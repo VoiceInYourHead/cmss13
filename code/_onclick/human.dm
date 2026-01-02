@@ -12,6 +12,9 @@
 
 
 /mob/living/carbon/human/click(atom/A, list/mods)
+	if(sword_combat_active)
+		current_active_technique.targeted_ability_check(A)
+
 	var/use_ability = FALSE
 	switch(get_ability_mouse_key())
 		if(XENO_ABILITY_CLICK_SHIFT)
