@@ -22,6 +22,16 @@
 /obj/effect/spider/stickyweb,
 /turf/open/floor/almayer/orange/northwest,
 /area/adminlevel/ert_station)
+"ak" = (
+/obj/effect/decal/hybrisa/tiretrack{
+	dir = 8;
+	pixel_y = 12
+	},
+/obj/structure/barricade/handrail/hybrisa/road/metal/double/offset,
+/turf/open/hybrisa/street/sidewalkcenter/north,
+/area/centcom{
+	name = "\improper abandoned  TESTING ZONE"
+	})
 "an" = (
 /turf/open/floor/plating/plating_catwalk,
 /area/adminlevel/ert_station)
@@ -35,6 +45,20 @@
 "as" = (
 /turf/open/space/basic,
 /area/space)
+"aA" = (
+/obj/effect/decal/hybrisa/road/lines2,
+/obj/effect/decal/hybrisa/road/lines1,
+/obj/effect/decal/hybrisa/road/road_edge{
+	icon_state = "road_edge_decal4"
+	},
+/obj/effect/decal/hybrisa/dirt,
+/obj/structure/prop/hybrisa/fakeplatforms/platform4/deco{
+	dir = 8
+	},
+/turf/open/hybrisa/street/asphalt,
+/area/centcom{
+	name = "\improper abandoned  TESTING ZONE"
+	})
 "aC" = (
 /obj/effect/step_trigger/teleporter/random{
 	affect_ghosts = 1;
@@ -52,10 +76,54 @@
 /obj/structure/closet/cabinet,
 /turf/open/floor/carpet,
 /area/adminlevel/ert_station)
+"aL" = (
+/obj/effect/decal/hybrisa/road/lines2,
+/turf/open/hybrisa/street/asphalt,
+/area/centcom{
+	name = "\improper abandoned  TESTING ZONE"
+	})
+"aS" = (
+/obj/structure/platform/metal/hybrisa/metalplatform6/east,
+/turf/open/hybrisa/street/sidewalk/east,
+/area/centcom{
+	name = "\improper abandoned  TESTING ZONE"
+	})
 "bn" = (
 /obj/structure/closet/boxinggloves,
 /turf/open/floor/almayer/silver,
 /area/adminlevel/ert_station)
+"br" = (
+/obj/structure/machinery/colony_floodlight/traffic/alt{
+	dir = 4;
+	pixel_y = 12;
+	pixel_x = 6
+	},
+/turf/open/hybrisa/street/sidewalk/south,
+/area/centcom{
+	name = "\improper abandoned  TESTING ZONE"
+	})
+"bO" = (
+/obj/structure/fence/dark,
+/turf/open/auto_turf/hybrisa_auto_turf/layer0,
+/area/centcom{
+	name = "\improper abandoned  TESTING ZONE"
+	})
+"bS" = (
+/obj/item/stack/sheet/cardboard,
+/obj/effect/decal/hybrisa/dirt,
+/obj/effect/decal/hybrisa/dirt,
+/turf/open/hybrisa/street/sidewalk/north,
+/area/centcom{
+	name = "\improper abandoned  TESTING ZONE"
+	})
+"bV" = (
+/obj/item/tool/warning_cone{
+	pixel_y = 17
+	},
+/turf/open/hybrisa/street/sidewalkfull,
+/area/centcom{
+	name = "\improper abandoned  TESTING ZONE"
+	})
 "co" = (
 /obj/structure/machinery/status_display{
 	pixel_y = 30
@@ -63,6 +131,16 @@
 /obj/structure/bed/sofa/south/grey,
 /turf/open/floor/almayer/silver/north,
 /area/adminlevel/ert_station)
+"ct" = (
+/obj/structure/platform/metal/hybrisa/metalplatform6,
+/obj/structure/stairs{
+	color = "#a6aeab";
+	dir = 4
+	},
+/turf/open/hybrisa/street/cement3,
+/area/centcom{
+	name = "\improper abandoned  TESTING ZONE"
+	})
 "cD" = (
 /obj/structure/machinery/cm_vending/sorted/medical/blood{
 	req_access = null
@@ -76,6 +154,38 @@
 	},
 /turf/open/floor/almayer/floor,
 /area/adminlevel/ert_station)
+"cP" = (
+/obj/structure/platform/metal/hybrisa/metalplatform6/north,
+/obj/structure/platform/metal/hybrisa/metalplatform6/west,
+/obj/effect/decal/hybrisa/road/lines6{
+	pixel_x = -3
+	},
+/obj/effect/decal/hybrisa/trash{
+	icon_state = "trash_14"
+	},
+/turf/open/hybrisa/street/asphalt,
+/area/centcom{
+	name = "\improper abandoned  TESTING ZONE"
+	})
+"cR" = (
+/obj/structure/platform/stone/hybrisa/rockdark/north,
+/obj/structure/platform/stone/hybrisa/rockdark,
+/obj/structure/platform/stone/hybrisa/rockdark/west,
+/obj/effect/hybrisa/misc/fake/pipes/pipe1{
+	dir = 4
+	},
+/obj/structure/prop/ice_colony/ground_wire,
+/obj/structure/prop/ice_colony/ground_wire{
+	dir = 1;
+	pixel_y = 5
+	},
+/obj/structure/prop/ice_colony/ground_wire{
+	dir = 4
+	},
+/turf/open/auto_turf/hybrisa_auto_turf/layer0,
+/area/centcom{
+	name = "\improper abandoned  TESTING ZONE"
+	})
 "cU" = (
 /obj/effect/step_trigger/teleporter/random{
 	affect_ghosts = 1;
@@ -89,6 +199,12 @@
 	},
 /turf/open/space/transit/east/shuttlespace_ew4,
 /area/space)
+"dh" = (
+/obj/structure/platform/metal/hybrisa/metalplatform6/west,
+/turf/open/hybrisa/street/sidewalk/west,
+/area/centcom{
+	name = "\improper abandoned  TESTING ZONE"
+	})
 "dr" = (
 /obj/structure/flora/pottedplant{
 	icon_state = "pottedplant_22"
@@ -106,6 +222,11 @@
 "dG" = (
 /turf/open/floor/plating/almayer,
 /area/adminlevel/ert_station/shuttle_dispatch)
+"dO" = (
+/turf/open/hybrisa/street/sidewalk/southeast,
+/area/centcom{
+	name = "\improper abandoned  TESTING ZONE"
+	})
 "dR" = (
 /obj/effect/step_trigger/teleporter/random{
 	affect_ghosts = 1;
@@ -119,6 +240,19 @@
 	},
 /turf/open/space/transit/east/shuttlespace_ew7,
 /area/space)
+"eq" = (
+/obj/structure/prop/hybrisa/fakeplatforms/platform4/deco{
+	dir = 8
+	},
+/turf/open/hybrisa/street/sidewalk/east,
+/area/centcom{
+	name = "\improper abandoned  TESTING ZONE"
+	})
+"es" = (
+/turf/closed/wall/hybrisa/colony,
+/area/centcom{
+	name = "\improper abandoned  TESTING ZONE"
+	})
 "ev" = (
 /turf/open/floor/carpet/edge/northwest,
 /area/centcom/living)
@@ -149,6 +283,15 @@
 	},
 /turf/open/floor/plating/almayer,
 /area/adminlevel/ert_station)
+"eC" = (
+/obj/item/trash/cigbutt{
+	pixel_x = -10;
+	pixel_y = 14
+	},
+/turf/open/hybrisa/street/sidewalk/south,
+/area/centcom{
+	name = "\improper abandoned  TESTING ZONE"
+	})
 "eE" = (
 /turf/open/floor/carpet/edge/north,
 /area/centcom/living)
@@ -283,6 +426,35 @@
 /obj/structure/machinery/r_n_d/server/centcom,
 /turf/open/floor/almayer/mono,
 /area/centcom/control)
+"gl" = (
+/obj/structure/platform/metal/hybrisa/metalplatform6/north,
+/obj/effect/decal/hybrisa/road/lines4,
+/obj/effect/decal/hybrisa/road/road_stop{
+	dir = 4;
+	icon_state = "stop_decal5"
+	},
+/obj/item/tool/warning_cone{
+	pixel_x = -20
+	},
+/turf/open/hybrisa/street/asphalt,
+/area/centcom{
+	name = "\improper abandoned  TESTING ZONE"
+	})
+"gn" = (
+/obj/effect/decal/cleanable/blood/oil,
+/obj/effect/decal/hybrisa/dirt,
+/turf/open/hybrisa/street/sidewalkcenter/north,
+/area/centcom{
+	name = "\improper abandoned  TESTING ZONE"
+	})
+"gq" = (
+/obj/structure/machinery/colony_floodlight/street{
+	pixel_y = 12
+	},
+/turf/open/hybrisa/street/cement3,
+/area/centcom{
+	name = "\improper abandoned  TESTING ZONE"
+	})
 "gu" = (
 /turf/open/floor/plating,
 /area/admin/droppod/holding)
@@ -290,9 +462,25 @@
 /obj/effect/decal/cleanable/blood,
 /turf/open/floor/almayer/plating/northeast,
 /area/adminlevel/ert_station)
+"gJ" = (
+/obj/effect/decal/hybrisa/dirt,
+/turf/open/hybrisa/street/sidewalk/north,
+/area/centcom{
+	name = "\improper abandoned  TESTING ZONE"
+	})
 "gR" = (
 /turf/open/floor/almayer/sterile_green_side/southeast,
 /area/adminlevel/ert_station)
+"gU" = (
+/obj/effect/decal/hybrisa/road/road_edge{
+	icon_state = "road_edge_decal6"
+	},
+/obj/effect/decal/hybrisa/dirt,
+/obj/effect/decal/hybrisa/road/lines3,
+/turf/open/hybrisa/street/asphalt,
+/area/centcom{
+	name = "\improper abandoned  TESTING ZONE"
+	})
 "gX" = (
 /turf/open/floor/almayer/floor,
 /area/adminlevel/ert_station/shuttle_dispatch)
@@ -300,9 +488,43 @@
 /obj/effect/landmark/newplayer_start,
 /turf/open/space/basic,
 /area/start)
+"ht" = (
+/obj/effect/decal/hybrisa/road/road_edge{
+	icon_state = "road_edge_decal3"
+	},
+/obj/effect/decal/hybrisa/road/lines3,
+/turf/open/hybrisa/street/asphalt,
+/area/centcom{
+	name = "\improper abandoned  TESTING ZONE"
+	})
 "hH" = (
 /turf/open/floor/almayer/sterile_green_side/northwest,
 /area/adminlevel/ert_station)
+"hJ" = (
+/obj/effect/decal/hybrisa/road/road_edge{
+	icon_state = "road_edge_decal2"
+	},
+/obj/effect/decal/hybrisa/road/lines4,
+/obj/effect/decal/hybrisa/road/lines2,
+/obj/effect/decal/hybrisa/dirt,
+/turf/open/hybrisa/street/asphalt,
+/area/centcom{
+	name = "\improper abandoned  TESTING ZONE"
+	})
+"hM" = (
+/obj/effect/decal/hybrisa/road/road_edge{
+	icon_state = "road_edge_decal2"
+	},
+/obj/effect/decal/hybrisa/road/lines4,
+/obj/effect/decal/hybrisa/road/road_stop{
+	dir = 8;
+	icon_state = "stop_decal5";
+	pixel_y = -14
+	},
+/turf/open/hybrisa/street/asphalt,
+/area/centcom{
+	name = "\improper abandoned  TESTING ZONE"
+	})
 "hP" = (
 /obj/docking_port/stationary/emergency_response/idle_port1,
 /turf/open/floor/plating,
@@ -311,29 +533,144 @@
 /obj/structure/sign/poster/art,
 /turf/closed/wall/r_wall/unmeltable,
 /area/adminlevel/ert_station)
+"ii" = (
+/obj/effect/decal/hybrisa/road/lines4,
+/obj/effect/decal/hybrisa/road/road_edge{
+	icon_state = "road_edge_decal8"
+	},
+/obj/effect/decal/hybrisa/road/lines2,
+/turf/open/hybrisa/street/asphalt,
+/area/centcom{
+	name = "\improper abandoned  TESTING ZONE"
+	})
+"ik" = (
+/obj/structure/machinery/colony_floodlight/traffic/alt{
+	pixel_x = 4;
+	pixel_y = 12
+	},
+/turf/open/hybrisa/street/sidewalk/north,
+/area/centcom{
+	name = "\improper abandoned  TESTING ZONE"
+	})
 "il" = (
 /obj/structure/machinery/photocopier,
 /turf/open/floor/almayer/floor,
 /area/adminlevel/ert_station)
+"ip" = (
+/obj/effect/decal/hybrisa/tiretrack{
+	dir = 8;
+	pixel_y = 12
+	},
+/turf/open/hybrisa/street/roadlines4,
+/area/centcom{
+	name = "\improper abandoned  TESTING ZONE"
+	})
+"iy" = (
+/obj/effect/decal/hybrisa/trash{
+	icon_state = "trash_5";
+	pixel_y = 12
+	},
+/obj/item/trash/cigbutt{
+	pixel_x = -10;
+	pixel_y = 14
+	},
+/turf/open/floor/plating/plating_catwalk/prison,
+/area/centcom{
+	name = "\improper abandoned  TESTING ZONE"
+	})
 "iz" = (
 /obj/structure/disposalpipe/junction,
 /turf/open/floor/almayer/silver/east,
 /area/adminlevel/ert_station)
+"iI" = (
+/obj/effect/decal/hybrisa/road/road_edge{
+	icon_state = "road_edge_decal3"
+	},
+/obj/effect/decal/hybrisa/road/lines3,
+/obj/effect/decal/hybrisa/dirt,
+/obj/effect/decal/hybrisa/road/lines4,
+/turf/open/hybrisa/street/asphalt,
+/area/centcom{
+	name = "\improper abandoned  TESTING ZONE"
+	})
 "iL" = (
 /obj/structure/machinery/status_display{
 	pixel_y = 30
 	},
 /turf/open/floor/almayer/plating_striped,
 /area/adminlevel/ert_station)
+"iM" = (
+/obj/structure/platform/stone/hybrisa/rockdark/north,
+/obj/structure/platform/stone/hybrisa/rockdark,
+/obj/structure/platform/stone/hybrisa/rockdark/east,
+/obj/effect/hybrisa/misc/fake/pipes/pipe1{
+	dir = 4
+	},
+/obj/structure/prop/ice_colony/ground_wire,
+/obj/structure/prop/ice_colony/ground_wire{
+	dir = 1;
+	pixel_y = 5
+	},
+/turf/open/auto_turf/hybrisa_auto_turf/layer0,
+/area/centcom{
+	name = "\improper abandoned  TESTING ZONE"
+	})
 "iR" = (
 /obj/structure/disposalpipe/segment{
 	dir = 2
 	},
 /turf/closed/wall/r_wall/unmeltable,
 /area/adminlevel/ert_station)
+"iW" = (
+/obj/effect/decal/hybrisa/road/road_edge{
+	icon_state = "road_edge_decal3"
+	},
+/obj/effect/decal/hybrisa/road/lines3,
+/obj/effect/decal/hybrisa/dirt,
+/turf/open/hybrisa/street/asphalt,
+/area/centcom{
+	name = "\improper abandoned  TESTING ZONE"
+	})
 "ja" = (
 /turf/open/floor/plating,
 /area/admin/droppod/loading)
+"jC" = (
+/obj/effect/decal/hybrisa/road/lines3,
+/obj/effect/decal/hybrisa/dirt,
+/turf/open/hybrisa/street/asphalt,
+/area/centcom{
+	name = "\improper abandoned  TESTING ZONE"
+	})
+"jD" = (
+/obj/structure/platform/metal/hybrisa/metalplatform6,
+/obj/structure/stairs{
+	color = "#a6aeab";
+	dir = 8
+	},
+/turf/open/hybrisa/street/cement3,
+/area/centcom{
+	name = "\improper abandoned  TESTING ZONE"
+	})
+"kc" = (
+/turf/open/hybrisa/street/sidewalk/west,
+/area/centcom{
+	name = "\improper abandoned  TESTING ZONE"
+	})
+"kf" = (
+/obj/item/tool/warning_cone{
+	pixel_y = 17
+	},
+/obj/effect/decal/hybrisa/dirt,
+/turf/open/hybrisa/street/sidewalk/south,
+/area/centcom{
+	name = "\improper abandoned  TESTING ZONE"
+	})
+"kj" = (
+/obj/effect/decal/hybrisa/dirt,
+/turf/open/hybrisa/street/sidewalk/east,
+/area/centcom{
+	name = "\improper abandoned  TESTING ZONE"
+	})
 "kn" = (
 /obj/docking_port/stationary/emergency_response/idle_port3,
 /turf/open/floor/plating,
@@ -348,12 +685,190 @@
 	},
 /turf/open/floor/almayer/floor,
 /area/adminlevel/ert_station)
+"kO" = (
+/obj/structure/barricade/handrail/hybrisa/road/plastic/red{
+	dir = 4
+	},
+/obj/effect/decal/hybrisa/dirt,
+/obj/effect/decal/cleanable/blood,
+/obj/effect/landmark/corpsespawner/hybrisa/sanitation,
+/turf/open/hybrisa/street/sidewalk/east,
+/area/centcom{
+	name = "\improper abandoned  TESTING ZONE"
+	})
+"la" = (
+/obj/effect/decal/hybrisa/road/lines4,
+/obj/effect/decal/hybrisa/road/road_stop{
+	dir = 4;
+	icon_state = "stop_decal5"
+	},
+/obj/item/clothing/under/colonist/white_service,
+/obj/item/clothing/suit/storage/CMB/hybrisa/nspa_jacket,
+/obj/item/clothing/shoes/laceup,
+/turf/open/hybrisa/street/asphalt,
+/area/centcom{
+	name = "\improper abandoned  TESTING ZONE"
+	})
+"lc" = (
+/turf/open/hybrisa/street/sidewalk/northeast,
+/area/centcom{
+	name = "\improper abandoned  TESTING ZONE"
+	})
+"lf" = (
+/obj/effect/decal/hybrisa/road/lines4,
+/obj/effect/decal/hybrisa/road/lines3,
+/obj/effect/decal/hybrisa/road/road_edge{
+	icon_state = "road_edge_decal5"
+	},
+/turf/open/hybrisa/street/asphalt,
+/area/centcom{
+	name = "\improper abandoned  TESTING ZONE"
+	})
+"lt" = (
+/obj/structure/platform/metal/hybrisa/metalplatform6,
+/obj/effect/decal/hybrisa/dirt,
+/turf/open/hybrisa/street/sidewalk/south,
+/area/centcom{
+	name = "\improper abandoned  TESTING ZONE"
+	})
+"lu" = (
+/obj/effect/decal/hybrisa/road/lines5{
+	pixel_y = 5
+	},
+/obj/effect/decal/hybrisa/road/road_edge{
+	icon_state = "road_edge_decal3"
+	},
+/obj/effect/decal/hybrisa/road/lines3,
+/obj/item/stack/sheet/cardboard{
+	pixel_y = -12
+	},
+/obj/effect/decal/hybrisa/road/lines2{
+	pixel_y = -4
+	},
+/obj/effect/decal/hybrisa/trash{
+	icon_state = "trash_4"
+	},
+/turf/open/hybrisa/street/asphalt,
+/area/centcom{
+	name = "\improper abandoned  TESTING ZONE"
+	})
+"lx" = (
+/obj/effect/decal/hybrisa/dirt,
+/obj/effect/decal/hybrisa/dirt,
+/turf/open/hybrisa/street/asphalt,
+/area/centcom{
+	name = "\improper abandoned  TESTING ZONE"
+	})
+"lA" = (
+/obj/effect/decal/hybrisa/road/road_stop{
+	icon_state = "stop_decal2"
+	},
+/turf/open/hybrisa/street/asphalt,
+/area/centcom{
+	name = "\improper abandoned  TESTING ZONE"
+	})
+"lC" = (
+/obj/effect/decal/hybrisa/road/road_stop{
+	icon_state = "stop_decal3"
+	},
+/turf/open/hybrisa/street/asphalt,
+/area/centcom{
+	name = "\improper abandoned  TESTING ZONE"
+	})
+"ma" = (
+/obj/effect/decal/hybrisa/road/lines3,
+/obj/effect/decal/hybrisa/dirt,
+/obj/effect/decal/hybrisa/dirt,
+/turf/open/hybrisa/street/asphalt,
+/area/centcom{
+	name = "\improper abandoned  TESTING ZONE"
+	})
 "me" = (
 /obj/structure/disposalpipe/segment{
 	dir = 2
 	},
 /turf/open/floor/almayer/silver/east,
 /area/adminlevel/ert_station)
+"mH" = (
+/obj/effect/decal/hybrisa/road/road_edge{
+	icon_state = "road_edge_decal5"
+	},
+/obj/effect/decal/hybrisa/road/lines3,
+/turf/open/hybrisa/street/asphalt,
+/area/centcom{
+	name = "\improper abandoned  TESTING ZONE"
+	})
+"mI" = (
+/obj/structure/prop/hybrisa/fakeplatforms/platform4/deco{
+	dir = 1
+	},
+/obj/effect/decal/hybrisa/dirt,
+/turf/open/hybrisa/street/sidewalkfull,
+/area/centcom{
+	name = "\improper abandoned  TESTING ZONE"
+	})
+"mM" = (
+/obj/effect/decal/hybrisa/road/lines4,
+/obj/effect/decal/hybrisa/road/lines2,
+/obj/effect/decal/hybrisa/road/road_edge{
+	icon_state = "road_edge_decal4"
+	},
+/turf/open/hybrisa/street/asphalt,
+/area/centcom{
+	name = "\improper abandoned  TESTING ZONE"
+	})
+"nh" = (
+/obj/structure/platform/stone/hybrisa/rockdark/north,
+/obj/structure/platform/stone/hybrisa/rockdark,
+/obj/structure/prop/ice_colony/ground_wire{
+	dir = 1;
+	pixel_y = 5
+	},
+/obj/structure/prop/ice_colony/ground_wire,
+/obj/effect/hybrisa/misc/fake/pipes/pipe5{
+	dir = 8;
+	pixel_y = -1
+	},
+/obj/effect/hybrisa/misc/fake/pipes/pipe5{
+	dir = 4;
+	pixel_y = -1
+	},
+/turf/open/gm/river,
+/area/centcom{
+	name = "\improper abandoned  TESTING ZONE"
+	})
+"no" = (
+/obj/effect/decal/hybrisa/dirt,
+/turf/open/floor/prison/cell_stripe/west,
+/area/centcom{
+	name = "\improper abandoned  TESTING ZONE"
+	})
+"nK" = (
+/obj/structure/platform/metal/hybrisa/metalplatform6/north,
+/obj/structure/largecrate/random/barrel/green,
+/turf/open/hybrisa/street/asphalt,
+/area/centcom{
+	name = "\improper abandoned  TESTING ZONE"
+	})
+"nL" = (
+/obj/structure/platform/metal/hybrisa/metalplatform6/east,
+/obj/structure/stairs{
+	color = "#a6aeab"
+	},
+/turf/open/hybrisa/street/cement3,
+/area/centcom{
+	name = "\improper abandoned  TESTING ZONE"
+	})
+"nN" = (
+/obj/structure/prop/hybrisa/fakeplatforms/platform4/deco,
+/obj/effect/decal/cleanable/blood,
+/obj/effect/decal/hybrisa/bloodtrail{
+	dir = 9
+	},
+/turf/open/hybrisa/street/sidewalkfull,
+/area/centcom{
+	name = "\improper abandoned  TESTING ZONE"
+	})
 "nP" = (
 /turf/open/floor/almayer/silvercorner/west,
 /area/adminlevel/ert_station/shuttle_dispatch)
@@ -379,6 +894,22 @@
 	},
 /turf/open/floor/almayer/silver,
 /area/adminlevel/ert_station)
+"oh" = (
+/obj/effect/decal/hybrisa/dirt,
+/turf/open/floor/prison/floor_plate/southwest,
+/area/centcom{
+	name = "\improper abandoned  TESTING ZONE"
+	})
+"ok" = (
+/obj/effect/decal/hybrisa/road/lines2,
+/obj/effect/decal/hybrisa/trash{
+	icon_state = "trash_3";
+	pixel_y = 12
+	},
+/turf/open/hybrisa/street/asphalt,
+/area/centcom{
+	name = "\improper abandoned  TESTING ZONE"
+	})
 "op" = (
 /obj/structure/machinery/cryopod/no_store,
 /obj/structure/sign/safety/cryo{
@@ -396,6 +927,16 @@
 /obj/effect/decal/cleanable/dirt,
 /turf/open/floor/almayer/silver/north,
 /area/adminlevel/ert_station/shuttle_dispatch)
+"oK" = (
+/obj/structure/platform/metal/hybrisa/metalplatform6/east,
+/obj/structure/stairs{
+	color = "#a6aeab";
+	dir = 1
+	},
+/turf/open/hybrisa/street/sidewalkfull,
+/area/centcom{
+	name = "\improper abandoned  TESTING ZONE"
+	})
 "oQ" = (
 /obj/effect/step_trigger/teleporter/random{
 	affect_ghosts = 1;
@@ -428,12 +969,33 @@
 /obj/item/bedsheet/brown,
 /turf/open/floor/almayer/red/northeast,
 /area/adminlevel/ert_station)
+"pd" = (
+/turf/open/hybrisa/street/sidewalkfull,
+/area/centcom{
+	name = "\improper abandoned  TESTING ZONE"
+	})
 "ph" = (
 /obj/structure/disposalpipe/junction{
 	dir = 8
 	},
 /turf/open/floor/plating/plating_catwalk,
 /area/adminlevel/ert_station)
+"pl" = (
+/obj/effect/decal/hybrisa/road/lines2,
+/obj/effect/decal/hybrisa/dirt,
+/obj/effect/decal/hybrisa/road/lines4{
+	pixel_y = 22;
+	pixel_x = 2
+	},
+/obj/effect/decal/cleanable/dirt/alt_dirt{
+	color = "#140400"
+	},
+/obj/item/trash/hybrisa/cuppa_joes/empty_cup,
+/obj/item/trash/hybrisa/cuppa_joes/lid,
+/turf/open/hybrisa/street/asphalt,
+/area/centcom{
+	name = "\improper abandoned  TESTING ZONE"
+	})
 "pm" = (
 /turf/open/floor/almayer/sterile_green_side/north,
 /area/adminlevel/ert_station)
@@ -442,6 +1004,30 @@
 /obj/effect/decal/cleanable/dirt,
 /turf/open/floor/almayer/floor,
 /area/adminlevel/ert_station/shuttle_dispatch)
+"pt" = (
+/obj/effect/decal/hybrisa/dirt,
+/obj/effect/decal/hybrisa/road/lines3,
+/turf/open/hybrisa/street/asphalt,
+/area/centcom{
+	name = "\improper abandoned  TESTING ZONE"
+	})
+"pz" = (
+/obj/structure/platform/metal/hybrisa/metalplatform6,
+/obj/structure/prop/hybrisa/fakeplatforms/platform4,
+/turf/open/hybrisa/street/sidewalk/south,
+/area/centcom{
+	name = "\improper abandoned  TESTING ZONE"
+	})
+"pO" = (
+/obj/effect/decal/hybrisa/dirt,
+/obj/effect/decal/hybrisa/trash{
+	dir = 1;
+	icon_state = "trash_11"
+	},
+/turf/open/hybrisa/street/cement3,
+/area/centcom{
+	name = "\improper abandoned  TESTING ZONE"
+	})
 "pP" = (
 /obj/item/newspaper,
 /turf/open/floor/carpet,
@@ -452,6 +1038,14 @@
 	},
 /turf/open/floor/almayer/silver/north,
 /area/adminlevel/ert_station/shuttle_dispatch)
+"pX" = (
+/obj/structure/prop/hybrisa/fakeplatforms/platform4/deco{
+	dir = 4
+	},
+/turf/open/hybrisa/street/sidewalk/west,
+/area/centcom{
+	name = "\improper abandoned  TESTING ZONE"
+	})
 "qi" = (
 /obj/structure/flora/pottedplant/random,
 /turf/open/floor/almayer/floor,
@@ -478,6 +1072,44 @@
 	},
 /turf/open/floor/almayer/floor,
 /area/adminlevel/ert_station)
+"qA" = (
+/obj/structure/platform/metal/hybrisa/metalplatform6/west,
+/obj/effect/decal/hybrisa/road/lines6{
+	pixel_x = -3
+	},
+/obj/effect/decal/hybrisa/road/lines2,
+/obj/effect/decal/hybrisa/trash{
+	icon_state = "trash_5";
+	pixel_y = 12
+	},
+/obj/item/trash/cigbutt{
+	pixel_x = -10;
+	pixel_y = 14
+	},
+/obj/item/trash/cigbutt{
+	pixel_x = -10;
+	pixel_y = 14
+	},
+/turf/open/hybrisa/street/asphalt,
+/area/centcom{
+	name = "\improper abandoned  TESTING ZONE"
+	})
+"qJ" = (
+/obj/structure/machinery/colony_floodlight/traffic/alt{
+	dir = 8;
+	pixel_x = 5;
+	pixel_y = 10
+	},
+/turf/open/hybrisa/street/sidewalk/north,
+/area/centcom{
+	name = "\improper abandoned  TESTING ZONE"
+	})
+"qO" = (
+/obj/effect/decal/hybrisa/dirt,
+/turf/open/hybrisa/street/cement1,
+/area/centcom{
+	name = "\improper abandoned  TESTING ZONE"
+	})
 "rf" = (
 /obj/structure/sink{
 	dir = 8;
@@ -485,11 +1117,37 @@
 	},
 /turf/open/floor/almayer/sterile_green_side/northeast,
 /area/adminlevel/ert_station)
+"rO" = (
+/obj/effect/decal/hybrisa/road/road_edge,
+/obj/effect/decal/hybrisa/road/lines1,
+/obj/effect/decal/hybrisa/doubleroad/lines4{
+	pixel_x = 4
+	},
+/turf/open/hybrisa/street/asphalt,
+/area/centcom{
+	name = "\improper abandoned  TESTING ZONE"
+	})
 "rR" = (
 /obj/structure/closet/secure_closet/freezer/fridge/full,
 /obj/item/reagent_container/food/condiment/enzyme,
 /turf/open/floor/prison/kitchen,
 /area/adminlevel/ert_station)
+"se" = (
+/obj/structure/platform/metal/hybrisa/metalplatform6/east,
+/obj/structure/sign/safety/one{
+	color = "#4b6834";
+	pixel_x = 34
+	},
+/turf/open/hybrisa/street/sidewalk/southeast,
+/area/centcom{
+	name = "\improper abandoned  TESTING ZONE"
+	})
+"si" = (
+/obj/structure/prop/hybrisa/fakeplatforms/platform4,
+/turf/open/hybrisa/street/sidewalk/south,
+/area/centcom{
+	name = "\improper abandoned  TESTING ZONE"
+	})
 "sj" = (
 /obj/structure/machinery/faxmachine,
 /obj/structure/surface/table/reinforced/prison,
@@ -508,6 +1166,14 @@
 	},
 /turf/open/space/transit/east/shuttlespace_ew5,
 /area/space)
+"sD" = (
+/obj/structure/prop/hybrisa/misc/firehydrant{
+	dir = 1
+	},
+/turf/open/hybrisa/street/sidewalk/north,
+/area/centcom{
+	name = "\improper abandoned  TESTING ZONE"
+	})
 "sN" = (
 /obj/structure/disposalpipe/segment{
 	dir = 1
@@ -533,6 +1199,11 @@
 /obj/structure/machinery/washing_machine,
 /turf/open/floor/almayer/dark_sterile,
 /area/adminlevel/ert_station)
+"ud" = (
+/turf/open/hybrisa/street/cement3,
+/area/centcom{
+	name = "\improper abandoned  TESTING ZONE"
+	})
 "uf" = (
 /obj/structure/machinery/door/airlock/almayer/generic{
 	dir = 1;
@@ -566,6 +1237,11 @@
 /obj/docking_port/stationary/emergency_response/idle_port6,
 /turf/open/floor/plating,
 /area/adminlevel/ert_station)
+"uE" = (
+/turf/open/hybrisa/street/cement1,
+/area/centcom{
+	name = "\improper abandoned  TESTING ZONE"
+	})
 "uI" = (
 /turf/open/floor/almayer/red,
 /area/adminlevel/ert_station)
@@ -591,6 +1267,11 @@
 	},
 /turf/open/floor/carpet,
 /area/adminlevel/ert_station)
+"uU" = (
+/turf/open/hybrisa/street/sidewalk/northwest,
+/area/centcom{
+	name = "\improper abandoned  TESTING ZONE"
+	})
 "uY" = (
 /obj/structure/janitorialcart,
 /obj/item/reagent_container/glass/bucket/janibucket,
@@ -638,6 +1319,39 @@
 /obj/effect/decal/cleanable/dirt,
 /turf/open/floor/almayer/silver,
 /area/adminlevel/ert_station/shuttle_dispatch)
+"vP" = (
+/obj/structure/platform/metal/stair_cut/hybrisa_metal_left,
+/obj/structure/stairs{
+	color = "#a6aeab";
+	dir = 8
+	},
+/turf/open/hybrisa/street/cement3,
+/area/centcom{
+	name = "\improper abandoned  TESTING ZONE"
+	})
+"vZ" = (
+/obj/structure/machinery/colony_floodlight/street{
+	pixel_y = 12
+	},
+/turf/open/hybrisa/street/sidewalk/east,
+/area/centcom{
+	name = "\improper abandoned  TESTING ZONE"
+	})
+"wd" = (
+/turf/open/hybrisa/street/sidewalkcenter/east,
+/area/centcom{
+	name = "\improper abandoned  TESTING ZONE"
+	})
+"wm" = (
+/obj/effect/decal/hybrisa/tiretrack{
+	dir = 8;
+	pixel_y = 18
+	},
+/obj/structure/barricade/handrail/hybrisa/road/metal/double/offset,
+/turf/open/hybrisa/street/sidewalkcenter/north,
+/area/centcom{
+	name = "\improper abandoned  TESTING ZONE"
+	})
 "wp" = (
 /turf/open/floor/almayer/silver/west,
 /area/adminlevel/ert_station/shuttle_dispatch)
@@ -690,6 +1404,11 @@
 	},
 /turf/open/space/transit/east/shuttlespace_ew3,
 /area/space)
+"xx" = (
+/turf/open/hybrisa/street/sidewalk/southwest,
+/area/centcom{
+	name = "\improper abandoned  TESTING ZONE"
+	})
 "xJ" = (
 /obj/effect/step_trigger/teleporter/random{
 	affect_ghosts = 1;
@@ -713,6 +1432,41 @@
 "xU" = (
 /turf/open/floor/almayer/w_y2/north,
 /area/adminlevel/ert_station)
+"xY" = (
+/obj/effect/decal/hybrisa/dirt,
+/obj/effect/decal/hybrisa/dirt,
+/turf/open/floor/prison/floor_plate/southwest,
+/area/centcom{
+	name = "\improper abandoned  TESTING ZONE"
+	})
+"ye" = (
+/obj/effect/decal/hybrisa/road/road_edge{
+	icon_state = "road_edge_decal4"
+	},
+/obj/effect/decal/hybrisa/road/lines2,
+/obj/item/shard,
+/turf/open/hybrisa/street/asphalt,
+/area/centcom{
+	name = "\improper abandoned  TESTING ZONE"
+	})
+"yh" = (
+/obj/effect/decal/hybrisa/road/road_edge{
+	icon_state = "road_edge_decal4"
+	},
+/obj/effect/decal/hybrisa/road/lines2,
+/turf/open/hybrisa/street/asphalt,
+/area/centcom{
+	name = "\improper abandoned  TESTING ZONE"
+	})
+"yi" = (
+/obj/effect/decal/hybrisa/road/road_stop{
+	icon_state = "stop_decal2"
+	},
+/obj/effect/decal/hybrisa/dirt,
+/turf/open/hybrisa/street/asphalt,
+/area/centcom{
+	name = "\improper abandoned  TESTING ZONE"
+	})
 "yk" = (
 /obj/structure/surface/table/reinforced,
 /obj/structure/machinery/processor{
@@ -731,6 +1485,28 @@
 	},
 /turf/open/floor/plating/almayer,
 /area/adminlevel/ert_station)
+"yp" = (
+/obj/effect/decal/hybrisa/road/road_edge{
+	icon_state = "road_edge_decal3"
+	},
+/obj/effect/decal/hybrisa/road/lines3,
+/obj/item/shard,
+/obj/effect/decal/hybrisa/dirt,
+/obj/effect/decal/hybrisa/doubleroad/lines2{
+	pixel_y = 4
+	},
+/turf/open/hybrisa/street/asphalt,
+/area/centcom{
+	name = "\improper abandoned  TESTING ZONE"
+	})
+"yt" = (
+/obj/structure/machinery/colony_floodlight/street{
+	pixel_y = 12
+	},
+/turf/open/hybrisa/street/sidewalk/west,
+/area/centcom{
+	name = "\improper abandoned  TESTING ZONE"
+	})
 "yx" = (
 /obj/effect/decal/warning_stripes{
 	icon_state = "W"
@@ -751,6 +1527,15 @@
 	},
 /turf/open/floor/prison/kitchen,
 /area/adminlevel/ert_station)
+"yY" = (
+/obj/effect/decal/hybrisa/road/roadmiddle{
+	dir = 8;
+	pixel_x = 16
+	},
+/turf/open/hybrisa/street/asphalt,
+/area/centcom{
+	name = "\improper abandoned  TESTING ZONE"
+	})
 "zg" = (
 /obj/structure/machinery/chem_dispenser/soda{
 	density = 0;
@@ -776,6 +1561,12 @@
 "zr" = (
 /turf/open/floor/almayer/silver/northwest,
 /area/adminlevel/ert_station)
+"zs" = (
+/obj/effect/decal/hybrisa/dirt,
+/turf/open/hybrisa/street/roadlines4,
+/area/centcom{
+	name = "\improper abandoned  TESTING ZONE"
+	})
 "zt" = (
 /obj/structure/machinery/vending/security,
 /turf/open/floor/almayer/red/southeast,
@@ -785,6 +1576,40 @@
 /obj/effect/decal/cleanable/dirt,
 /turf/open/floor/almayer/silver/northwest,
 /area/adminlevel/ert_station/shuttle_dispatch)
+"zE" = (
+/obj/structure/platform/metal/hybrisa/metalplatform6/east,
+/obj/effect/decal/cleanable/blood,
+/obj/effect/decal/hybrisa/bloodtrail{
+	pixel_x = 7
+	},
+/obj/structure/stairs{
+	color = "#a6aeab"
+	},
+/turf/open/hybrisa/street/cement3,
+/area/centcom{
+	name = "\improper abandoned  TESTING ZONE"
+	})
+"zF" = (
+/obj/structure/barricade/handrail/hybrisa/road/plastic/blue{
+	dir = 1
+	},
+/obj/effect/decal/hybrisa/dirt,
+/turf/open/hybrisa/street/sidewalk/south,
+/area/centcom{
+	name = "\improper abandoned  TESTING ZONE"
+	})
+"zG" = (
+/obj/effect/decal/hybrisa/road/lines4,
+/turf/open/hybrisa/street/asphalt,
+/area/centcom{
+	name = "\improper abandoned  TESTING ZONE"
+	})
+"zI" = (
+/obj/effect/decal/hybrisa/dirt,
+/turf/open/floor/corsat/marked,
+/area/centcom{
+	name = "\improper abandoned  TESTING ZONE"
+	})
 "zN" = (
 /obj/structure/disposalpipe/segment{
 	dir = 4;
@@ -810,6 +1635,13 @@
 "AL" = (
 /turf/open/floor/almayer/dark_sterile,
 /area/adminlevel/ert_station)
+"AV" = (
+/obj/effect/decal/hybrisa/dirt,
+/obj/structure/barricade/handrail/hybrisa/road/metal/metaldark/offset,
+/turf/open/hybrisa/street/sidewalkcenter/north,
+/area/centcom{
+	name = "\improper abandoned  TESTING ZONE"
+	})
 "Bv" = (
 /obj/structure/disposalpipe/segment{
 	dir = 2
@@ -823,6 +1655,11 @@
 /obj/effect/decal/cleanable/blood/oil/streak,
 /turf/open/floor/plating/almayer,
 /area/adminlevel/ert_station/shuttle_dispatch)
+"BA" = (
+/turf/open/floor/plating/plating_catwalk/prison,
+/area/centcom{
+	name = "\improper abandoned  TESTING ZONE"
+	})
 "BO" = (
 /obj/effect/decal/warning_stripes{
 	icon_state = "NW-out";
@@ -857,6 +1694,12 @@
 	},
 /turf/open/floor/almayer/dark_sterile,
 /area/adminlevel/ert_station)
+"CJ" = (
+/obj/structure/barricade/handrail/hybrisa/road/metal/double/offset,
+/turf/open/hybrisa/street/sidewalkcenter/north,
+/area/centcom{
+	name = "\improper abandoned  TESTING ZONE"
+	})
 "CK" = (
 /obj/structure/machinery/door/airlock/almayer/security/glass{
 	dir = 1;
@@ -868,6 +1711,13 @@
 	},
 /turf/open/floor/almayer/redfull,
 /area/adminlevel/ert_station)
+"CL" = (
+/obj/effect/decal/hybrisa/dirt,
+/obj/structure/cargo_container/hybrisa/containersextended/bluewywingsleft,
+/turf/open/hybrisa/street/cement1,
+/area/centcom{
+	name = "\improper abandoned  TESTING ZONE"
+	})
 "CN" = (
 /obj/structure/sign/safety/bathunisex{
 	pixel_x = -17
@@ -877,6 +1727,20 @@
 "CU" = (
 /turf/open/floor/prison/kitchen,
 /area/adminlevel/ert_station)
+"Dg" = (
+/obj/effect/decal/hybrisa/dirt,
+/obj/effect/decal/hybrisa/trash{
+	icon_state = "trash_16";
+	pixel_y = 35
+	},
+/obj/item/tool/warning_cone{
+	pixel_x = 4;
+	pixel_y = 18
+	},
+/turf/open/hybrisa/street/sidewalk/southeast,
+/area/centcom{
+	name = "\improper abandoned  TESTING ZONE"
+	})
 "Do" = (
 /obj/structure/mirror,
 /turf/closed/wall/r_wall/unmeltable,
@@ -902,12 +1766,26 @@
 /obj/item/restraint/handcuffs,
 /turf/open/floor/almayer/red/east,
 /area/adminlevel/ert_station)
+"Dz" = (
+/obj/effect/decal/hybrisa/road/road_stop,
+/turf/open/hybrisa/street/asphalt,
+/area/centcom{
+	name = "\improper abandoned  TESTING ZONE"
+	})
 "DD" = (
 /obj/effect/decal/warning_stripes{
 	icon_state = "N"
 	},
 /turf/open/floor/plating/almayer,
 /area/adminlevel/ert_station/shuttle_dispatch)
+"DP" = (
+/obj/effect/decal/hybrisa/dirt,
+/obj/effect/decal/hybrisa/dirt,
+/obj/item/device/flashlight/lamp/tripod,
+/turf/open/hybrisa/street/cement1,
+/area/centcom{
+	name = "\improper abandoned  TESTING ZONE"
+	})
 "Ef" = (
 /obj/effect/step_trigger/teleporter/random{
 	affect_ghosts = 1;
@@ -921,6 +1799,28 @@
 	},
 /turf/open/space/transit/east/shuttlespace_ew9,
 /area/space)
+"Eh" = (
+/obj/effect/decal/hybrisa/road/lines2,
+/obj/effect/decal/hybrisa/road/road_stop{
+	dir = 4;
+	icon_state = "stop_decal5"
+	},
+/obj/structure/platform/metal/hybrisa/metalplatform6/north,
+/obj/effect/decal/hybrisa/road/road_edge{
+	icon_state = "road_edge_decal4"
+	},
+/obj/structure/barricade/handrail/strata{
+	dir = 1
+	},
+/turf/open/hybrisa/street/asphalt,
+/area/centcom{
+	name = "\improper abandoned  TESTING ZONE"
+	})
+"Ej" = (
+/turf/open/hybrisa/street/asphalt,
+/area/centcom{
+	name = "\improper abandoned  TESTING ZONE"
+	})
 "En" = (
 /obj/structure/surface/table/woodentable/fancy,
 /obj/item/book/manual/chef_recipes,
@@ -938,6 +1838,12 @@
 "Ez" = (
 /turf/open/floor/almayer/red/east,
 /area/adminlevel/ert_station)
+"EF" = (
+/obj/structure/fence/dark,
+/turf/open/auto_turf/hybrisa_auto_turf/layer2,
+/area/centcom{
+	name = "\improper abandoned  TESTING ZONE"
+	})
 "EG" = (
 /obj/effect/decal/warning_stripes{
 	icon_state = "W"
@@ -949,6 +1855,15 @@
 	},
 /turf/open/floor/plating/almayer,
 /area/adminlevel/ert_station)
+"EH" = (
+/obj/effect/decal/hybrisa/road/road_edge{
+	icon_state = "road_edge_decal2"
+	},
+/obj/effect/decal/hybrisa/road/lines4,
+/turf/open/hybrisa/street/asphalt,
+/area/centcom{
+	name = "\improper abandoned  TESTING ZONE"
+	})
 "EI" = (
 /obj/structure/surface/table/woodentable/fancy,
 /obj/item/clothing/suit/chef/classic,
@@ -970,6 +1885,13 @@
 /obj/effect/decal/cleanable/dirt,
 /turf/open/floor/almayer/silver/west,
 /area/adminlevel/ert_station/shuttle_dispatch)
+"Fc" = (
+/obj/effect/decal/hybrisa/road/lines1,
+/obj/effect/decal/hybrisa/road/road_edge,
+/turf/open/hybrisa/street/asphalt,
+/area/centcom{
+	name = "\improper abandoned  TESTING ZONE"
+	})
 "Fd" = (
 /obj/structure/disposalpipe/segment{
 	dir = 2
@@ -982,9 +1904,32 @@
 	},
 /turf/open/floor/plating/almayer,
 /area/adminlevel/ert_station)
+"Fz" = (
+/obj/effect/decal/hybrisa/dirt,
+/turf/open/hybrisa/street/sidewalk/south,
+/area/centcom{
+	name = "\improper abandoned  TESTING ZONE"
+	})
 "FB" = (
 /turf/open/floor/plating,
 /area/adminlevel/ert_station)
+"FF" = (
+/obj/effect/decal/hybrisa/road/road_edge,
+/obj/effect/decal/hybrisa/road/lines1,
+/obj/effect/decal/hybrisa/road/lines2,
+/turf/open/hybrisa/street/asphalt,
+/area/centcom{
+	name = "\improper abandoned  TESTING ZONE"
+	})
+"FG" = (
+/obj/item/trash/cigbutt{
+	pixel_x = -10;
+	pixel_y = 14
+	},
+/turf/open/hybrisa/street/sidewalk/north,
+/area/centcom{
+	name = "\improper abandoned  TESTING ZONE"
+	})
 "FO" = (
 /obj/structure/machinery/door/airlock/almayer/generic{
 	damage_cap = 50000;
@@ -1002,9 +1947,29 @@
 	},
 /turf/open/floor/almayer/tcomms,
 /area/adminlevel/ert_station)
+"FR" = (
+/obj/effect/decal/hybrisa/road/lines3,
+/obj/effect/decal/hybrisa/road/lines1,
+/obj/effect/decal/hybrisa/road/road_edge{
+	icon_state = "road_edge_decal6"
+	},
+/turf/open/hybrisa/street/asphalt,
+/area/centcom{
+	name = "\improper abandoned  TESTING ZONE"
+	})
 "FT" = (
 /turf/open/floor/almayer/silver,
 /area/adminlevel/ert_station/shuttle_dispatch)
+"Gc" = (
+/obj/effect/decal/hybrisa/road/lines2,
+/obj/effect/decal/hybrisa/road/lines1,
+/obj/effect/decal/hybrisa/road/road_edge{
+	icon_state = "road_edge_decal4"
+	},
+/turf/open/hybrisa/street/asphalt,
+/area/centcom{
+	name = "\improper abandoned  TESTING ZONE"
+	})
 "Ge" = (
 /obj/structure/bed/chair{
 	dir = 4
@@ -1024,6 +1989,21 @@
 	},
 /turf/open/floor/almayer/sterile_green_side/southeast,
 /area/adminlevel/ert_station)
+"Gk" = (
+/obj/effect/decal/hybrisa/road/lines5{
+	pixel_y = 5
+	},
+/obj/effect/decal/hybrisa/road/road_edge{
+	icon_state = "road_edge_decal3"
+	},
+/obj/effect/decal/hybrisa/road/lines3,
+/obj/effect/decal/hybrisa/road/lines2{
+	pixel_y = -4
+	},
+/turf/open/hybrisa/street/asphalt,
+/area/centcom{
+	name = "\improper abandoned  TESTING ZONE"
+	})
 "Gm" = (
 /obj/effect/step_trigger/teleporter/random{
 	affect_ghosts = 1;
@@ -1064,6 +2044,14 @@
 /obj/item/reagent_container/food/condiment/saltshaker,
 /turf/open/floor/carpet,
 /area/adminlevel/ert_station)
+"Gw" = (
+/obj/effect/decal/hybrisa/road/lines1,
+/obj/effect/decal/hybrisa/dirt,
+/obj/effect/decal/hybrisa/dirt,
+/turf/open/hybrisa/street/asphalt,
+/area/centcom{
+	name = "\improper abandoned  TESTING ZONE"
+	})
 "GB" = (
 /turf/open/floor/almayer/silver/north,
 /area/adminlevel/ert_station)
@@ -1097,6 +2085,32 @@
 	},
 /turf/open/floor/almayer/dark_sterile,
 /area/adminlevel/ert_station)
+"GX" = (
+/obj/structure/prop/hybrisa/fakeplatforms/platform4/deco,
+/turf/open/hybrisa/street/sidewalkfull,
+/area/centcom{
+	name = "\improper abandoned  TESTING ZONE"
+	})
+"HC" = (
+/obj/item/tool/warning_cone{
+	pixel_x = -13;
+	pixel_y = 11
+	},
+/obj/structure/barricade/handrail/hybrisa/road/plastic/blue{
+	dir = 4
+	},
+/obj/item/tool/warning_cone{
+	pixel_y = 17
+	},
+/obj/item/tool/shovel,
+/obj/effect/decal/hybrisa/dirt,
+/obj/effect/decal/cleanable/dirt/alt_dirt{
+	color = "#140400"
+	},
+/turf/open/hybrisa/street/sidewalk/north,
+/area/centcom{
+	name = "\improper abandoned  TESTING ZONE"
+	})
 "HL" = (
 /obj/structure/sign/catclock{
 	pixel_x = 32
@@ -1123,6 +2137,16 @@
 	},
 /turf/open/floor/almayer/silver/west,
 /area/adminlevel/ert_station)
+"Ii" = (
+/obj/effect/decal/hybrisa/dirt,
+/obj/effect/decal/hybrisa/tiretrack{
+	dir = 8;
+	pixel_y = 12
+	},
+/turf/open/hybrisa/street/roadlines4,
+/area/centcom{
+	name = "\improper abandoned  TESTING ZONE"
+	})
 "Il" = (
 /obj/structure/machinery/bioprinter{
 	stored_metal = 1000
@@ -1168,6 +2192,17 @@
 "IR" = (
 /turf/closed/wall/r_wall/unmeltable,
 /area/adminlevel/simulation)
+"Jb" = (
+/turf/open/hybrisa/street/sidewalk/east,
+/area/centcom{
+	name = "\improper abandoned  TESTING ZONE"
+	})
+"Jd" = (
+/obj/structure/platform/metal/hybrisa/metalplatform6/east,
+/turf/open/hybrisa/street/sidewalkfull,
+/area/centcom{
+	name = "\improper abandoned  TESTING ZONE"
+	})
 "Jl" = (
 /obj/docking_port/stationary/emergency_response/idle_port5{
 	dwidth = 8
@@ -1183,6 +2218,14 @@
 "Jy" = (
 /turf/open/floor/almayer/orange/east,
 /area/adminlevel/ert_station)
+"JP" = (
+/obj/structure/prop/hybrisa/fakeplatforms/platform4/deco{
+	dir = 1
+	},
+/turf/open/hybrisa/street/sidewalkfull,
+/area/centcom{
+	name = "\improper abandoned  TESTING ZONE"
+	})
 "JT" = (
 /obj/structure/sink{
 	dir = 8;
@@ -1190,10 +2233,33 @@
 	},
 /turf/open/floor/almayer/dark_sterile,
 /area/adminlevel/ert_station)
+"JU" = (
+/obj/effect/decal/cleanable/blood/oil,
+/obj/effect/decal/hybrisa/doubleroad/lines3{
+	pixel_y = -4
+	},
+/obj/effect/decal/hybrisa/road/road_edge{
+	icon_state = "road_edge_decal7"
+	},
+/obj/effect/decal/hybrisa/road/corner{
+	dir = 4
+	},
+/obj/item/shard,
+/obj/effect/decal/hybrisa/road/lines2,
+/turf/open/hybrisa/street/asphalt,
+/area/centcom{
+	name = "\improper abandoned  TESTING ZONE"
+	})
 "JW" = (
 /obj/structure/machinery/cm_vending/sorted/walkman,
 /turf/open/floor/wood/ship,
 /area/adminlevel/ert_station)
+"Kd" = (
+/obj/item/stack/sheet/cardboard,
+/turf/open/hybrisa/street/sidewalk/south,
+/area/centcom{
+	name = "\improper abandoned  TESTING ZONE"
+	})
 "Kk" = (
 /turf/closed/wall/mineral/gold,
 /area/adminlevel/ert_station)
@@ -1212,6 +2278,11 @@
 	},
 /turf/open/floor/wood/ship,
 /area/adminlevel/ert_station)
+"KO" = (
+/turf/open/hybrisa/street/roadlines4,
+/area/centcom{
+	name = "\improper abandoned  TESTING ZONE"
+	})
 "KQ" = (
 /obj/structure/machinery/cm_vending/sorted/boozeomat,
 /turf/open/floor/wood/ship,
@@ -1229,12 +2300,28 @@
 /obj/effect/decal/cleanable/dirt,
 /turf/open/floor/almayer/silver/north,
 /area/adminlevel/ert_station/shuttle_dispatch)
+"Lr" = (
+/obj/effect/decal/hybrisa/dirt,
+/obj/structure/barricade/sandbags{
+	icon_state = "sandbag4"
+	},
+/obj/structure/barricade/handrail/hybrisa/road/plastic/blue,
+/turf/open/hybrisa/street/cement1,
+/area/centcom{
+	name = "\improper abandoned  TESTING ZONE"
+	})
 "Lt" = (
 /obj/structure/disposalpipe/segment{
 	dir = 2
 	},
 /turf/open/floor/almayer/greencorner,
 /area/adminlevel/ert_station)
+"Lu" = (
+/obj/effect/decal/hybrisa/dirt,
+/turf/open/hybrisa/street/sidewalk/west,
+/area/centcom{
+	name = "\improper abandoned  TESTING ZONE"
+	})
 "Ly" = (
 /obj/effect/decal/warning_stripes{
 	icon_state = "E"
@@ -1267,6 +2354,15 @@
 /obj/structure/sign/nosmoking_1,
 /turf/closed/wall/r_wall/unmeltable,
 /area/adminlevel/ert_station)
+"LG" = (
+/obj/effect/decal/hybrisa/road/lines2,
+/obj/effect/decal/hybrisa/road/road_edge{
+	icon_state = "road_edge_decal4"
+	},
+/turf/open/hybrisa/street/asphalt,
+/area/centcom{
+	name = "\improper abandoned  TESTING ZONE"
+	})
 "LH" = (
 /obj/item/trash/barcardine,
 /turf/open/floor/wood/ship,
@@ -1300,9 +2396,42 @@
 /obj/structure/sign/safety,
 /turf/closed/wall,
 /area/adminlevel/ert_station)
+"Mz" = (
+/obj/structure/platform/metal/stair_cut/hybrisa_metal_right,
+/obj/structure/stairs{
+	color = "#a6aeab";
+	dir = 4
+	},
+/turf/open/hybrisa/street/cement3,
+/area/centcom{
+	name = "\improper abandoned  TESTING ZONE"
+	})
 "MB" = (
 /turf/open/floor/almayer/silvercorner,
 /area/adminlevel/ert_station)
+"MD" = (
+/obj/effect/decal/hybrisa/road/lines5{
+	pixel_y = 5
+	},
+/obj/effect/decal/hybrisa/road/road_edge{
+	icon_state = "road_edge_decal3"
+	},
+/obj/effect/decal/hybrisa/road/lines3,
+/obj/effect/decal/hybrisa/road/lines2{
+	pixel_y = -4
+	},
+/obj/effect/decal/hybrisa/trash{
+	icon_state = "trash_5";
+	pixel_y = 12
+	},
+/obj/effect/decal/hybrisa/road/lines4{
+	pixel_y = 22;
+	pixel_x = 2
+	},
+/turf/open/hybrisa/street/asphalt,
+/area/centcom{
+	name = "\improper abandoned  TESTING ZONE"
+	})
 "MG" = (
 /obj/structure/machinery/disposal,
 /obj/structure/disposalpipe/trunk{
@@ -1323,6 +2452,18 @@
 	},
 /turf/open/floor/plating/plating_catwalk,
 /area/adminlevel/ert_station)
+"MX" = (
+/obj/effect/decal/hybrisa/road/road_edge{
+	icon_state = "road_edge_decal4"
+	},
+/obj/effect/decal/hybrisa/road/lines2,
+/obj/effect/decal/hybrisa/doubleroad/lines3{
+	pixel_y = -4
+	},
+/turf/open/hybrisa/street/asphalt,
+/area/centcom{
+	name = "\improper abandoned  TESTING ZONE"
+	})
 "Nc" = (
 /obj/effect/decal/warning_stripes{
 	icon_state = "SW-out";
@@ -1349,6 +2490,15 @@
 	},
 /turf/open/floor/wood/ship,
 /area/adminlevel/ert_station)
+"Nl" = (
+/obj/structure/stairs{
+	color = "#a6aeab";
+	dir = 1
+	},
+/turf/open/hybrisa/street/sidewalkfull,
+/area/centcom{
+	name = "\improper abandoned  TESTING ZONE"
+	})
 "Nt" = (
 /obj/structure/noticeboard{
 	desc = "It seems very, very empty.";
@@ -1364,6 +2514,18 @@
 	},
 /turf/open/floor/plating/plating_catwalk,
 /area/adminlevel/ert_station)
+"NA" = (
+/obj/effect/decal/hybrisa/road/road_edge{
+	icon_state = "road_edge_decal3"
+	},
+/obj/effect/decal/hybrisa/road/lines3,
+/obj/effect/decal/hybrisa/doubleroad/lines2{
+	pixel_y = 4
+	},
+/turf/open/hybrisa/street/asphalt,
+/area/centcom{
+	name = "\improper abandoned  TESTING ZONE"
+	})
 "NE" = (
 /obj/structure/machinery/disposal,
 /obj/structure/disposalpipe/trunk{
@@ -1371,10 +2533,25 @@
 	},
 /turf/open/floor/almayer/floor,
 /area/adminlevel/ert_station)
+"NF" = (
+/obj/item/trash/cigbutt{
+	pixel_x = -10;
+	pixel_y = 14
+	},
+/obj/item/stack/sheet/cardboard,
+/turf/open/hybrisa/street/cement3,
+/area/centcom{
+	name = "\improper abandoned  TESTING ZONE"
+	})
 "NH" = (
 /obj/structure/sign/nosmoking_2,
 /turf/closed/wall,
 /area/adminlevel/ert_station)
+"NO" = (
+/turf/open/hybrisa/street/sidewalk/south,
+/area/centcom{
+	name = "\improper abandoned  TESTING ZONE"
+	})
 "NZ" = (
 /turf/open/floor/carpet,
 /area/adminlevel/ert_station)
@@ -1397,6 +2574,33 @@
 "Oj" = (
 /turf/open/floor/almayer/plating_striped,
 /area/adminlevel/ert_station)
+"Oq" = (
+/obj/effect/decal/hybrisa/dirt,
+/obj/structure/largecrate,
+/obj/item/tool/crowbar,
+/turf/open/hybrisa/street/cement1,
+/area/centcom{
+	name = "\improper abandoned  TESTING ZONE"
+	})
+"Ov" = (
+/obj/effect/decal/hybrisa/road/lines5{
+	pixel_y = 5
+	},
+/obj/effect/decal/hybrisa/road/road_edge{
+	icon_state = "road_edge_decal3"
+	},
+/obj/effect/decal/hybrisa/road/lines3,
+/obj/effect/decal/hybrisa/road/lines2{
+	pixel_y = -4
+	},
+/obj/effect/decal/hybrisa/road/lines1{
+	pixel_y = 22;
+	pixel_x = -2
+	},
+/turf/open/hybrisa/street/asphalt,
+/area/centcom{
+	name = "\improper abandoned  TESTING ZONE"
+	})
 "OC" = (
 /obj/structure/sign/poster/hunk,
 /obj/structure/window/framed/colony/reinforced/hull,
@@ -1406,6 +2610,20 @@
 /obj/structure/machinery/vending/dinnerware,
 /turf/open/floor/wood/ship,
 /area/adminlevel/ert_station)
+"OE" = (
+/obj/effect/decal/hybrisa/road/lines2,
+/obj/effect/decal/cleanable/blood/oil,
+/obj/effect/decal/hybrisa/doubleroad/lines3{
+	pixel_y = -4
+	},
+/obj/effect/decal/hybrisa/road/road_edge{
+	icon_state = "road_edge_decal4"
+	},
+/obj/item/shard,
+/turf/open/hybrisa/street/asphalt,
+/area/centcom{
+	name = "\improper abandoned  TESTING ZONE"
+	})
 "OF" = (
 /obj/structure/sign/safety/maint,
 /turf/closed/wall,
@@ -1414,6 +2632,17 @@
 /obj/structure/reagent_dispensers/tank/water,
 /turf/open/floor/almayer/test_floor5,
 /area/adminlevel/ert_station)
+"OJ" = (
+/obj/item/tool/warning_cone{
+	pixel_x = -20
+	},
+/obj/structure/machinery/colony_floodlight/street{
+	pixel_y = 12
+	},
+/turf/open/hybrisa/street/sidewalk/south,
+/area/centcom{
+	name = "\improper abandoned  TESTING ZONE"
+	})
 "Po" = (
 /obj/structure/bed,
 /obj/item/bedsheet,
@@ -1428,6 +2657,11 @@
 "Pr" = (
 /turf/open/floor/almayer/silver/east,
 /area/adminlevel/ert_station)
+"Pu" = (
+/turf/open/hybrisa/street/sidewalkcenter/south,
+/area/centcom{
+	name = "\improper abandoned  TESTING ZONE"
+	})
 "PE" = (
 /turf/open/floor/engine,
 /area/adminlevel/simulation)
@@ -1466,6 +2700,17 @@
 "Qr" = (
 /turf/open/floor/almayer/floor,
 /area/adminlevel/ert_station)
+"Qw" = (
+/obj/effect/decal/hybrisa/dirt,
+/obj/effect/decal/hybrisa/trash{
+	dir = 4;
+	icon_state = "trash_11"
+	},
+/obj/item/trash/cigbutt,
+/turf/open/hybrisa/street/sidewalk/west,
+/area/centcom{
+	name = "\improper abandoned  TESTING ZONE"
+	})
 "Qz" = (
 /obj/item/prop/helmetgarb/rosary,
 /turf/open/floor/carpet,
@@ -1477,10 +2722,67 @@
 "QJ" = (
 /turf/open/floor/almayer/silver,
 /area/adminlevel/ert_station)
+"QW" = (
+/obj/effect/decal/hybrisa/road/road_edge{
+	icon_state = "road_edge_decal3"
+	},
+/obj/effect/decal/hybrisa/road/lines3,
+/obj/effect/decal/hybrisa/road/lines1,
+/turf/open/hybrisa/street/asphalt,
+/area/centcom{
+	name = "\improper abandoned  TESTING ZONE"
+	})
 "Rj" = (
 /obj/structure/window/framed/colony,
 /turf/open/floor/almayer/floor,
 /area/adminlevel/ert_station)
+"Rl" = (
+/obj/effect/decal/hybrisa/road/lines4,
+/obj/effect/decal/hybrisa/road/road_edge{
+	icon_state = "road_edge_decal11"
+	},
+/obj/effect/decal/hybrisa/road/lines3,
+/turf/open/hybrisa/street/asphalt,
+/area/centcom{
+	name = "\improper abandoned  TESTING ZONE"
+	})
+"Rn" = (
+/obj/effect/decal/hybrisa/dirt,
+/turf/open/hybrisa/street/sidewalkfull,
+/area/centcom{
+	name = "\improper abandoned  TESTING ZONE"
+	})
+"Rq" = (
+/obj/effect/decal/hybrisa/trash{
+	icon_state = "trash_6";
+	pixel_x = -8;
+	pixel_y = 12
+	},
+/turf/open/hybrisa/street/sidewalk/east,
+/area/centcom{
+	name = "\improper abandoned  TESTING ZONE"
+	})
+"Ru" = (
+/obj/effect/decal/hybrisa/road/road_edge{
+	icon_state = "road_edge_decal8"
+	},
+/obj/effect/decal/hybrisa/road/lines4,
+/turf/open/hybrisa/street/asphalt,
+/area/centcom{
+	name = "\improper abandoned  TESTING ZONE"
+	})
+"RC" = (
+/obj/effect/decal/hybrisa/road/road_edge{
+	icon_state = "road_edge_decal2"
+	},
+/obj/effect/decal/hybrisa/road/lines4,
+/obj/effect/decal/hybrisa/doubleroad/lines1{
+	pixel_x = -4
+	},
+/turf/open/hybrisa/street/asphalt,
+/area/centcom{
+	name = "\improper abandoned  TESTING ZONE"
+	})
 "RF" = (
 /turf/open/floor/almayer/sterile_green,
 /area/adminlevel/ert_station)
@@ -1499,6 +2801,16 @@
 	},
 /turf/open/floor/almayer/red/southeast,
 /area/adminlevel/ert_station)
+"RP" = (
+/obj/item/stack/rods{
+	pixel_y = 14
+	},
+/obj/item/shard,
+/obj/effect/decal/cleanable/blood/oil,
+/turf/open/hybrisa/street/sidewalkcenter/south,
+/area/centcom{
+	name = "\improper abandoned  TESTING ZONE"
+	})
 "RV" = (
 /obj/structure/closet{
 	name = "boxing attire"
@@ -1509,6 +2821,13 @@
 /obj/structure/machinery/cm_vending/sorted/boozeomat/chess,
 /turf/open/floor/wood/ship,
 /area/adminlevel/ert_station)
+"RY" = (
+/obj/effect/decal/hybrisa/road/lines1,
+/obj/effect/decal/hybrisa/dirt,
+/turf/open/hybrisa/street/asphalt,
+/area/centcom{
+	name = "\improper abandoned  TESTING ZONE"
+	})
 "Sk" = (
 /obj/structure/machinery/door/poddoor/almayer{
 	id = "ERT Lock Big";
@@ -1526,6 +2845,52 @@
 /obj/structure/machinery/newscaster/security_unit,
 /turf/closed/wall/r_wall/unmeltable,
 /area/adminlevel/ert_station)
+"Sx" = (
+/obj/structure/barricade/handrail/hybrisa/road/plastic/blue,
+/obj/item/clothing/head/hardhat{
+	pixel_x = 4;
+	pixel_y = 7
+	},
+/turf/open/hybrisa/street/cement1,
+/area/centcom{
+	name = "\improper abandoned  TESTING ZONE"
+	})
+"SK" = (
+/obj/structure/platform/metal/hybrisa/metalplatform6/west,
+/obj/structure/stairs{
+	color = "#a6aeab"
+	},
+/turf/open/hybrisa/street/cement3,
+/area/centcom{
+	name = "\improper abandoned  TESTING ZONE"
+	})
+"SS" = (
+/obj/structure/prop/ice_colony/surveying_device/measuring_device{
+	dir = 4;
+	layer = 5
+	},
+/obj/structure/prop/ice_colony/ground_wire{
+	dir = 8;
+	layer = 2
+	},
+/obj/structure/barricade/sandbags{
+	dir = 1;
+	icon_state = "sandbag_0";
+	pixel_y = 6
+	},
+/obj/structure/prop/ice_colony/ground_wire{
+	dir = 4;
+	layer = 2
+	},
+/obj/item/storage/pouch/construction,
+/obj/effect/decal/hybrisa/dirt,
+/obj/effect/decal/cleanable/dirt/alt_dirt{
+	color = "#140400"
+	},
+/turf/open/hybrisa/street/sidewalk/north,
+/area/centcom{
+	name = "\improper abandoned  TESTING ZONE"
+	})
 "ST" = (
 /obj/structure/machinery/door/airlock/almayer/medical/glass{
 	dir = 1;
@@ -1598,6 +2963,12 @@
 	},
 /turf/open/floor/almayer/floor,
 /area/adminlevel/ert_station/shuttle_dispatch)
+"TY" = (
+/obj/effect/decal/hybrisa/dirt,
+/turf/open/hybrisa/street/asphalt,
+/area/centcom{
+	name = "\improper abandoned  TESTING ZONE"
+	})
 "Ua" = (
 /obj/structure/machinery/cm_vending/gear/antag{
 	hacked = 1;
@@ -1623,6 +2994,13 @@
 "Ut" = (
 /turf/open/floor/almayer/greencorner/north,
 /area/adminlevel/ert_station)
+"Uy" = (
+/obj/effect/decal/hybrisa/dirt,
+/obj/effect/decal/hybrisa/dirt,
+/turf/open/floor/corsat/marked,
+/area/centcom{
+	name = "\improper abandoned  TESTING ZONE"
+	})
 "UI" = (
 /obj/structure/surface/table/gamblingtable,
 /obj/item/toy/deck{
@@ -1666,6 +3044,15 @@
 /obj/structure/sign/poster/clf,
 /turf/closed/wall,
 /area/adminlevel/ert_station)
+"VH" = (
+/obj/structure/barricade/handrail/hybrisa/road/metal/double{
+	dir = 4;
+	pixel_x = 16
+	},
+/turf/open/hybrisa/street/sidewalkcenter/west,
+/area/centcom{
+	name = "\improper abandoned  TESTING ZONE"
+	})
 "VI" = (
 /turf/open/floor/almayer/silvercorner,
 /area/adminlevel/ert_station/shuttle_dispatch)
@@ -1686,6 +3073,15 @@
 /obj/structure/machinery/medical_pod/sleeper,
 /turf/open/floor/almayer/dark_sterile,
 /area/adminlevel/ert_station)
+"VV" = (
+/obj/effect/decal/hybrisa/tiretrack{
+	dir = 8;
+	pixel_y = 12
+	},
+/turf/open/hybrisa/street/asphalt,
+/area/centcom{
+	name = "\improper abandoned  TESTING ZONE"
+	})
 "Wn" = (
 /turf/open/floor/almayer/silver/north,
 /area/adminlevel/ert_station/shuttle_dispatch)
@@ -1700,6 +3096,15 @@
 	},
 /turf/open/floor/plating/almayer,
 /area/adminlevel/ert_station)
+"Ws" = (
+/turf/closed/shuttle{
+	dir = 1;
+	icon_state = "pwall";
+	color = "black"
+	},
+/area/centcom{
+	name = "\improper abandoned  TESTING ZONE"
+	})
 "WA" = (
 /obj/effect/decal/warning_stripes{
 	icon_state = "E"
@@ -1707,6 +3112,21 @@
 /obj/effect/decal/cleanable/blood/oil,
 /turf/open/floor/plating/almayer,
 /area/adminlevel/ert_station/shuttle_dispatch)
+"WE" = (
+/obj/effect/decal/hybrisa/road/lines2,
+/obj/effect/decal/hybrisa/trash{
+	icon_state = "trash_2";
+	pixel_y = 12
+	},
+/obj/item/trash/cigbutt{
+	pixel_x = -10;
+	pixel_y = 14
+	},
+/obj/item/weapon/sword/fd_sword/timesword,
+/turf/open/hybrisa/street/asphalt,
+/area/centcom{
+	name = "\improper abandoned  TESTING ZONE"
+	})
 "WG" = (
 /obj/structure/bed/chair{
 	dir = 4
@@ -1717,6 +3137,16 @@
 /obj/structure/machinery/chem_storage,
 /turf/open/floor/almayer/mono,
 /area/centcom/control)
+"WJ" = (
+/obj/effect/decal/hybrisa/dirt,
+/obj/item/stack/rods{
+	pixel_y = 14
+	},
+/obj/item/shard,
+/turf/open/hybrisa/street/sidewalkcenter/south,
+/area/centcom{
+	name = "\improper abandoned  TESTING ZONE"
+	})
 "WK" = (
 /obj/structure/bed/chair{
 	dir = 8
@@ -1734,10 +3164,52 @@
 /obj/structure/machinery/vending/cigarette/wy,
 /turf/open/floor/wood/ship,
 /area/adminlevel/ert_station)
+"WS" = (
+/obj/effect/decal/hybrisa/road/lines2,
+/obj/effect/decal/hybrisa/road/lines1{
+	pixel_y = 22;
+	pixel_x = -2
+	},
+/turf/open/hybrisa/street/asphalt,
+/area/centcom{
+	name = "\improper abandoned  TESTING ZONE"
+	})
+"Xb" = (
+/obj/item/tool/warning_cone{
+	pixel_y = 17
+	},
+/turf/open/hybrisa/street/sidewalk/south,
+/area/centcom{
+	name = "\improper abandoned  TESTING ZONE"
+	})
 "Xi" = (
 /obj/structure/sign/poster/music,
 /turf/closed/wall,
 /area/adminlevel/ert_station)
+"Xm" = (
+/obj/effect/decal/hybrisa/road/road_edge{
+	icon_state = "road_edge_decal4"
+	},
+/obj/effect/decal/hybrisa/road/lines2,
+/obj/effect/decal/hybrisa/road/lines1,
+/turf/open/hybrisa/street/asphalt,
+/area/centcom{
+	name = "\improper abandoned  TESTING ZONE"
+	})
+"Xx" = (
+/obj/effect/decal/hybrisa/dirt,
+/obj/effect/decal/hybrisa/dirt,
+/obj/effect/decal/hybrisa/road/road_stop{
+	icon_state = "stop_decal3"
+	},
+/obj/effect/decal/hybrisa/tiretrack{
+	dir = 8;
+	pixel_y = 12
+	},
+/turf/open/hybrisa/street/asphalt,
+/area/centcom{
+	name = "\improper abandoned  TESTING ZONE"
+	})
 "XA" = (
 /obj/structure/surface/table/woodentable/fancy,
 /obj/item/reagent_container/food/snacks/pastatomato,
@@ -1757,6 +3229,13 @@
 	},
 /turf/open/floor/plating/plating_catwalk,
 /area/adminlevel/ert_station)
+"XJ" = (
+/obj/effect/decal/hybrisa/dirt,
+/obj/structure/cargo_container/hybrisa/containersextended/bluewywingsright,
+/turf/open/hybrisa/street/cement1,
+/area/centcom{
+	name = "\improper abandoned  TESTING ZONE"
+	})
 "XR" = (
 /turf/open/floor/almayer/sterile_green_side/southwest,
 /area/adminlevel/ert_station)
@@ -1807,6 +3286,13 @@
 	},
 /turf/open/floor/plating/plating_catwalk,
 /area/adminlevel/ert_station)
+"Zg" = (
+/obj/effect/decal/hybrisa/road/road_edge,
+/obj/effect/decal/hybrisa/road/lines1,
+/turf/open/hybrisa/street/asphalt,
+/area/centcom{
+	name = "\improper abandoned  TESTING ZONE"
+	})
 "Zh" = (
 /obj/structure/surface/table/reinforced/prison,
 /obj/item/storage/surgical_tray,
@@ -1859,6 +3345,12 @@
 	},
 /turf/open/floor/almayer/tcomms,
 /area/adminlevel/ert_station)
+"ZG" = (
+/obj/structure/platform/metal/hybrisa/metalplatform6/west,
+/turf/open/hybrisa/street/sidewalkfull,
+/area/centcom{
+	name = "\improper abandoned  TESTING ZONE"
+	})
 "ZI" = (
 /obj/structure/barricade/handrail,
 /turf/open/floor/plating/plating_catwalk,
@@ -1867,6 +3359,11 @@
 /obj/structure/reagent_dispensers/tank/fuel,
 /turf/open/floor/almayer/test_floor5,
 /area/adminlevel/ert_station)
+"ZL" = (
+/turf/open/hybrisa/street/sidewalk/north,
+/area/centcom{
+	name = "\improper abandoned  TESTING ZONE"
+	})
 "ZU" = (
 /obj/structure/bed/chair/comfy,
 /turf/open/floor/carpet,
@@ -2364,25 +3861,25 @@ aa
 aa
 aa
 aa
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
+aa
+aa
+aa
+aa
+aa
+aa
+aa
+aa
+aa
+aa
+aa
+aa
+aa
+aa
+aa
+aa
+aa
+aa
+aa
 as
 TT
 as
@@ -2516,25 +4013,25 @@ aa
 aa
 aa
 aa
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
+aa
+aa
+aa
+aa
+aa
+aa
+aa
+aa
+aa
+aa
+aa
+aa
+aa
+aa
+aa
+aa
+aa
+aa
+aa
 as
 TT
 as
@@ -2668,25 +4165,25 @@ aa
 aa
 aa
 aa
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
+Ws
+Ws
+Ws
+Ws
+Ws
+Ws
+Ws
+Ws
+Ws
+Ws
+Ws
+Ws
+Ws
+Ws
+Ws
+Ws
+Ws
+Ws
+Ws
 as
 TT
 as
@@ -2820,25 +4317,25 @@ aa
 aa
 aa
 aa
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
+Ws
+WS
+Ov
+ZL
+Kd
+ye
+gn
+RP
+ht
+ZL
+JP
+SK
+Qw
+pd
+NO
+BA
+BA
+BA
+Ws
 as
 TT
 as
@@ -2972,25 +4469,25 @@ aa
 aa
 aa
 aa
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
+Ws
+aL
+Gk
+lc
+dO
+OE
+gn
+WJ
+NA
+ZL
+GX
+nL
+Jb
+pd
+eC
+iy
+cP
+qA
+Ws
 as
 TT
 as
@@ -3124,25 +4621,25 @@ aa
 aa
 aa
 aa
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
+Ws
+Ej
+gU
+Uy
+zI
+JU
+AV
+Pu
+yp
+ZL
+si
+BA
+gq
+FG
+Fz
+BA
+nK
+WE
+Ws
 as
 TT
 as
@@ -3276,25 +4773,25 @@ aa
 aa
 aa
 aa
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
+Ws
+Ej
+pt
+zI
+zI
+aL
+ak
+Pu
+iW
+ZL
+pz
+es
+es
+vP
+jD
+es
+gl
+la
+Ws
 as
 TT
 as
@@ -3428,25 +4925,25 @@ aa
 aa
 aa
 aa
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
+Ws
+lx
+mH
+zI
+zI
+ii
+Xx
+lC
+iI
+qJ
+JP
+dh
+dh
+pX
+mI
+ZG
+pX
+kc
+Ws
 as
 TT
 as
@@ -3580,25 +5077,25 @@ aa
 aa
 aa
 aa
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
+Ws
+ok
+lu
+uU
+xx
+KO
+Ii
+KO
+KO
+lc
+Jb
+kj
+Jb
+kj
+Jb
+Jb
+vZ
+kj
+Ws
 as
 TT
 as
@@ -3730,27 +5227,27 @@ as
 as
 as
 as
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
+aa
+aa
+Ws
+pl
+MD
+ZL
+NO
+Gc
+RY
+Gw
+FR
+KO
+FF
+Zg
+rO
+rO
+rO
+rO
+Zg
+Fc
+Ws
 as
 TT
 as
@@ -3882,27 +5379,27 @@ as
 as
 as
 as
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
+aa
+aa
+Ws
+hM
+Rl
+ZL
+NO
+LG
+VV
+TY
+jC
+KO
+lA
+VH
+VH
+VH
+VH
+VH
+VH
+yY
+Ws
 as
 TT
 as
@@ -4034,27 +5531,27 @@ as
 as
 as
 as
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
+aa
+aa
+Ws
+kc
+Lu
+bV
+OJ
+LG
+VV
+Ej
+ma
+zs
+yi
+wd
+wd
+wd
+wd
+wd
+wd
+TY
+Ws
 as
 TT
 as
@@ -4186,27 +5683,27 @@ as
 as
 as
 as
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
+aa
+aa
+Ws
+qO
+uE
+gJ
+br
+mM
+zG
+zG
+lf
+KO
+hJ
+EH
+RC
+RC
+RC
+RC
+EH
+Ru
+Ws
 as
 TT
 as
@@ -4338,27 +5835,27 @@ as
 as
 as
 as
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
+aa
+aa
+Ws
+es
+DP
+ZL
+Fz
+KO
+ip
+KO
+KO
+uU
+yt
+kc
+kc
+kc
+kc
+kc
+xx
+zI
+Ws
 as
 TT
 as
@@ -4490,27 +5987,27 @@ as
 as
 as
 as
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
+aa
+aa
+Ws
+bO
+Oq
+HC
+Xb
+Xm
+Dz
+Dz
+QW
+ik
+GX
+aS
+aS
+eq
+GX
+Jd
+se
+aA
+Ws
 as
 TT
 as
@@ -4642,27 +6139,27 @@ as
 as
 as
 as
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
+aa
+aa
+Ws
+bO
+Sx
+cR
+zF
+yh
+CJ
+Pu
+ht
+sD
+lt
+es
+es
+Mz
+ct
+es
+es
+Eh
+Ws
 as
 TT
 as
@@ -4794,27 +6291,27 @@ as
 as
 as
 as
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
+aa
+aa
+Ws
+EF
+Lr
+nh
+zF
+MX
+CJ
+Pu
+NA
+ZL
+si
+BA
+gq
+ZL
+NO
+ud
+xY
+Nl
+Ws
 as
 TT
 as
@@ -4946,27 +6443,27 @@ as
 as
 as
 as
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
+aa
+aa
+Ws
+EF
+CL
+iM
+zF
+MX
+CJ
+Pu
+NA
+ZL
+mI
+SK
+Lu
+Rn
+NO
+pO
+oh
+oK
+Ws
 as
 TT
 as
@@ -5098,27 +6595,27 @@ as
 as
 as
 as
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
+aa
+aa
+Ws
+bO
+XJ
+SS
+kf
+MX
+wm
+Pu
+NA
+bS
+nN
+zE
+kO
+Rq
+Dg
+NF
+oh
+no
+Ws
 as
 TT
 as
@@ -5250,27 +6747,27 @@ as
 as
 as
 as
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
+aa
+aa
+Ws
+Ws
+Ws
+Ws
+Ws
+Ws
+Ws
+Ws
+Ws
+Ws
+Ws
+Ws
+Ws
+Ws
+Ws
+Ws
+Ws
+Ws
+Ws
 as
 TT
 as
@@ -5403,26 +6900,26 @@ as
 as
 as
 as
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
+aa
+aa
+aa
+aa
+aa
+aa
+aa
+aa
+aa
+aa
+aa
+aa
+aa
+aa
+aa
+aa
+aa
+aa
+aa
+aa
 as
 TT
 as
@@ -5555,26 +7052,26 @@ as
 as
 as
 as
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
-as
+aa
+aa
+aa
+aa
+aa
+aa
+aa
+aa
+aa
+aa
+aa
+aa
+aa
+aa
+aa
+aa
+aa
+aa
+aa
+aa
 as
 TT
 as

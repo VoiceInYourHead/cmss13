@@ -21,11 +21,6 @@
 	if(SSticker?.mode?.hardcore)
 		hardcore = TRUE //For WO disposing of corpses
 
-	var/list/techs = swords_technique.Copy()
-	swords_technique.Cut()
-	for(var/tech in techs)
-		new tech(src)
-
 /mob/living/carbon/human/initialize_pass_flags(datum/pass_flags_container/PF)
 	..()
 	if (PF)

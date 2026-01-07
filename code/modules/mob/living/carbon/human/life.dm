@@ -87,6 +87,9 @@
 	if(!client && !mind && species)
 		species.handle_npc(src)
 
+	if(!sword_combat_active && sword_usage_current > 0)
+		sword_usage_current -= 1
+
 /mob/living/carbon/human/set_stat(new_stat)
 	. = ..()
 	// Temporarily force triggering HUD updates so they apply immediately rather than on Life tick.

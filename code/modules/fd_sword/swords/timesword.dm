@@ -1,0 +1,277 @@
+/atom
+	var/deplaced = FALSE
+
+/atom/MouseEntered(location, control, params)
+	. = ..()
+	if(deplaced)
+		var/mob/M = usr
+		M.play_screen_text(text = "ТЫ ПОМНИШЬ, ЧТО ЗДЕСЬ ЧТО-ТО БЫЛО...", alert_type = /atom/movable/screen/text/screen_text/command_order, override_color = "#ff0000")
+
+/obj/item/weapon/sword/fd_sword/timesword
+	techniques = list(/datum/sword_tech/timesword)
+
+/obj/effect/fd_sword/timeaoe
+	name = "ЧАС РАСПЛАТЫ"
+
+	icon = 'code/modules/fd_sword/icons/160x160.dmi'
+	icon_state = "time"
+
+	anchored = TRUE
+	layer = ABOVE_MOB_LAYER
+	pixel_x = -64
+	pixel_y = -64
+
+/obj/effect/fd_sword/timeaoe/Initialize(mapload, ...)
+	. = ..()
+	spawn(1 SECONDS)
+		animate(src, alpha = 0, time = 1 SECONDS)
+	spawn(2 SECONDS)
+		qdel(src)
+
+/obj/effect/fd_sword/timeanchor
+	name = "ВРЕМЕННОЙ ЯКОРЬ"
+
+	icon = 'code/modules/fd_sword/icons/visuals.dmi'
+	icon_state = "foul"
+
+	anchored = TRUE
+	alpha = 0
+
+/obj/effect/fd_sword/timeanchor/Initialize(mapload, ...)
+	. = ..()
+	animate(src, alpha = 255, time = 1 SECONDS)
+
+/obj/effect/fd_sword/timeanchor/proc/timecurse(mob/living/M)
+	M.add_filter("timestopped", 1, list("type" = "blur", "size" = 1))
+
+	M.anchored = TRUE
+	ADD_TRAIT(M, TRAIT_IMMOBILIZED, TIMECURSE_TRAIT)
+	ADD_TRAIT(M, TRAIT_UNDENSE, TIMECURSE_TRAIT)
+
+	addtimer(CALLBACK(M, TYPE_PROC_REF(/mob/living, reset_timeanchor)), 4 SECONDS)
+
+/mob/living/proc/reset_timeanchor()
+
+	anchored = FALSE
+	REMOVE_TRAIT(src, TRAIT_IMMOBILIZED, TIMECURSE_TRAIT)
+	REMOVE_TRAIT(src, TRAIT_UNDENSE, TIMECURSE_TRAIT)
+
+	remove_filter("timestopped", 1, list("type" = "blur", "size" = 1))
+
+/obj/effect/fd_sword/time_telegraph
+	name = "ТЕЛЕГРАФИЯ"
+
+	icon = 'code/modules/fd_sword/icons/visuals.dmi'
+	icon_state = "summoning"
+
+	anchored = TRUE
+	mouse_opacity = FALSE
+	layer = ABOVE_MOB_LAYER
+
+/obj/effect/fd_sword/time_telegraph/Initialize(mapload, ...)
+	. = ..()
+	animate(src, alpha = 0, time = 1 SECONDS)
+	spawn(1 SECONDS)
+		qdel(src)
+
+/obj/effect/fd_sword/anchored
+	icon = 'code/modules/fd_sword/icons/visuals.dmi'
+	icon_state = "restrained"
+
+	anchored = TRUE
+	mouse_opacity = FALSE
+	alpha = 0
+	layer = BELOW_MOB_LAYER
+
+/obj/effect/fd_sword/anchored/Initialize(mapload, ...)
+	. = ..()
+	animate(src, alpha = 255, time = 0.5 SECONDS, flags = ANIMATION_PARALLEL)
+	animate(src, pixel_y = 48, time = 0.5 SECONDS, easing = SINE_EASING|EASE_OUT, flags = ANIMATION_PARALLEL)
+
+	spawn(0.5 SECONDS)
+		animate(src, alpha = 0, time = 0.5 SECONDS)
+
+	spawn(1 SECONDS)
+		qdel(src)
+
+/obj/effect/fd_sword/time_teleport
+	name = "ТЕЛЕПОРТАЦИЯ"
+
+	icon = 'code/modules/fd_sword/icons/visuals.dmi'
+	icon_state = "rune_blind"
+
+	anchored = TRUE
+	mouse_opacity = FALSE
+	layer = ABOVE_MOB_LAYER
+
+/obj/effect/fd_sword/time_teleport/Initialize(mapload, ...)
+	. = ..()
+	spawn(1 SECONDS)
+		qdel(src)
+
+// Q - ставит якорь в текущей локации игрока, перемещает его на него спустя 5 секунд, восстанавливая всё хп
+// E - запускает волну по прямой линии. Все, кто в ней оказываются - подвержены тому же эффекту, что и в Q
+// R - все в радиусе замирают
+
+/datum/sword_tech/timesword
+	name = "ТЕХНИКА: Время"
+
+	traverse_ability_cooldown = 30 SECONDS
+	traverse_ability_cost = 2
+	traverse_ability_charges = 3
+
+	ranged_ability_cooldown = 10 SECONDS
+	ranged_ability_charges = 2
+	var/ranged_ability_range = 4
+
+	aoe_ability_cooldown = 1 MINUTES
+	var/time_fragments = 0
+
+	targeted_ability_cooldown = 3 SECONDS
+	targeted_ability_cost = 0
+
+/datum/sword_tech/timesword/use_traverse_ability()
+	time_fragments -= 1
+	create_new_anchor(connected_weapon.new_soul)
+
+/datum/sword_tech/timesword/proc/create_new_anchor(mob/living/anchored)
+	var/teleport_to = new /obj/effect/fd_sword/timeanchor(get_turf(anchored))
+	new /obj/effect/fd_sword/time_telegraph(get_turf(teleport_to))
+
+	addtimer(CALLBACK(src, PROC_REF(backintime), teleport_to, anchored), 5 SECONDS)
+
+/datum/sword_tech/timesword/proc/backintime(obj/anchor, mob/living/traveler)
+
+	if(traveler == connected_weapon.new_soul)
+
+		connected_weapon.new_soul.anchored = TRUE
+		ADD_TRAIT(connected_weapon.new_soul, TRAIT_IMMOBILIZED, TIMECURSE_TRAIT)
+		ADD_TRAIT(connected_weapon.new_soul, TRAIT_UNDENSE, TIMECURSE_TRAIT)
+
+		new /obj/effect/fd_sword/time_teleport(get_turf(anchor))
+		animate(connected_weapon.new_soul, alpha = 0, time = 1 SECONDS)
+
+		spawn(1 SECONDS)
+
+			connected_weapon.new_soul.anchored = FALSE
+			REMOVE_TRAIT(connected_weapon.new_soul, TRAIT_IMMOBILIZED, TIMECURSE_TRAIT)
+			REMOVE_TRAIT(connected_weapon.new_soul, TRAIT_UNDENSE, TIMECURSE_TRAIT)
+
+			traveler.forceMove(get_turf(anchor))
+			traveler.rejuvenate()
+			animate(connected_weapon.new_soul, alpha = 255, time = 1 SECONDS)
+
+			if(!connected_weapon.new_soul.is_holding(connected_weapon))
+
+				if(!connected_weapon.new_soul.r_hand)
+					connected_weapon.new_soul.put_in_r_hand(connected_weapon)
+
+				else
+					if(!connected_weapon.new_soul.l_hand)
+						connected_weapon.new_soul.put_in_l_hand(connected_weapon)
+
+	else
+		traveler.throw_atom(anchor, get_dist(anchor, traveler)+5, SPEED_VERY_FAST, src, TRUE, HIGH_LAUNCH, PASS_ALL)
+		if(istype(anchor, /obj/effect/fd_sword/timeanchor))
+			var/obj/effect/fd_sword/timeanchor/T = anchor
+
+			T.timecurse(traveler)
+
+	animate(anchor, alpha = 0, time = 1 SECONDS)
+	spawn(1.5 SECONDS)
+		qdel(anchor)
+
+/datum/sword_tech/timesword/use_ranged_ability()
+	var/final_ability_range = ranged_ability_range + tech_level
+	var/turf/ending = get_ranged_target_turf(connected_weapon.new_soul, connected_weapon.new_soul.dir, final_ability_range)
+	var/list/affected_turfs = list()
+
+	for(var/turf/T in get_line(connected_weapon.new_soul, ending))
+		if(T == get_turf(connected_weapon.new_soul))
+			continue
+		affected_turfs += T
+
+	for(var/turf/T in affected_turfs)
+		new /obj/effect/fd_sword/time_telegraph(T)
+		for(var/mob/living/N in T)
+			new /obj/effect/fd_sword/anchored(get_turf(N))
+
+			time_fragments += 2
+			create_new_anchor(N)
+
+	var/reverse_facing = get_dir(ending, connected_weapon.new_soul)
+
+	new /obj/effect/fd_sword/hit_effect(get_turf(connected_weapon.new_soul))
+	connected_weapon.new_soul.animation_attack_on(ending)
+
+	connected_weapon.new_soul.throw_atom(get_edge_target_turf(connected_weapon.new_soul, reverse_facing), 1, SPEED_AVERAGE, src, FALSE)
+	connected_weapon.new_soul.face_atom(ending)
+
+/datum/sword_tech/timesword/use_aoe_ability()
+	var/aoe_area = 2 + tech_level
+
+	if(time_fragments >= 10)
+		time_fragments -= 10
+
+		connected_weapon.new_soul.anchored = TRUE
+		ADD_TRAIT(connected_weapon.new_soul, TRAIT_IMMOBILIZED, TIMECURSE_TRAIT)
+		ADD_TRAIT(connected_weapon.new_soul, TRAIT_UNDENSE, TIMECURSE_TRAIT)
+
+		animate(connected_weapon.new_soul, pixel_z = 64, time = 1 SECONDS, easing = SINE_EASING|EASE_OUT)
+		for(var/turf/T in orange(aoe_area, connected_weapon.new_soul))
+			new /obj/effect/fd_sword/time_telegraph(T)
+
+		spawn(1 SECONDS)
+			new /obj/effect/fd_sword/timeaoe(get_turf(connected_weapon.new_soul))
+			animate(connected_weapon.new_soul, pixel_z = 0, time = 0.5 SECONDS, easing = SINE_EASING|EASE_OUT)
+
+			connected_weapon.new_soul.anchored = FALSE
+			REMOVE_TRAIT(connected_weapon.new_soul, TRAIT_IMMOBILIZED, TIMECURSE_TRAIT)
+			REMOVE_TRAIT(connected_weapon.new_soul, TRAIT_UNDENSE, TIMECURSE_TRAIT)
+
+			for(var/mob/living/M in orange(aoe_area, connected_weapon.new_soul))
+
+				if(M == connected_weapon.new_soul)
+					continue
+
+				M.add_filter("timestopped", 1, list("type" = "blur", "size" = 1))
+
+				M.anchored = TRUE
+				ADD_TRAIT(M, TRAIT_IMMOBILIZED, TIMECURSE_TRAIT)
+				ADD_TRAIT(M, TRAIT_UNDENSE, TIMECURSE_TRAIT)
+
+				addtimer(CALLBACK(M, TYPE_PROC_REF(/mob/living, reset_timeanchor)), 10 SECONDS)
+
+/datum/sword_tech/timesword/use_targeted_ability(atom/target)
+
+	if(istype(target, /mob/living))
+		if(target != connected_weapon.new_soul)
+			time_fragments += 1
+
+	if(istype(target, /obj/) && target != connected_weapon)
+		var/obj/O = target
+
+		if(!connected_weapon.new_soul.get_active_hand())
+			if(time_fragments > 0)
+
+				new /obj/effect/fd_sword/targeted_ability(get_turf(O))
+
+				if(!O.deplaced)
+					animate(O, alpha = 100, time = 1 SECONDS)
+					O.add_filter("timestopped", 1, list("type" = "blur", "size" = 1))
+
+					O.density = FALSE
+					O.anchored = TRUE
+					O.deplaced = TRUE
+
+					time_fragments -= 1
+					targeted_ability_cost += 1
+				else
+					animate(O, alpha = 255, time = 1 SECONDS)
+					O.remove_filter("timestopped", 1, list("type" = "blur", "size" = 1))
+
+					O.density = initial(O.density)
+					O.anchored = initial(O.anchored)
+					O.deplaced = FALSE
+
+					time_fragments -= 1
