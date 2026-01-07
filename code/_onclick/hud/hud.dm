@@ -162,6 +162,15 @@
 	gun_move_icon = null
 	gun_run_icon = null
 
+	sword_info = null
+	sword_usage_stat = null
+	sword_limit_stat = null
+
+	traverse_info = null
+	ranged_info = null
+	aoe_info = null
+	targeted_info = null
+
 	QDEL_LIST_ASSOC_VAL(plane_masters)
 	QDEL_LIST_ASSOC_VAL(plane_master_controllers)
 

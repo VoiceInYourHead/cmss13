@@ -1,3 +1,245 @@
+#define SPAN_STYLE(style, X) "<span style=\"[style]\">[X]</span>"
+#define SPAN_COLOR(color, text) SPAN_STYLE("color: [color]", "[text]")
+#define SPAN_SIZE(size, text) SPAN_STYLE("font-size: [size]", "[text]")
+#define FONT_NORMAL(X) SPAN_SIZE("13px", "[X]")
+#define FONT_LARGE(X) SPAN_SIZE("16px", "[X]")
+
+//// HUD ////
+/datum/hud
+	var/atom/movable/screen/sword_info/sword_info
+
+	var/atom/movable/screen/sword_info/traverse_info/traverse_info
+	var/atom/movable/screen/sword_info/ranged_info/ranged_info
+	var/atom/movable/screen/sword_info/aoe_info/aoe_info
+	var/atom/movable/screen/sword_info/targeted_info/targeted_info
+
+	var/atom/movable/screen/sword_usage_stat/sword_usage_stat
+	var/atom/movable/screen/sword_limit_stat/sword_limit_stat
+
+/datum/hud/human/proc/draw_sword_info(datum/custom_hud/ui_datum)
+	sword_info = new /atom/movable/screen/sword_info()
+	sword_info.icon = ui_datum.ui_style_icon
+	sword_info.screen_loc = "CENTER,CENTER"
+	infodisplay += sword_info
+
+/datum/hud/human/proc/traverse_info(datum/custom_hud/ui_datum)
+	traverse_info = new /atom/movable/screen/sword_info/traverse_info()
+	traverse_info.icon = ui_datum.ui_style_icon
+	traverse_info.screen_loc = "CENTER,CENTER"
+	infodisplay += traverse_info
+
+/datum/hud/human/proc/ranged_info(datum/custom_hud/ui_datum)
+	ranged_info = new /atom/movable/screen/sword_info/ranged_info()
+	ranged_info.icon = ui_datum.ui_style_icon
+	ranged_info.screen_loc = "CENTER,CENTER"
+	infodisplay += ranged_info
+
+/datum/hud/human/proc/aoe_info(datum/custom_hud/ui_datum)
+	aoe_info = new /atom/movable/screen/sword_info/aoe_info()
+	aoe_info.icon = ui_datum.ui_style_icon
+	aoe_info.screen_loc = "CENTER,CENTER"
+	infodisplay += aoe_info
+
+/datum/hud/human/proc/targeted_info(datum/custom_hud/ui_datum)
+	targeted_info = new /atom/movable/screen/sword_info/targeted_info()
+	targeted_info.icon = ui_datum.ui_style_icon
+	targeted_info.screen_loc = "CENTER,CENTER"
+	infodisplay += targeted_info
+
+/atom/movable/screen/sword_info
+	name = "technique info"
+	icon_state = "info_dump"
+	alpha = 0
+	mouse_opacity = FALSE
+	var/mother_button = TRUE
+	var/hide = FALSE
+
+/atom/movable/screen/sword_info/proc/change_visibility(mob/living/carbon/human/user)
+
+	if(mother_button)
+		if(user && user.hud_used && user.sword_combat_active)
+			mouse_opacity = TRUE
+			animate(src, alpha = 255, time = 0.5 SECONDS)
+			return 1
+		if(user && user.hud_used && !user.sword_combat_active)
+			mouse_opacity = FALSE
+			animate(src, alpha = 0, time = 0.5 SECONDS)
+			return 1
+
+	if(!mother_button)
+		if(user && user.hud_used)
+			if(!user.sword_combat_active)
+				mouse_opacity = FALSE
+				hide = TRUE
+				animate(src, alpha = 0, time = 0.5 SECONDS)
+				return 1
+			if(hide)
+				mouse_opacity = TRUE
+				hide = FALSE
+				animate(src, alpha = 255, time = 0.5 SECONDS)
+				return 1
+			if(!hide)
+				mouse_opacity = FALSE
+				hide = TRUE
+				animate(src, alpha = 0, time = 0.5 SECONDS)
+				return 1
+
+/atom/movable/screen/sword_info/clicked(mob/living/carbon/human/user)
+	if (..())
+		return 1
+
+	if(user && user.hud_used && user.sword_combat_active)
+		if(mother_button)
+			user.hud_used.traverse_info.change_visibility(user)
+			user.hud_used.ranged_info.change_visibility(user)
+			user.hud_used.aoe_info.change_visibility(user)
+			user.hud_used.targeted_info.change_visibility(user)
+			return 1
+
+/atom/movable/screen/sword_info/traverse_info
+	name = "traverse technique info"
+	icon_state = "info_traverse"
+	alpha = 0
+	mother_button = FALSE
+	hide = TRUE
+
+/atom/movable/screen/sword_info/traverse_info/MouseEntered(location, control, params)
+	. = ..()
+	var/mob/living/carbon/human/user = usr
+
+	var/content_of_tooltip = get_additional_info(user)
+	openToolTip(user = usr, tip_src = src, params = params, title = name, content = content_of_tooltip)
+
+/atom/movable/screen/sword_info/traverse_info/proc/get_additional_info(mob/living/carbon/human/user)
+	var/list/info = list()
+
+	info += FONT_LARGE("[SPAN_COLOR("#ffffff","[user.current_active_technique.traverse_ability_name]")]")
+	info += FONT_NORMAL("<li>[user.current_active_technique.traverse_ability_desc]</li>")
+
+	return jointext(info, "")
+
+/atom/movable/screen/sword_info/ranged_info
+	name = "ranged technique info"
+	icon_state = "info_ranged"
+	alpha = 0
+	mother_button = FALSE
+	hide = TRUE
+
+/atom/movable/screen/sword_info/ranged_info/MouseEntered(location, control, params)
+	. = ..()
+	var/mob/living/carbon/human/user = usr
+
+	var/content_of_tooltip = get_additional_info(user)
+	openToolTip(user = usr, tip_src = src, params = params, title = name, content = content_of_tooltip)
+
+/atom/movable/screen/sword_info/ranged_info/proc/get_additional_info(mob/living/carbon/human/user)
+	var/list/info = list()
+
+	info += FONT_LARGE("[SPAN_COLOR("#ffffff","[user.current_active_technique.ranged_ability_name]")]")
+	info += FONT_NORMAL("<li>[user.current_active_technique.ranged_ability_desc]</li>")
+
+	return jointext(info, "")
+
+/atom/movable/screen/sword_info/aoe_info
+	name = "aoe technique info"
+	icon_state = "info_aoe"
+	alpha = 0
+	mother_button = FALSE
+	hide = TRUE
+
+/atom/movable/screen/sword_info/aoe_info/MouseEntered(location, control, params)
+	. = ..()
+	var/mob/living/carbon/human/user = usr
+
+	var/content_of_tooltip = get_additional_info(user)
+	openToolTip(user = usr, tip_src = src, params = params, title = name, content = content_of_tooltip)
+
+/atom/movable/screen/sword_info/aoe_info/proc/get_additional_info(mob/living/carbon/human/user)
+	var/list/info = list()
+
+	info += FONT_LARGE("[SPAN_COLOR("#ffffff","[user.current_active_technique.aoe_ability_name]")]")
+	info += FONT_NORMAL("<li>[user.current_active_technique.aoe_ability_desc]</li>")
+
+	return jointext(info, "")
+
+/atom/movable/screen/sword_info/targeted_info
+	name = "targeted technique info"
+	icon_state = "info_targeted"
+	alpha = 0
+	mother_button = FALSE
+	hide = TRUE
+
+/atom/movable/screen/sword_info/targeted_info/MouseEntered(location, control, params)
+	. = ..()
+	var/mob/living/carbon/human/user = usr
+
+	var/content_of_tooltip = get_additional_info(user)
+	openToolTip(user = usr, tip_src = src, params = params, title = name, content = content_of_tooltip)
+
+/atom/movable/screen/sword_info/targeted_info/proc/get_additional_info(mob/living/carbon/human/user)
+	var/list/info = list()
+
+	info += FONT_LARGE("[SPAN_COLOR("#ffffff","[user.current_active_technique.targeted_ability_name]")]")
+	info += FONT_NORMAL("<li>[user.current_active_technique.targeted_ability_desc]</li>")
+
+	return jointext(info, "")
+
+/datum/hud/human/proc/draw_sword_usage_stat(datum/custom_hud/ui_datum)
+	sword_usage_stat = new /atom/movable/screen/sword_usage_stat()
+	sword_usage_stat.icon = ui_datum.ui_style_icon
+	sword_usage_stat.screen_loc = "CENTER,CENTER"
+	infodisplay += sword_usage_stat
+
+/atom/movable/screen/sword_usage_stat
+	name = "current usage"
+	icon_state = "usage_0"
+	alpha = 0
+	mouse_opacity = FALSE
+
+/atom/movable/screen/sword_usage_stat/proc/update_stat(mob/living/carbon/human/user)
+	if(user && user.hud_used && user.sword_combat_active)
+		if(user.sword_usage_current > 10)
+			icon_state = "usage_10"
+		else
+			icon_state = "usage_[user.sword_usage_current]"
+
+		animate(src, alpha = 255, time = 0.5 SECONDS, flags = ANIMATION_PARALLEL)
+		animate(src, pixel_x = 19, time = 0.5 SECONDS, easing = SINE_EASING|EASE_OUT, flags = ANIMATION_PARALLEL)
+
+		addtimer(CALLBACK(src, PROC_REF(hide_stat)), 5 SECONDS)
+
+/atom/movable/screen/sword_usage_stat/proc/hide_stat()
+	animate(src, alpha = 0, time = 0.5 SECONDS, flags = ANIMATION_PARALLEL)
+	animate(src, pixel_x = 0, time = 0.5 SECONDS, easing = SINE_EASING|EASE_IN, flags = ANIMATION_PARALLEL)
+
+/datum/hud/human/proc/draw_sword_limit_stat(datum/custom_hud/ui_datum)
+	sword_limit_stat = new /atom/movable/screen/sword_limit_stat()
+	sword_limit_stat.icon = ui_datum.ui_style_icon
+	sword_limit_stat.screen_loc = "CENTER,CENTER"
+	infodisplay += sword_limit_stat
+
+/atom/movable/screen/sword_limit_stat
+	name = "usage limit"
+	icon_state = "usage_cap_10"
+	alpha = 0
+	mouse_opacity = FALSE
+
+/atom/movable/screen/sword_limit_stat/proc/update_stat(mob/living/carbon/human/user)
+	if(user && user.hud_used && user.sword_combat_active)
+		if(user.sword_usage_limit < 0)
+			icon_state = "usage_cap_0"
+		else
+			icon_state = "usage_cap_[user.sword_usage_limit]"
+
+		animate(src, alpha = 255, time = 0.5 SECONDS, flags = ANIMATION_PARALLEL)
+		animate(src, pixel_x = 19, time = 0.5 SECONDS, easing = SINE_EASING|EASE_OUT, flags = ANIMATION_PARALLEL)
+
+		addtimer(CALLBACK(src, PROC_REF(hide_stat)), 5 SECONDS)
+
+/atom/movable/screen/sword_limit_stat/proc/hide_stat()
+	animate(src, alpha = 0, time = 0.5 SECONDS, flags = ANIMATION_PARALLEL)
+	animate(src, pixel_x = 0, time = 0.5 SECONDS, easing = SINE_EASING|EASE_IN, flags = ANIMATION_PARALLEL)
+
 //// SWORD ////
 
 /obj/effect/fd_sword/targeted_ability
@@ -89,15 +331,16 @@
 
 /obj/item/weapon/sword/fd_sword/process()
 
-	if(new_soul.sword_combat_active && new_soul.current_active_technique == technique_attached)
+	if(new_soul)
+		if(new_soul.sword_combat_active && new_soul.current_active_technique == technique_attached)
 
-		var/pre_overcharge = new_soul.sword_usage_limit - 2
-		if(new_soul.sword_usage_current >= pre_overcharge && !new_soul.danger_zone_reached)
-			new_soul.danger_zone_reached = TRUE
-			new /obj/effect/fd_sword/sanity_effect/full(get_turf(new_soul))
+			var/pre_overcharge = new_soul.sword_usage_limit - 2
+			if(new_soul.sword_usage_current >= pre_overcharge && !new_soul.danger_zone_reached)
+				new_soul.danger_zone_reached = TRUE
+				new /obj/effect/fd_sword/sanity_effect/full(get_turf(new_soul))
 
-		if(new_soul.sword_usage_current > new_soul.sword_usage_limit && !new_soul.overcharged)
-			trigger_overcharge()
+			if(new_soul.sword_usage_current > new_soul.sword_usage_limit && !new_soul.overcharged)
+				trigger_overcharge()
 
 /obj/item/weapon/sword/fd_sword/attack(mob/target, mob/user)
 	. = ..()
@@ -134,6 +377,9 @@
 	new_soul.reagents.del_reagent("speed_stimulant")
 	new_soul.reagents.del_reagent("brain_stimulant")
 
+	new_soul.hud_used.sword_usage_stat.update_stat(new_soul)
+	new_soul.hud_used.sword_limit_stat.update_stat(new_soul)
+
 	technique_attached.overcharge_debuffs()
 
 /obj/item/weapon/sword/fd_sword/dropped(mob/user)
@@ -162,6 +408,8 @@
 		if(isnull(new_soul))
 			new_soul = soul
 
+		soul.hud_used.sword_info.change_visibility(soul)
+
 		return TRUE
 
 	if(awakend)
@@ -170,6 +418,12 @@
 
 		soul.current_active_technique = null
 		soul.sword_combat_active = FALSE
+
+		soul.hud_used.sword_info.change_visibility(soul)
+		soul.hud_used.traverse_info.change_visibility(soul)
+		soul.hud_used.ranged_info.change_visibility(soul)
+		soul.hud_used.aoe_info.change_visibility(soul)
+		soul.hud_used.targeted_info.change_visibility(soul)
 
 		return TRUE
 
@@ -198,20 +452,32 @@
 	var/traverse_ability_cost = 1
 	var/traverse_ability_charges = -1
 
+	var/traverse_ability_name = "ПЕРЕДВИЖЕНИЕ"
+	var/traverse_ability_desc = "Описание"
+
 	var/ranged_ability_cooldown = 0 // E keybind
 	var/ranged_ability_ready = TRUE
 	var/ranged_ability_cost = 1
 	var/ranged_ability_charges = -1
+
+	var/ranged_ability_name = "ДИСТАНЦИОННОЕ"
+	var/ranged_ability_desc = "Описание"
 
 	var/aoe_ability_cooldown = 0 // Shift+E keybind
 	var/aoe_ability_ready = TRUE
 	var/aoe_ability_cost = 1
 	var/aoe_ability_charges = -1
 
+	var/aoe_ability_name = "МАССОВОЕ"
+	var/aoe_ability_desc = "Описание"
+
 	var/targeted_ability_cooldown = 0 // LMB по объектам
 	var/targeted_ability_ready = TRUE
 	var/targeted_ability_cost = 1
 	var/targeted_ability_charges = -1
+
+	var/targeted_ability_name = "НАПРАВЛЕННОЕ"
+	var/targeted_ability_desc = "Описание"
 
 	var/obj/item/weapon/sword/fd_sword/connected_weapon
 
@@ -240,6 +506,9 @@
 		return FALSE
 
 	connected_weapon.new_soul.sword_usage_current += traverse_ability_cost
+	if(traverse_ability_cost > 0)
+		connected_weapon.new_soul.hud_used.sword_usage_stat.update_stat(connected_weapon.new_soul)
+		connected_weapon.new_soul.hud_used.sword_limit_stat.update_stat(connected_weapon.new_soul)
 	use_traverse_ability()
 
 	if(traverse_ability_charges > 0)
@@ -266,6 +535,9 @@
 		return FALSE
 
 	connected_weapon.new_soul.sword_usage_current += ranged_ability_cost
+	if(ranged_ability_cost > 0)
+		connected_weapon.new_soul.hud_used.sword_usage_stat.update_stat(connected_weapon.new_soul)
+		connected_weapon.new_soul.hud_used.sword_limit_stat.update_stat(connected_weapon.new_soul)
 	use_ranged_ability()
 
 	if(ranged_ability_charges > 0)
@@ -292,6 +564,9 @@
 		return FALSE
 
 	connected_weapon.new_soul.sword_usage_current += aoe_ability_cost
+	if(aoe_ability_cost > 0)
+		connected_weapon.new_soul.hud_used.sword_usage_stat.update_stat(connected_weapon.new_soul)
+		connected_weapon.new_soul.hud_used.sword_limit_stat.update_stat(connected_weapon.new_soul)
 	use_aoe_ability()
 
 	if(aoe_ability_charges > 0)
@@ -318,6 +593,9 @@
 		return FALSE
 
 	connected_weapon.new_soul.sword_usage_current += targeted_ability_cost
+	if(targeted_ability_cost > 0)
+		connected_weapon.new_soul.hud_used.sword_usage_stat.update_stat(connected_weapon.new_soul)
+		connected_weapon.new_soul.hud_used.sword_limit_stat.update_stat(connected_weapon.new_soul)
 	use_targeted_ability(target)
 
 	if(targeted_ability_charges > 0)

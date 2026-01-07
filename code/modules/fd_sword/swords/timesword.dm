@@ -1,12 +1,6 @@
 /atom
 	var/deplaced = FALSE
 
-/atom/MouseEntered(location, control, params)
-	. = ..()
-	if(deplaced)
-		var/mob/M = usr
-		M.play_screen_text(text = "ТЫ ПОМНИШЬ, ЧТО ЗДЕСЬ ЧТО-ТО БЫЛО...", alert_type = /atom/movable/screen/text/screen_text/command_order, override_color = "#ff0000")
-
 /obj/item/weapon/sword/fd_sword/timesword
 	techniques = list(/datum/sword_tech/timesword)
 
@@ -130,9 +124,27 @@
 	targeted_ability_cooldown = 3 SECONDS
 	targeted_ability_cost = 0
 
+	traverse_ability_name = "ВРЕМЕННОЙ ЯКОРЬ"
+	ranged_ability_name = "ТЕМПОРАЛЬНАЯ ВОЛНА"
+	aoe_ability_name = "ЧАС РАСПЛАТЫ"
+	targeted_ability_name = "ВРЕМЕННОЕ ИСКАЖЕНИЕ"
+
+/datum/sword_tech/timesword/Initialize()
+	. = ..()
+	update_info()
+
+/datum/sword_tech/timesword/proc/update_info()
+	traverse_ability_desc = "Устанавливает в точке временной якорь, который перемещает вас обратно во времени по прохождению пяти секунд, тратя 1 ФРАГМЕНТ и полностью восстанавливая здоровье. Ваши текущие ФРАГМЕНТЫ: [time_fragments]"
+	ranged_ability_desc = "Все сущности, оказавшиеся в зоне оной, становятся на временной якорь. По прохождению 5 секунд, эти сущности притягиваются к якорю и замирают во времени. +2 ФРАГМЕНТА за каждую поражённую цель. Ваши текущие ФРАГМЕНТЫ: [time_fragments]"
+	aoe_ability_desc = "Создаёт темпоральный шторм, заставляющий всех живых существ замереть во времени. Тратит 10 ФРАГМЕНТОВ. Ваши текущие ФРАГМЕНТЫ: [time_fragments]"
+	targeted_ability_desc = "Касание пустой руки в боевом режиме де-материализует предмет из пространства за 1 ФРАГМЕНТ. Обычная атака даёт 1 ФРАГМЕНТ. Ваши текущие ФРАГМЕНТЫ: [time_fragments]"
+
 /datum/sword_tech/timesword/use_traverse_ability()
-	time_fragments -= 1
-	create_new_anchor(connected_weapon.new_soul)
+
+	if(time_fragments > 0)
+		time_fragments -= 1
+		update_info()
+		create_new_anchor(connected_weapon.new_soul)
 
 /datum/sword_tech/timesword/proc/create_new_anchor(mob/living/anchored)
 	var/teleport_to = new /obj/effect/fd_sword/timeanchor(get_turf(anchored))
@@ -199,6 +211,8 @@
 			time_fragments += 2
 			create_new_anchor(N)
 
+	update_info()
+
 	var/reverse_facing = get_dir(ending, connected_weapon.new_soul)
 
 	new /obj/effect/fd_sword/hit_effect(get_turf(connected_weapon.new_soul))
@@ -212,6 +226,8 @@
 
 	if(time_fragments >= 10)
 		time_fragments -= 10
+
+		update_info()
 
 		connected_weapon.new_soul.anchored = TRUE
 		ADD_TRAIT(connected_weapon.new_soul, TRAIT_IMMOBILIZED, TIMECURSE_TRAIT)
@@ -248,6 +264,8 @@
 		if(target != connected_weapon.new_soul)
 			time_fragments += 1
 
+			update_info()
+
 	if(istype(target, /obj/) && target != connected_weapon)
 		var/obj/O = target
 
@@ -266,6 +284,8 @@
 
 					time_fragments -= 1
 					targeted_ability_cost += 1
+
+					update_info()
 				else
 					animate(O, alpha = 255, time = 1 SECONDS)
 					O.remove_filter("timestopped", 1, list("type" = "blur", "size" = 1))
@@ -275,3 +295,5 @@
 					O.deplaced = FALSE
 
 					time_fragments -= 1
+
+					update_info()

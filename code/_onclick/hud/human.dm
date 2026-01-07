@@ -98,6 +98,16 @@
 	draw_zone_sel(ui_datum, ui_alpha, ui_color)
 	draw_gun_related(ui_datum, ui_alpha)
 
+	draw_sword_info(ui_datum)
+
+	traverse_info(ui_datum)
+	ranged_info(ui_datum)
+	aoe_info(ui_datum)
+	targeted_info(ui_datum)
+
+	draw_sword_usage_stat(ui_datum)
+	draw_sword_limit_stat(ui_datum)
+
 
 /mob/living/carbon/human/verb/toggle_hotkey_verbs()
 	set category = "OOC"
