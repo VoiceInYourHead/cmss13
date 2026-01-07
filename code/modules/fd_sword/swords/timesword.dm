@@ -239,7 +239,7 @@
 
 		spawn(1 SECONDS)
 			new /obj/effect/fd_sword/timeaoe(get_turf(connected_weapon.new_soul))
-			animate(connected_weapon.new_soul, pixel_z = 0, time = 0.5 SECONDS, easing = SINE_EASING|EASE_OUT)
+			animate(connected_weapon.new_soul, pixel_z = 0, time = 0.2 SECONDS, easing = SINE_EASING|EASE_OUT)
 
 			connected_weapon.new_soul.anchored = FALSE
 			REMOVE_TRAIT(connected_weapon.new_soul, TRAIT_IMMOBILIZED, TIMECURSE_TRAIT)

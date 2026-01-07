@@ -12,7 +12,7 @@
 
 
 /mob/living/carbon/human/click(atom/A, list/mods)
-	if(sword_combat_active)
+	if(sword_combat_active && !istype(A, /atom/movable/screen))
 		current_active_technique.targeted_ability_check(A)
 
 	var/use_ability = FALSE

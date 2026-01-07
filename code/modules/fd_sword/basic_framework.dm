@@ -204,7 +204,7 @@
 			icon_state = "usage_[user.sword_usage_current]"
 
 		animate(src, alpha = 255, time = 0.5 SECONDS, flags = ANIMATION_PARALLEL)
-		animate(src, pixel_x = 19, time = 0.5 SECONDS, easing = SINE_EASING|EASE_OUT, flags = ANIMATION_PARALLEL)
+		animate(src, pixel_x = 24, time = 0.5 SECONDS, easing = SINE_EASING|EASE_OUT, flags = ANIMATION_PARALLEL)
 
 		addtimer(CALLBACK(src, PROC_REF(hide_stat)), 5 SECONDS)
 
@@ -232,7 +232,7 @@
 			icon_state = "usage_cap_[user.sword_usage_limit]"
 
 		animate(src, alpha = 255, time = 0.5 SECONDS, flags = ANIMATION_PARALLEL)
-		animate(src, pixel_x = 19, time = 0.5 SECONDS, easing = SINE_EASING|EASE_OUT, flags = ANIMATION_PARALLEL)
+		animate(src, pixel_x = 24, time = 0.5 SECONDS, easing = SINE_EASING|EASE_OUT, flags = ANIMATION_PARALLEL)
 
 		addtimer(CALLBACK(src, PROC_REF(hide_stat)), 5 SECONDS)
 
