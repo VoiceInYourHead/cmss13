@@ -103,10 +103,6 @@
 	spawn(1 SECONDS)
 		qdel(src)
 
-// Q - ставит якорь в текущей локации игрока, перемещает его на него спустя 5 секунд, восстанавливая всё хп
-// E - запускает волну по прямой линии. Все, кто в ней оказываются - подвержены тому же эффекту, что и в Q
-// R - все в радиусе замирают
-
 /datum/sword_tech/timesword
 	name = "ТЕХНИКА: Время"
 
@@ -119,10 +115,14 @@
 	var/ranged_ability_range = 4
 
 	aoe_ability_cooldown = 1 MINUTES
-	var/time_fragments = 0
 
 	targeted_ability_cooldown = 3 SECONDS
 	targeted_ability_cost = 0
+
+	var/time_fragments = 0
+	var/traverse_fragments_cost = 1
+	var/aoe_fragments_cost = 10
+	var/targeted_fragments_cost = 1
 
 	traverse_ability_name = "ВРЕМЕННОЙ ЯКОРЬ"
 	ranged_ability_name = "ТЕМПОРАЛЬНАЯ ВОЛНА"
@@ -138,13 +138,6 @@
 	ranged_ability_desc = "Все сущности, оказавшиеся в зоне оной, становятся на временной якорь. По прохождению 5 секунд, эти сущности притягиваются к якорю и замирают во времени. +2 ФРАГМЕНТА за каждую поражённую цель. Ваши текущие ФРАГМЕНТЫ: [time_fragments]"
 	aoe_ability_desc = "Создаёт темпоральный шторм, заставляющий всех живых существ замереть во времени. Тратит 10 ФРАГМЕНТОВ. Ваши текущие ФРАГМЕНТЫ: [time_fragments]"
 	targeted_ability_desc = "Касание пустой руки в боевом режиме де-материализует предмет из пространства за 1 ФРАГМЕНТ. Обычная атака даёт 1 ФРАГМЕНТ. Ваши текущие ФРАГМЕНТЫ: [time_fragments]"
-
-/datum/sword_tech/timesword/use_traverse_ability()
-
-	if(time_fragments > 0)
-		time_fragments -= 1
-		update_info()
-		create_new_anchor(connected_weapon.new_soul)
 
 /datum/sword_tech/timesword/proc/create_new_anchor(mob/living/anchored)
 	var/teleport_to = new /obj/effect/fd_sword/timeanchor(get_turf(anchored))
@@ -193,6 +186,21 @@
 	spawn(1.5 SECONDS)
 		qdel(anchor)
 
+/datum/sword_tech/timesword/traverse_ability_check()
+	if(time_fragments < traverse_fragments_cost)
+		new /obj/effect/fd_sword/cannot_cast_ability(get_turf(connected_weapon.new_soul))
+		connected_weapon.new_soul.balloon_alert(connected_weapon.new_soul, "Недостаточно фрагментов!", COLOR_RED)
+		shake_camera(connected_weapon.new_soul, 2, 1)
+		return FALSE
+
+	. = ..()
+
+/datum/sword_tech/timesword/use_traverse_ability()
+
+	time_fragments -= traverse_fragments_cost
+	update_info()
+	create_new_anchor(connected_weapon.new_soul)
+
 /datum/sword_tech/timesword/use_ranged_ability()
 	var/final_ability_range = ranged_ability_range + tech_level
 	var/turf/ending = get_ranged_target_turf(connected_weapon.new_soul, connected_weapon.new_soul.dir, final_ability_range)
@@ -221,42 +229,50 @@
 	connected_weapon.new_soul.throw_atom(get_edge_target_turf(connected_weapon.new_soul, reverse_facing), 1, SPEED_AVERAGE, src, FALSE)
 	connected_weapon.new_soul.face_atom(ending)
 
+/datum/sword_tech/timesword/aoe_ability_check()
+	if(time_fragments < aoe_fragments_cost)
+		new /obj/effect/fd_sword/cannot_cast_ability(get_turf(connected_weapon.new_soul))
+		connected_weapon.new_soul.balloon_alert(connected_weapon.new_soul, "Недостаточно фрагментов!", COLOR_RED)
+		shake_camera(connected_weapon.new_soul, 2, 1)
+		return FALSE
+
+	. = ..()
+
 /datum/sword_tech/timesword/use_aoe_ability()
 	var/aoe_area = 2 + tech_level
+	time_fragments -= aoe_fragments_cost
 
-	if(time_fragments >= 10)
-		time_fragments -= 10
+	update_info()
 
-		update_info()
+	connected_weapon.new_soul.anchored = TRUE
+	ADD_TRAIT(connected_weapon.new_soul, TRAIT_IMMOBILIZED, TIMECURSE_TRAIT)
+	ADD_TRAIT(connected_weapon.new_soul, TRAIT_UNDENSE, TIMECURSE_TRAIT)
 
-		connected_weapon.new_soul.anchored = TRUE
-		ADD_TRAIT(connected_weapon.new_soul, TRAIT_IMMOBILIZED, TIMECURSE_TRAIT)
-		ADD_TRAIT(connected_weapon.new_soul, TRAIT_UNDENSE, TIMECURSE_TRAIT)
+	animate(connected_weapon.new_soul, pixel_z = 64, time = 1 SECONDS, easing = SINE_EASING|EASE_OUT)
+	for(var/turf/T in orange(aoe_area, connected_weapon.new_soul))
+		new /obj/effect/fd_sword/time_telegraph(T)
 
-		animate(connected_weapon.new_soul, pixel_z = 64, time = 1 SECONDS, easing = SINE_EASING|EASE_OUT)
-		for(var/turf/T in orange(aoe_area, connected_weapon.new_soul))
-			new /obj/effect/fd_sword/time_telegraph(T)
+	spawn(1 SECONDS)
+		new /obj/effect/fd_sword/timeaoe(get_turf(connected_weapon.new_soul))
+		animate(connected_weapon.new_soul, pixel_z = 0, time = 0.2 SECONDS, easing = SINE_EASING|EASE_OUT)
 
-		spawn(1 SECONDS)
-			new /obj/effect/fd_sword/timeaoe(get_turf(connected_weapon.new_soul))
-			animate(connected_weapon.new_soul, pixel_z = 0, time = 0.2 SECONDS, easing = SINE_EASING|EASE_OUT)
+		connected_weapon.new_soul.anchored = FALSE
+		REMOVE_TRAIT(connected_weapon.new_soul, TRAIT_IMMOBILIZED, TIMECURSE_TRAIT)
+		REMOVE_TRAIT(connected_weapon.new_soul, TRAIT_UNDENSE, TIMECURSE_TRAIT)
 
-			connected_weapon.new_soul.anchored = FALSE
-			REMOVE_TRAIT(connected_weapon.new_soul, TRAIT_IMMOBILIZED, TIMECURSE_TRAIT)
-			REMOVE_TRAIT(connected_weapon.new_soul, TRAIT_UNDENSE, TIMECURSE_TRAIT)
+		for(var/mob/living/M in orange(aoe_area, connected_weapon.new_soul))
 
-			for(var/mob/living/M in orange(aoe_area, connected_weapon.new_soul))
+			if(M == connected_weapon.new_soul)
+				continue
 
-				if(M == connected_weapon.new_soul)
-					continue
+			new /obj/effect/fd_sword/anchored(get_turf(M))
+			M.add_filter("timestopped", 1, list("type" = "blur", "size" = 1))
 
-				M.add_filter("timestopped", 1, list("type" = "blur", "size" = 1))
+			M.anchored = TRUE
+			ADD_TRAIT(M, TRAIT_IMMOBILIZED, TIMECURSE_TRAIT)
+			ADD_TRAIT(M, TRAIT_UNDENSE, TIMECURSE_TRAIT)
 
-				M.anchored = TRUE
-				ADD_TRAIT(M, TRAIT_IMMOBILIZED, TIMECURSE_TRAIT)
-				ADD_TRAIT(M, TRAIT_UNDENSE, TIMECURSE_TRAIT)
-
-				addtimer(CALLBACK(M, TYPE_PROC_REF(/mob/living, reset_timeanchor)), 10 SECONDS)
+			addtimer(CALLBACK(M, TYPE_PROC_REF(/mob/living, reset_timeanchor)), 10 SECONDS)
 
 /datum/sword_tech/timesword/use_targeted_ability(atom/target)
 
@@ -270,7 +286,7 @@
 		var/obj/O = target
 
 		if(!connected_weapon.new_soul.get_active_hand())
-			if(time_fragments > 0)
+			if(time_fragments >= targeted_fragments_cost)
 
 				new /obj/effect/fd_sword/targeted_ability(get_turf(O))
 
@@ -280,10 +296,16 @@
 
 					O.density = FALSE
 					O.anchored = TRUE
+					O.opacity = FALSE
 					O.deplaced = TRUE
 
-					time_fragments -= 1
-					targeted_ability_cost += 1
+					time_fragments -= targeted_fragments_cost
+					connected_weapon.new_soul.sword_usage_current += 1
+
+					check_overcharge()
+
+					connected_weapon.new_soul.hud_used.sword_usage_stat.update_stat(connected_weapon.new_soul)
+					connected_weapon.new_soul.hud_used.sword_limit_stat.update_stat(connected_weapon.new_soul)
 
 					update_info()
 				else
@@ -292,8 +314,15 @@
 
 					O.density = initial(O.density)
 					O.anchored = initial(O.anchored)
+					O.opacity = initial(O.opacity)
 					O.deplaced = FALSE
 
-					time_fragments -= 1
+					time_fragments -= targeted_fragments_cost
 
 					update_info()
+			else
+				new /obj/effect/fd_sword/cannot_cast_ability(get_turf(connected_weapon.new_soul))
+				connected_weapon.new_soul.balloon_alert(connected_weapon.new_soul, "Недостаточно фрагментов!", COLOR_RED)
+				shake_camera(connected_weapon.new_soul, 2, 1)
+
+				return FALSE

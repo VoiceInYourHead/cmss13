@@ -76,6 +76,10 @@ GLOBAL_LIST_INIT(job_squad_roles, JOB_SQUAD_ROLES_LIST)
 #define JOB_CIVIL_ROLES    /datum/timelock/civil
 #define JOB_CIVIL_ROLES_LIST   list(JOB_COMBAT_REPORTER)
 
+#define JOB_BUREAU_AGENT "Bureau Agent"
+#define JOB_BUREAU_ROLES    /datum/timelock/bureau
+#define JOB_BUREAU_ROLES_LIST   list(JOB_BUREAU_AGENT)
+
 #define JOB_MESS_SERGEANT "Mess Technician"
 #define JOB_SYNTH "Synthetic"
 #define JOB_SYNTH_K9 "Synthetic K9"
