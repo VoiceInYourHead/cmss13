@@ -738,8 +738,9 @@
 
 /datum/sword_tech/proc/targeted_ability_check(atom/target)
 	if(!targeted_ability_ready)
-		new /obj/effect/fd_sword/ability_on_cooldown(get_turf(connected_weapon.new_soul))
-		connected_weapon.new_soul.balloon_alert(connected_weapon.new_soul, "Способность перезаряжается!", COLOR_ORANGE)
+		if(!connected_weapon.new_soul.get_active_hand())
+			new /obj/effect/fd_sword/ability_on_cooldown(get_turf(connected_weapon.new_soul))
+			connected_weapon.new_soul.balloon_alert(connected_weapon.new_soul, "Способность перезаряжается!", COLOR_ORANGE)
 		return FALSE
 
 	use_targeted_ability(target)
@@ -859,9 +860,12 @@
 
 	name = "Entity"
 
-	health = 50
+	health = 10
 	pixel_x = 0
 	old_x = 0
+
+	melee_damage_lower = 5
+	melee_damage_upper = 15
 
 /mob/living/simple_animal/hostile/alien/fd_sword_test/update_wounds()
 	return
