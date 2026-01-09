@@ -1899,6 +1899,7 @@
 #include "code\modules\fd_sword\jobs_and_stuff.dm"
 #include "code\modules\fd_sword\swords\pyrokinesis_school.dm"
 #include "code\modules\fd_sword\swords\timesword.dm"
+#include "code\modules\fd_sword\swords\wintersword.dm"
 #include "code\modules\fishing\bait\generic.dm"
 #include "code\modules\fishing\datums\generic.dm"
 #include "code\modules\fishing\datums\helpers.dm"

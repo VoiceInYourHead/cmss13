@@ -107,14 +107,16 @@
 	name = "ТЕХНИКА: Время"
 
 	traverse_ability_cooldown = 30 SECONDS
-	traverse_ability_cost = 2
+	traverse_ability_cost = 1
 	traverse_ability_charges = 3
 
 	ranged_ability_cooldown = 10 SECONDS
 	ranged_ability_charges = 2
+	ranged_ability_cost = 2
 	var/ranged_ability_range = 4
 
 	aoe_ability_cooldown = 1 MINUTES
+	aoe_ability_cost = 4
 
 	targeted_ability_cooldown = 3 SECONDS
 	targeted_ability_cost = 0

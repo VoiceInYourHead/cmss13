@@ -357,6 +357,16 @@
 		var/mob/living/climber = mover
 		if(climber.a_intent == INTENT_HARM)
 			return TRUE
+
+		if(istype(mover, /mob/living/carbon/human))
+			var/mob/living/carbon/human/H = mover
+			if(istype(H.current_active_technique, /datum/sword_tech/wintersword))
+				var/datum/sword_tech/wintersword/icewalk = H.current_active_technique
+				if(icewalk.traverse_active)
+					flags_atom |= NO_ZFALL
+					new /obj/structure/fd_sword/ice_bridge(get_turf(src))
+					return TRUE
+
 		space.climb_down(climber)
 		return FALSE
 

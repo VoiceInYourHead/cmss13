@@ -784,7 +784,7 @@
 
 	if(!human_mob.sword_combat_active)
 		new /obj/effect/fd_sword/cannot_cast_ability(get_turf(human_mob))
-		human_mob.balloon_alert(human_mob, "Способность нельзя применить!", COLOR_RED)
+		human_mob.balloon_alert(human_mob, "Вытащите меч из ножен!", COLOR_RED)
 		shake_camera(human_mob, 2, 1)
 		return FALSE
 
