@@ -5,7 +5,7 @@
 	if(istype(current_active_technique, /datum/sword_tech/wintersword))
 		var/datum/sword_tech/wintersword/icewalk = current_active_technique
 		if(icewalk.traverse_active)
-			next_move_slowdown = -0.5
+			next_move_slowdown = -1
 			flags_atom |= NO_ZFALL
 			new /obj/structure/fd_sword/ice_bridge(get_turf(NewLoc))
 
@@ -62,13 +62,90 @@
 	ADD_TRAIT(M, TRAIT_IMMOBILIZED, ICESLIDE_TRAIT)
 	ADD_TRAIT(M, TRAIT_UNDENSE, ICESLIDE_TRAIT)
 
-	addtimer(CALLBACK(src, PROC_REF(standup), M), 1 SECONDS)
+	for(var/i = 0, i <= 3, i++)
+		new /obj/effect/fd_sword/stunned(get_turf(M))
 
-/obj/structure/fd_sword/ice_bridge/proc/standup(mob/living/M)
-	animate(M, time = 0.5 SECONDS, transform = matrix(0, MATRIX_ROTATE), easing = SINE_EASING)
-	REMOVE_TRAIT(M, TRAIT_IMMOBILIZED, ICESLIDE_TRAIT)
-	REMOVE_TRAIT(M, TRAIT_UNDENSE, ICESLIDE_TRAIT)
-	M.tripped = FALSE
+	addtimer(CALLBACK(M, TYPE_PROC_REF(/mob/living, standup)), 1 SECONDS)
+
+/mob/living/proc/standup()
+	animate(src, time = 0.5 SECONDS, transform = matrix(0, MATRIX_ROTATE), easing = SINE_EASING)
+	REMOVE_TRAIT(src, TRAIT_IMMOBILIZED, ICESLIDE_TRAIT)
+	REMOVE_TRAIT(src, TRAIT_UNDENSE, ICESLIDE_TRAIT)
+	tripped = FALSE
+
+/obj/effect/fd_sword/stunned
+	icon = 'code/modules/fd_sword/icons/visuals.dmi'
+	icon_state = "stun"
+
+	anchored = TRUE
+	mouse_opacity = FALSE
+	alpha = 0
+	layer = BELOW_MOB_LAYER
+
+/obj/effect/fd_sword/stunned/Initialize(mapload, ...)
+	. = ..()
+	animate(src, alpha = 255, time = 0.5 SECONDS, flags = ANIMATION_PARALLEL)
+	animate(src, pixel_x = rand(-32,32), pixel_y = rand(-32,32), time = 0.5 SECONDS, easing = BOUNCE_EASING, flags = ANIMATION_PARALLEL)
+
+	spawn(0.5 SECONDS)
+		animate(src, alpha = 0, time = 0.5 SECONDS)
+
+	spawn(1 SECONDS)
+		qdel(src)
+
+/obj/effect/fd_sword/shards_creation
+	icon = 'code/modules/fd_sword/icons/visuals.dmi'
+	icon_state = "ice_shards"
+
+	anchored = TRUE
+	mouse_opacity = FALSE
+	alpha = 0
+
+/obj/effect/fd_sword/shards_creation/Initialize(mapload, ...)
+	. = ..()
+	var/matrix/base_matrix = matrix(base_transform)
+	update_base_transform(base_matrix.Scale(0.5,0.5))
+
+	animate(src, alpha = 255, time = 1 SECONDS)
+
+	spawn(1.4 SECONDS)
+		animate(src, alpha = 0, time = 0.5 SECONDS, flags = ANIMATION_PARALLEL)
+
+	spawn(2 SECONDS)
+		qdel(src)
+
+/datum/ammo/bullet/shotgun/iceshard
+	name = "ice spike"
+	icon = 'code/modules/fd_sword/icons/visuals.dmi'
+	icon_state = "ice_proj"
+	bonus_projectiles_type = /datum/ammo/bullet/shotgun/ice_spread
+
+	accuracy_var_low = PROJECTILE_VARIANCE_TIER_5
+	accuracy_var_high = PROJECTILE_VARIANCE_TIER_5
+	accurate_range = 8
+	max_range = 11
+	damage = 30
+	damage_var_low = PROJECTILE_VARIANCE_TIER_8
+	damage_var_high = PROJECTILE_VARIANCE_TIER_8
+	penetration = ARMOR_PENETRATION_TIER_4
+	bonus_projectiles_amount = EXTRA_PROJECTILES_TIER_9
+	shell_speed = AMMO_SPEED_TIER_2
+
+/datum/ammo/bullet/shotgun/ice_spread
+	name = "ice spike"
+	icon = 'code/modules/fd_sword/icons/visuals.dmi'
+	icon_state = "ice_proj"
+
+	accuracy_var_low = PROJECTILE_VARIANCE_TIER_6
+	accuracy_var_high = PROJECTILE_VARIANCE_TIER_6
+	accurate_range = 6
+	max_range = 8
+	damage = 30
+	damage_var_low = PROJECTILE_VARIANCE_TIER_8
+	damage_var_high = PROJECTILE_VARIANCE_TIER_8
+	penetration = ARMOR_PENETRATION_TIER_4
+	shell_speed = AMMO_SPEED_TIER_2
+	scatter = SCATTER_AMOUNT_TIER_1
 
 /obj/item/weapon/sword/fd_sword/wintersword
 	techniques = list(/datum/sword_tech/wintersword)
@@ -163,6 +240,14 @@
 	traverse_ability_name = "ЛЕДЕНЯЩАЯ ПОСТУПЬ"
 	traverse_ability_desc = "Создаёт под ногами твёрдую ледяную корку, которая исчезает со временем, но может быть использована для быстрого перемещения по обеим осям координат. Другие люди подскальзываются на ней!"
 
+	ranged_ability_cooldown = 60 SECONDS
+	ranged_ability_cost = 1
+	ranged_ability_charges = 6
+	var/shards_type = /datum/ammo/bullet/shotgun/iceshard
+
+	ranged_ability_name = "МОРОЗНЫЕ ИГЛЫ"
+	ranged_ability_desc = "Выпускает свору крайне острых ледяных пик с внушительным уроном"
+
 /datum/sword_tech/wintersword/use_traverse_ability()
 	traverse_active = TRUE
 
@@ -177,3 +262,20 @@
 
 /datum/sword_tech/wintersword/proc/stop_traverse()
 	traverse_active = FALSE
+
+/datum/sword_tech/wintersword/use_ranged_ability()
+	var/turf/shoot_angle = get_step(connected_weapon.new_soul, connected_weapon.new_soul.dir)
+	var/obj/effect/fd_sword/shards_creation/former_projectile
+	ADD_TRAIT(connected_weapon.new_soul, TRAIT_IMMOBILIZED, ICESPIKES_TRAIT)
+	former_projectile = new /obj/effect/fd_sword/shards_creation(shoot_angle)
+
+	spawn(1.2 SECONDS)
+		former_projectile.forceMove(get_turf(get_step(former_projectile, connected_weapon.new_soul.dir)))
+		var/obj/projectile/projectile = new /obj/projectile(connected_weapon.new_soul.loc)
+
+		var/datum/ammo/shards_datum = GLOB.ammo_list[shards_type]
+		projectile.generate_bullet(shards_datum)
+
+		shake_camera(connected_weapon.new_soul, 2, 1)
+		projectile.fire_at(shoot_angle, connected_weapon.new_soul, connected_weapon.new_soul, shards_datum.max_range, shards_datum.shell_speed)
+		REMOVE_TRAIT(connected_weapon.new_soul, TRAIT_IMMOBILIZED, ICESPIKES_TRAIT)

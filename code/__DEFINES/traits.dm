@@ -539,5 +539,6 @@ GLOBAL_LIST(trait_name_map)
 #define WALL_HIDING_TRAIT "wallhiding"
 // timesword stun
 #define TIMECURSE_TRAIT "timecurse"
-// wintersword stun
+// wintersword abilities
 #define ICESLIDE_TRAIT "iceslide"
+#define ICESPIKES_TRAIT "icespikes"
