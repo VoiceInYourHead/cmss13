@@ -330,6 +330,25 @@
 
 //// SWORD ////
 
+/obj/effect/fd_sword/telegraph_basic
+	name = "ТЕЛЕГРАФИЯ АТАКИ"
+
+	icon = 'code/modules/fd_sword/icons/visuals.dmi'
+	icon_state = "target_tile"
+
+	anchored = TRUE
+	mouse_opacity = FALSE
+	var/delete_after = 1 SECONDS
+
+/obj/effect/fd_sword/telegraph_basic/Initialize(mapload, ...)
+	. = ..()
+	addtimer(CALLBACK(src, PROC_REF(remove)), delete_after)
+
+/obj/effect/fd_sword/telegraph_basic/proc/remove()
+	animate(src, alpha = 0, time = 0.5 SECONDS)
+	spawn(0.6 SECONDS)
+		qdel(src)
+
 /obj/effect/fd_sword/targeted_ability
 	name = "CLICK ME"
 	icon = 'code/modules/fd_sword/icons/visuals.dmi'

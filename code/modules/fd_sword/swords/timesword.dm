@@ -11,7 +11,7 @@
 	icon_state = "time"
 
 	anchored = TRUE
-	layer = ABOVE_MOB_LAYER
+	layer = 5
 	pixel_x = -64
 	pixel_y = -64
 
@@ -22,11 +22,31 @@
 	spawn(2 SECONDS)
 		qdel(src)
 
+/obj/effect/fd_sword/timetentacles
+	name = "ВРЕМЕННОЙ РАЗРЫВ"
+
+	icon = 'code/modules/fd_sword/icons/visuals.dmi'
+	icon_state = "dreamfiend"
+
+	anchored = TRUE
+	alpha = 0
+
+/obj/effect/fd_sword/timetentacles/Initialize(mapload, ...)
+	. = ..()
+	animate(src, alpha = 255, time = 1 SECONDS, flags = ANIMATION_PARALLEL)
+	animate(src, pixel_x = -32, time = 1 SECONDS, easing = SINE_EASING|EASE_OUT, flags = ANIMATION_PARALLEL)
+
+	spawn(1.5 SECONDS)
+		animate(src, alpha = 0, time = 1 SECONDS)
+
+	spawn(2.5 SECONDS)
+		qdel(src)
+
 /obj/effect/fd_sword/timeanchor
 	name = "ВРЕМЕННОЙ ЯКОРЬ"
 
 	icon = 'code/modules/fd_sword/icons/visuals.dmi'
-	icon_state = "foul"
+	icon_state = "void_conduit_tg"
 
 	anchored = TRUE
 	alpha = 0
@@ -52,8 +72,8 @@
 
 	remove_filter("timestopped", 1, list("type" = "blur", "size" = 1))
 
-/obj/effect/fd_sword/time_telegraph
-	name = "ТЕЛЕГРАФИЯ"
+/obj/effect/fd_sword/timewave
+	name = "ВРЕМЕННАЯ ВОЛНА"
 
 	icon = 'code/modules/fd_sword/icons/visuals.dmi'
 	icon_state = "summoning"
@@ -62,7 +82,7 @@
 	mouse_opacity = FALSE
 	layer = ABOVE_MOB_LAYER
 
-/obj/effect/fd_sword/time_telegraph/Initialize(mapload, ...)
+/obj/effect/fd_sword/timewave/Initialize(mapload, ...)
 	. = ..()
 	animate(src, alpha = 0, time = 1 SECONDS)
 	spawn(1 SECONDS)
@@ -88,20 +108,9 @@
 	spawn(1 SECONDS)
 		qdel(src)
 
-/obj/effect/fd_sword/time_teleport
-	name = "ТЕЛЕПОРТАЦИЯ"
-
-	icon = 'code/modules/fd_sword/icons/visuals.dmi'
-	icon_state = "rune_blind"
-
-	anchored = TRUE
-	mouse_opacity = FALSE
+/obj/effect/fd_sword/timeanchor/alter
+	icon_state = "void_chill_oh_fuck_tg"
 	layer = ABOVE_MOB_LAYER
-
-/obj/effect/fd_sword/time_teleport/Initialize(mapload, ...)
-	. = ..()
-	spawn(1 SECONDS)
-		qdel(src)
 
 /datum/sword_tech/timesword
 	name = "ТЕХНИКА: Время"
@@ -142,8 +151,12 @@
 	targeted_ability_desc = "Касание пустой руки в боевом режиме де-материализует предмет из пространства за 1 ФРАГМЕНТ. Обычная атака даёт 1 ФРАГМЕНТ. Ваши текущие ФРАГМЕНТЫ: [time_fragments]"
 
 /datum/sword_tech/timesword/proc/create_new_anchor(mob/living/anchored)
-	var/teleport_to = new /obj/effect/fd_sword/timeanchor(get_turf(anchored))
-	new /obj/effect/fd_sword/time_telegraph(get_turf(teleport_to))
+	var/teleport_to
+
+	if(!istype(anchored, connected_weapon.new_soul))
+		teleport_to = new /obj/effect/fd_sword/timeanchor/alter(get_turf(anchored))
+	else
+		teleport_to = new /obj/effect/fd_sword/timeanchor(get_turf(anchored))
 
 	addtimer(CALLBACK(src, PROC_REF(backintime), teleport_to, anchored), 5 SECONDS)
 
@@ -155,17 +168,20 @@
 		ADD_TRAIT(connected_weapon.new_soul, TRAIT_IMMOBILIZED, TIMECURSE_TRAIT)
 		ADD_TRAIT(connected_weapon.new_soul, TRAIT_UNDENSE, TIMECURSE_TRAIT)
 
-		new /obj/effect/fd_sword/time_teleport(get_turf(anchor))
-		animate(connected_weapon.new_soul, alpha = 0, time = 1 SECONDS)
+		new /obj/effect/fd_sword/timetentacles(get_turf(traveler))
 
 		spawn(1 SECONDS)
+			animate(connected_weapon.new_soul, pixel_x = -32, time = 0.5 SECONDS, easing = SINE_EASING|EASE_OUT, flags = ANIMATION_PARALLEL)
+			animate(connected_weapon.new_soul, alpha = 0, time = 0.5 SECONDS, flags = ANIMATION_PARALLEL)
 
+		spawn(1.5 SECONDS)
 			connected_weapon.new_soul.anchored = FALSE
 			REMOVE_TRAIT(connected_weapon.new_soul, TRAIT_IMMOBILIZED, TIMECURSE_TRAIT)
 			REMOVE_TRAIT(connected_weapon.new_soul, TRAIT_UNDENSE, TIMECURSE_TRAIT)
 
 			traveler.forceMove(get_turf(anchor))
 			traveler.rejuvenate()
+			connected_weapon.new_soul.pixel_x = 0
 			animate(connected_weapon.new_soul, alpha = 255, time = 1 SECONDS)
 
 			if(!connected_weapon.new_soul.is_holding(connected_weapon))
@@ -203,6 +219,9 @@
 	update_info()
 	create_new_anchor(connected_weapon.new_soul)
 
+/obj/effect/fd_sword/telegraph_basic/timesword/ranged
+	delete_after = 0.5 SECONDS
+
 /datum/sword_tech/timesword/use_ranged_ability()
 	var/final_ability_range = ranged_ability_range + tech_level
 	var/turf/ending = get_ranged_target_turf(connected_weapon.new_soul, connected_weapon.new_soul.dir, final_ability_range)
@@ -214,22 +233,31 @@
 		affected_turfs += T
 
 	for(var/turf/T in affected_turfs)
-		new /obj/effect/fd_sword/time_telegraph(T)
-		for(var/mob/living/N in T)
-			new /obj/effect/fd_sword/anchored(get_turf(N))
+		new /obj/effect/fd_sword/telegraph_basic/timesword/ranged(T)
 
-			time_fragments += 2
-			create_new_anchor(N)
+	spawn(0.5 SECONDS)
 
-	update_info()
+		for(var/turf/T in affected_turfs)
+			new /obj/effect/fd_sword/timewave(T)
 
-	var/reverse_facing = get_dir(ending, connected_weapon.new_soul)
+			for(var/mob/living/N in T)
+				new /obj/effect/fd_sword/anchored(get_turf(N))
 
-	new /obj/effect/fd_sword/hit_effect(get_turf(connected_weapon.new_soul))
-	connected_weapon.new_soul.animation_attack_on(ending)
+				time_fragments += 2
+				create_new_anchor(N)
 
-	connected_weapon.new_soul.throw_atom(get_edge_target_turf(connected_weapon.new_soul, reverse_facing), 1, SPEED_AVERAGE, src, FALSE)
-	connected_weapon.new_soul.face_atom(ending)
+		update_info()
+
+		var/reverse_facing = get_dir(ending, connected_weapon.new_soul)
+
+		new /obj/effect/fd_sword/hit_effect(get_turf(connected_weapon.new_soul))
+		connected_weapon.new_soul.animation_attack_on(ending)
+
+		connected_weapon.new_soul.throw_atom(get_edge_target_turf(connected_weapon.new_soul, reverse_facing), 1, SPEED_AVERAGE, src, FALSE)
+		connected_weapon.new_soul.face_atom(ending)
+
+/obj/effect/fd_sword/telegraph_basic/timesword/aoe
+	delete_after = 1 SECONDS
 
 /datum/sword_tech/timesword/aoe_ability_check()
 	if(time_fragments < aoe_fragments_cost)
@@ -252,9 +280,13 @@
 
 	animate(connected_weapon.new_soul, pixel_z = 64, time = 1 SECONDS, easing = SINE_EASING|EASE_OUT)
 	for(var/turf/T in orange(aoe_area, connected_weapon.new_soul))
-		new /obj/effect/fd_sword/time_telegraph(T)
+		new /obj/effect/fd_sword/telegraph_basic/timesword/aoe(T)
 
 	spawn(1 SECONDS)
+
+		for(var/turf/T in orange(aoe_area, connected_weapon.new_soul))
+			new /obj/effect/fd_sword/timewave(T)
+
 		new /obj/effect/fd_sword/timeaoe(get_turf(connected_weapon.new_soul))
 		animate(connected_weapon.new_soul, pixel_z = 0, time = 0.2 SECONDS, easing = SINE_EASING|EASE_OUT)
 

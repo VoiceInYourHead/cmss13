@@ -542,3 +542,4 @@ GLOBAL_LIST(trait_name_map)
 // wintersword abilities
 #define ICESLIDE_TRAIT "iceslide"
 #define ICESPIKES_TRAIT "icespikes"
+#define ICECAGE_TRAIT "icecage"

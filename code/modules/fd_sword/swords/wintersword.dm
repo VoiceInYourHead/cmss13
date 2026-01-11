@@ -16,6 +16,33 @@
 /mob/living
 	var/tripped = FALSE
 
+/obj/effect/fd_sword/ice_aoe
+	name = "Ледяная пика"
+
+	icon = 'code/modules/fd_sword/icons/visuals.dmi'
+	icon_state = "spike"
+
+	anchored = TRUE
+	alpha = 0
+
+/obj/effect/fd_sword/ice_aoe/Initialize(mapload, ...)
+	. = ..()
+	animate(src, alpha = 255, time = 0.5 SECONDS, flags = ANIMATION_PARALLEL)
+	animate(src, pixel_y = 18, time = 0.5 SECONDS, easing = BACK_EASING|EASE_IN, flags = ANIMATION_PARALLEL)
+
+	for(var/mob/living/L in get_turf(src))
+		L.adjustBruteLoss(50)
+		shake_camera(L, 2, 1)
+
+	spawn(0.5 SECONDS)
+		animate(src, pixel_y = 0, time = 0.2 SECONDS, easing = SINE_EASING|EASE_IN)
+
+	spawn(0.7 SECONDS)
+		animate(src, alpha = 0, time = 0.3 SECONDS)
+
+	spawn(1 SECONDS)
+		qdel(src)
+
 /obj/structure/fd_sword/ice_bridge
 	name = "Лёд"
 
@@ -277,5 +304,44 @@
 		projectile.generate_bullet(shards_datum)
 
 		shake_camera(connected_weapon.new_soul, 2, 1)
+		connected_weapon.new_soul.animation_attack_on(shoot_angle)
 		projectile.fire_at(shoot_angle, connected_weapon.new_soul, connected_weapon.new_soul, shards_datum.max_range, shards_datum.shell_speed)
 		REMOVE_TRAIT(connected_weapon.new_soul, TRAIT_IMMOBILIZED, ICESPIKES_TRAIT)
+
+/obj/effect/fd_sword/telegraph_basic/wintersword/aoe
+	delete_after = 1 SECONDS
+
+/datum/sword_tech/wintersword/use_aoe_ability()
+	var/list/inner_circle = list()
+	var/list/outer_circle = list()
+
+	var/inner_circle_area = 1 + tech_level
+	var/outer_circle_area = inner_circle_area + 1
+
+	connected_weapon.new_soul.anchored = TRUE
+	ADD_TRAIT(connected_weapon.new_soul, TRAIT_IMMOBILIZED, ICECAGE_TRAIT)
+
+	for(var/turf/T in orange(inner_circle_area, connected_weapon.new_soul))
+		if(connected_weapon.new_soul in T)
+			continue
+		new /obj/effect/fd_sword/telegraph_basic/wintersword/aoe(T)
+		inner_circle += T
+
+	spawn(1 SECONDS)
+		for(var/turf/T in inner_circle)
+			new /obj/effect/fd_sword/ice_aoe(T)
+
+		for(var/turf/T in orange(outer_circle_area, connected_weapon.new_soul))
+			if(connected_weapon.new_soul in T)
+				continue
+			if(T in inner_circle)
+				continue
+			new /obj/effect/fd_sword/telegraph_basic/wintersword/aoe(T)
+			outer_circle += T
+
+	spawn(2 SECONDS)
+		for(var/turf/T in outer_circle)
+			new /obj/effect/fd_sword/ice_aoe(T)
+
+		connected_weapon.new_soul.anchored = FALSE
+		REMOVE_TRAIT(connected_weapon.new_soul, TRAIT_IMMOBILIZED, ICECAGE_TRAIT)
