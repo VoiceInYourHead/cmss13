@@ -127,7 +127,6 @@
 	aoe_ability_cooldown = 1 MINUTES
 	aoe_ability_cost = 4
 
-	targeted_ability_cooldown = 3 SECONDS
 	targeted_ability_cost = 0
 
 	var/time_fragments = 0

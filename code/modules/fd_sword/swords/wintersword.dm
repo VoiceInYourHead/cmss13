@@ -15,6 +15,30 @@
 
 /mob/living
 	var/tripped = FALSE
+	var/ice_stacks = 0
+
+/mob/living/Life(delta_time)
+	. = ..()
+
+	if(ice_stacks > 0)
+		ice_stacks -= 1
+
+/mob/living/proc/turn_to_ice()
+	overlays += image('code/modules/fd_sword/icons/visuals.dmi', icon_state = "ice_cube")
+	ADD_TRAIT(src, TRAIT_IMMOBILIZED, ICECAGE_TRAIT)
+	ADD_TRAIT(src, TRAIT_TEMPORARILY_MUTED, ICECAGE_TRAIT)
+
+	mouse_opacity = FALSE
+
+	addtimer(CALLBACK(src, PROC_REF(unfreeze)), 5 SECONDS)
+
+/mob/living/proc/unfreeze()
+	overlays -= image('code/modules/fd_sword/icons/visuals.dmi', icon_state = "ice_cube")
+	REMOVE_TRAIT(src, TRAIT_IMMOBILIZED, ICECAGE_TRAIT)
+	REMOVE_TRAIT(src, TRAIT_TEMPORARILY_MUTED, ICECAGE_TRAIT)
+
+	mouse_opacity = TRUE
+	ice_stacks = 0
 
 /obj/effect/fd_sword/ice_aoe
 	name = "Ледяная пика"
@@ -267,13 +291,24 @@
 	traverse_ability_name = "ЛЕДЕНЯЩАЯ ПОСТУПЬ"
 	traverse_ability_desc = "Создаёт под ногами твёрдую ледяную корку, которая исчезает со временем, но может быть использована для быстрого перемещения по обеим осям координат. Другие люди подскальзываются на ней!"
 
-	ranged_ability_cooldown = 60 SECONDS
+	ranged_ability_cooldown = 1 MINUTES
 	ranged_ability_cost = 1
-	ranged_ability_charges = 6
+	ranged_ability_charges = 9
 	var/shards_type = /datum/ammo/bullet/shotgun/iceshard
 
 	ranged_ability_name = "МОРОЗНЫЕ ИГЛЫ"
 	ranged_ability_desc = "Выпускает свору крайне острых ледяных пик с внушительным уроном"
+
+	aoe_ability_cooldown = 30 SECONDS
+	aoe_ability_cost = 4
+
+	aoe_ability_name = "ЛАВИНА"
+	aoe_ability_desc = "Создаёт вокруг группу ледяных шипов, наносящих средний урон всему, что окажется в месте их появления"
+
+	targeted_ability_cost = 0
+
+	targeted_ability_name = "ОБМОРОЖЕНИЕ"
+	targeted_ability_desc = "Систематические удары данным оружием заставляют цель замёрзнуть. Касание пустой рукой в боевом режиме может привести к самым разным последствиям в зависимости от выбранной цели"
 
 /datum/sword_tech/wintersword/use_traverse_ability()
 	traverse_active = TRUE
@@ -322,8 +357,15 @@
 	ADD_TRAIT(connected_weapon.new_soul, TRAIT_IMMOBILIZED, ICECAGE_TRAIT)
 
 	for(var/turf/T in orange(inner_circle_area, connected_weapon.new_soul))
+		var/obj/O
+
+		if(T.density)
+			continue
+		if(O in T && O.density)
+			continue
 		if(connected_weapon.new_soul in T)
 			continue
+
 		new /obj/effect/fd_sword/telegraph_basic/wintersword/aoe(T)
 		inner_circle += T
 
@@ -332,10 +374,17 @@
 			new /obj/effect/fd_sword/ice_aoe(T)
 
 		for(var/turf/T in orange(outer_circle_area, connected_weapon.new_soul))
+			var/obj/O
+
+			if(T.density)
+				continue
+			if(O in T && O.density)
+				continue
 			if(connected_weapon.new_soul in T)
 				continue
 			if(T in inner_circle)
 				continue
+
 			new /obj/effect/fd_sword/telegraph_basic/wintersword/aoe(T)
 			outer_circle += T
 
@@ -345,3 +394,14 @@
 
 		connected_weapon.new_soul.anchored = FALSE
 		REMOVE_TRAIT(connected_weapon.new_soul, TRAIT_IMMOBILIZED, ICECAGE_TRAIT)
+
+/datum/sword_tech/wintersword/use_targeted_ability(atom/target)
+
+	if(istype(target, /mob/living))
+		if(target != connected_weapon.new_soul)
+			var/mob/living/L = target
+
+			L.ice_stacks += 2
+
+			if(L.ice_stacks >= 10)
+				L.turn_to_ice()
