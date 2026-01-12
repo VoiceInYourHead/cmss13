@@ -4,6 +4,16 @@
 /obj/item/weapon/sword/fd_sword/timesword
 	techniques = list(/datum/sword_tech/timesword)
 
+/obj/item/weapon/sword/fd_sword/timesword/attack(mob/target, mob/user)
+	. = ..()
+
+	if(istype(target, /mob/living))
+		if(target != user)
+			var/datum/sword_tech/timesword/T = technique_attached
+
+			T.time_fragments += 1
+			T.update_info()
+
 /obj/effect/fd_sword/timeaoe
 	name = "ЧАС РАСПЛАТЫ"
 
@@ -308,13 +318,6 @@
 			addtimer(CALLBACK(M, TYPE_PROC_REF(/mob/living, reset_timeanchor)), 10 SECONDS)
 
 /datum/sword_tech/timesword/use_targeted_ability(atom/target)
-
-	if(istype(target, /mob/living))
-		if(target != connected_weapon.new_soul)
-			time_fragments += 1
-
-			update_info()
-
 	if(istype(target, /obj/) && target != connected_weapon)
 		var/obj/O = target
 

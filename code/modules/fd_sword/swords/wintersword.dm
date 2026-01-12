@@ -1,6 +1,29 @@
 #define COMSIG_KB_HUMAN_WINTERSWORD_TRAVERSE_UP "keybinding_human_wintersword_traverse_up"
 #define COMSIG_KB_HUMAN_WINTERSWORD_TRAVERSE_DOWN "keybinding_human_wintersword_traverse_down"
 
+/obj/
+	var/cold = FALSE
+
+/obj/proc/chill_out()
+	cold = TRUE
+
+	overlays += image('code/modules/fd_sword/icons/visuals.dmi', icon_state = "empdisable")
+	add_filter("chilled", 1, list("type" = "outline", "color" = "#aefff4", "size" = 1))
+
+	addtimer(CALLBACK(src, PROC_REF(heat_up)), 1 MINUTES)
+
+/obj/proc/heat_up()
+	cold = FALSE
+
+	overlays -= image('code/modules/fd_sword/icons/visuals.dmi', icon_state = "empdisable")
+	remove_filter("chilled", 1, list("type" = "outline", "color" = "#aefff4", "size" = 1))
+
+/obj/get_examine_text(mob/user)
+	. = ..()
+
+	if(cold)
+		. += SPAN_BLUE("На поверхности [src] виднеется едва заметная ледяная корка.")
+
 /mob/living/carbon/human/Move(NewLoc, direct)
 	if(istype(current_active_technique, /datum/sword_tech/wintersword))
 		var/datum/sword_tech/wintersword/icewalk = current_active_technique
@@ -14,6 +37,7 @@
 	flags_atom &= ~NO_ZFALL
 
 /mob/living
+	var/cold = FALSE
 	var/tripped = FALSE
 	var/ice_stacks = 0
 
@@ -30,12 +54,18 @@
 
 	mouse_opacity = FALSE
 
+	cold = TRUE
+	bodytemperature = 190
+
 	addtimer(CALLBACK(src, PROC_REF(unfreeze)), 5 SECONDS)
 
 /mob/living/proc/unfreeze()
 	overlays -= image('code/modules/fd_sword/icons/visuals.dmi', icon_state = "ice_cube")
 	REMOVE_TRAIT(src, TRAIT_IMMOBILIZED, ICECAGE_TRAIT)
 	REMOVE_TRAIT(src, TRAIT_TEMPORARILY_MUTED, ICECAGE_TRAIT)
+
+	cold = FALSE
+	bodytemperature = T37C
 
 	mouse_opacity = TRUE
 	ice_stacks = 0
@@ -55,11 +85,17 @@
 	animate(src, pixel_y = 18, time = 0.5 SECONDS, easing = BACK_EASING|EASE_IN, flags = ANIMATION_PARALLEL)
 
 	for(var/mob/living/L in get_turf(src))
-		L.adjustBruteLoss(50)
+		animate(L, pixel_z = 23, time = 0.5 SECONDS, easing = BACK_EASING|EASE_IN)
+		new /obj/effect/fd_sword/hit_effect(get_turf(L))
+
+		L.apply_damage(50, BRUTE)
 		shake_camera(L, 2, 1)
 
 	spawn(0.5 SECONDS)
 		animate(src, pixel_y = 0, time = 0.2 SECONDS, easing = SINE_EASING|EASE_IN)
+
+		for(var/mob/living/L in get_turf(src))
+			animate(L, pixel_z = 0, time = 0.2 SECONDS, easing = SINE_EASING|EASE_IN)
 
 	spawn(0.7 SECONDS)
 		animate(src, alpha = 0, time = 0.3 SECONDS)
@@ -144,6 +180,22 @@
 	spawn(1 SECONDS)
 		qdel(src)
 
+/obj/effect/fd_sword/sparkles
+	icon = 'code/modules/fd_sword/icons/visuals.dmi'
+	icon_state = "empdisable"
+
+	anchored = TRUE
+	mouse_opacity = FALSE
+	layer = ABOVE_MOB_LAYER
+
+/obj/effect/fd_sword/sparkles/Initialize(mapload, ...)
+	. = ..()
+	spawn(1 SECONDS)
+		animate(src, alpha = 0, time = 0.5 SECONDS)
+
+	spawn(1.5 SECONDS)
+		qdel(src)
+
 /obj/effect/fd_sword/shards_creation
 	icon = 'code/modules/fd_sword/icons/visuals.dmi'
 	icon_state = "ice_shards"
@@ -201,6 +253,18 @@
 /obj/item/weapon/sword/fd_sword/wintersword
 	techniques = list(/datum/sword_tech/wintersword)
 	icon_state = "wintersword"
+
+/obj/item/weapon/sword/fd_sword/wintersword/attack(mob/target, mob/user)
+	. = ..()
+	var/mob/living/carbon/human/H = user
+
+	if(istype(target, /mob/living) && H.sword_combat_active)
+		if(target != user)
+			var/mob/living/L = target
+
+			L.ice_stacks += 2
+			if(L.ice_stacks >= 10)
+				L.turn_to_ice()
 
 /datum/keybinding/human/sword_technique/wintersword_traverse_up
 	hotkey_keys = list("Northeast")
@@ -357,12 +421,6 @@
 	ADD_TRAIT(connected_weapon.new_soul, TRAIT_IMMOBILIZED, ICECAGE_TRAIT)
 
 	for(var/turf/T in orange(inner_circle_area, connected_weapon.new_soul))
-		var/obj/O
-
-		if(T.density)
-			continue
-		if(O in T && O.density)
-			continue
 		if(connected_weapon.new_soul in T)
 			continue
 
@@ -374,12 +432,6 @@
 			new /obj/effect/fd_sword/ice_aoe(T)
 
 		for(var/turf/T in orange(outer_circle_area, connected_weapon.new_soul))
-			var/obj/O
-
-			if(T.density)
-				continue
-			if(O in T && O.density)
-				continue
 			if(connected_weapon.new_soul in T)
 				continue
 			if(T in inner_circle)
@@ -396,12 +448,34 @@
 		REMOVE_TRAIT(connected_weapon.new_soul, TRAIT_IMMOBILIZED, ICECAGE_TRAIT)
 
 /datum/sword_tech/wintersword/use_targeted_ability(atom/target)
+	if(!connected_weapon.new_soul.get_active_hand())
 
-	if(istype(target, /mob/living))
-		if(target != connected_weapon.new_soul)
-			var/mob/living/L = target
+		if(istype(target, /obj/) && target != connected_weapon)
+			var/obj/O = target
+			O.chill_out()
 
-			L.ice_stacks += 2
+			new /obj/effect/fd_sword/targeted_ability(get_turf(target))
+			connected_weapon.new_soul.sword_usage_current += 1
 
-			if(L.ice_stacks >= 10)
-				L.turn_to_ice()
+			check_overcharge()
+			connected_weapon.new_soul.hud_used.sword_usage_stat.update_stat(connected_weapon.new_soul)
+			connected_weapon.new_soul.hud_used.sword_limit_stat.update_stat(connected_weapon.new_soul)
+
+		if(istype(target, /mob/living/carbon/human) && get_dist(target, connected_weapon.new_soul) <= 1)
+			var/mob/living/carbon/human/H = target
+
+			new /obj/effect/fd_sword/sparkles(get_turf(H))
+
+			for(var/obj/limb/L in H)
+				L.remove_all_bleeding(TRUE)
+
+			H.apply_damage(-30, BRUTE)
+			H.apply_damage(-30, BURN)
+			connected_weapon.new_soul.balloon_alert_to_viewers("*[connected_weapon.new_soul] прикладывает руку к ранам [H], помогая им затянуться*", null, DEFAULT_MESSAGE_RANGE, null, COLOR_CYAN)
+
+			new /obj/effect/fd_sword/targeted_ability(get_turf(target))
+			connected_weapon.new_soul.sword_usage_current += 1
+
+			check_overcharge()
+			connected_weapon.new_soul.hud_used.sword_usage_stat.update_stat(connected_weapon.new_soul)
+			connected_weapon.new_soul.hud_used.sword_limit_stat.update_stat(connected_weapon.new_soul)

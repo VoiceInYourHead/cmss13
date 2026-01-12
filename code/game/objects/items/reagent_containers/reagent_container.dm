@@ -33,6 +33,9 @@
 	if(reagent_info)
 		. += reagent_info
 
+	if(cold && length(reagents.reagent_list))
+		. += SPAN_BLUE("Жидкость внутри слегка охлаждена!")
+
 /// Whether the user can see the amount or reagents inside
 /obj/item/reagent_container/proc/show_reagent_info(mob/user)
 	if(reagent_desc_override)
