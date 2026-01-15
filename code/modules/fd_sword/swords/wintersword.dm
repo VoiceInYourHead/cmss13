@@ -452,14 +452,16 @@
 
 		if(istype(target, /obj/) && target != connected_weapon)
 			var/obj/O = target
-			O.chill_out()
+			if(!O.cold)
 
-			new /obj/effect/fd_sword/targeted_ability(get_turf(target))
-			connected_weapon.new_soul.sword_usage_current += 1
+				O.chill_out()
 
-			check_overcharge()
-			connected_weapon.new_soul.hud_used.sword_usage_stat.update_stat(connected_weapon.new_soul)
-			connected_weapon.new_soul.hud_used.sword_limit_stat.update_stat(connected_weapon.new_soul)
+				new /obj/effect/fd_sword/targeted_ability(get_turf(target))
+				connected_weapon.new_soul.sword_usage_current += 1
+
+				check_overcharge()
+				connected_weapon.new_soul.hud_used.sword_usage_stat.update_stat(connected_weapon.new_soul)
+				connected_weapon.new_soul.hud_used.sword_limit_stat.update_stat(connected_weapon.new_soul)
 
 		if(istype(target, /mob/living/carbon/human) && get_dist(target, connected_weapon.new_soul) <= 1)
 			var/mob/living/carbon/human/H = target

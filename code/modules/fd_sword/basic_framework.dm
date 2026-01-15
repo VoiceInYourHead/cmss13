@@ -100,7 +100,7 @@
 				animate(src, alpha = 0, time = 0.5 SECONDS)
 				return 1
 
-/atom/movable/screen/sword_info/clicked(mob/living/carbon/human/user)
+/atom/movable/screen/sword_info/clicked(mob/living/carbon/human/user, list/mods)
 	if (..())
 		return 1
 
@@ -203,7 +203,6 @@
 	return jointext(info, "")
 
 /atom/movable/screen/sword_info/targeted_info
-	name = "targeted technique info"
 	icon_state = "info_targeted"
 	alpha = 0
 	mother_button = FALSE
