@@ -345,7 +345,7 @@
 		return FALSE
 
 /datum/sword_tech/wintersword
-	name = "ТЕХНИКА: Зима"
+	name = "КОНЦЕПЦИЯ: Зима"
 
 	traverse_ability_cooldown = 30 SECONDS
 	traverse_ability_cost = 2
@@ -370,6 +370,7 @@
 	aoe_ability_desc = "Создаёт вокруг группу ледяных шипов, наносящих средний урон всему, что окажется в месте их появления"
 
 	targeted_ability_cost = 0
+	targeted_ability_cooldown = 2 SECONDS
 
 	targeted_ability_name = "ОБМОРОЖЕНИЕ"
 	targeted_ability_desc = "Систематические удары данным оружием заставляют цель замёрзнуть. Касание пустой рукой в боевом режиме может привести к самым разным последствиям в зависимости от выбранной цели"

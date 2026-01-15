@@ -123,7 +123,7 @@
 	layer = ABOVE_MOB_LAYER
 
 /datum/sword_tech/timesword
-	name = "ТЕХНИКА: Время"
+	name = "КОНЦЕПЦИЯ: Время"
 
 	traverse_ability_cooldown = 30 SECONDS
 	traverse_ability_cost = 1
@@ -138,6 +138,7 @@
 	aoe_ability_cost = 4
 
 	targeted_ability_cost = 0
+	targeted_ability_cooldown = 2 SECONDS
 
 	var/time_fragments = 0
 	var/traverse_fragments_cost = 1
