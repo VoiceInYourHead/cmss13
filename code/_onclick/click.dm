@@ -87,7 +87,7 @@
 		if(ishuman(src))
 			var/mob/living/carbon/human/H = src
 			if(H.current_active_technique != /datum/sword_tech/timesword || !H.sword_combat_active)
-				H.play_screen_text(text = "ТЫ ПОМНИШЬ, ЧТО ЗДЕСЬ ЧТО-ТО БЫЛО...", alert_type = /atom/movable/screen/text/screen_text/command_order, override_color = "#ff0000")
+				H.play_screen_text(text = "ТЫ ПОМНИШЬ, ЧТО ЗДЕСЬ ЧТО-ТО БЫЛО...", alert_type = /atom/movable/screen/text/screen_text/command_order, override_color = "#929292")
 
 	if(mods[MIDDLE_CLICK] || mods[BUTTON4] || mods[BUTTON5])
 		return

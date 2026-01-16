@@ -543,3 +543,5 @@ GLOBAL_LIST(trait_name_map)
 #define ICESLIDE_TRAIT "iceslide"
 #define ICESPIKES_TRAIT "icespikes"
 #define ICECAGE_TRAIT "icecage"
+// goldensword domain
+#define GOLDENCASINO_TRAIT "goldencasino"
