@@ -536,6 +536,9 @@
 
 //// MOB ////
 
+/mob/living
+	var/jackpot_status = FALSE
+
 /mob/living/carbon/human
 	var/datum/sword_tech/current_active_technique = null
 	var/obj/item/weapon/sword/fd_sword/sword_pact = null
@@ -547,6 +550,21 @@
 
 	var/danger_zone_reached = FALSE
 	var/overcharged = FALSE
+
+/mob/living/carbon/human/Move(NewLoc, direct)
+	if(jackpot_status)
+		next_move_slowdown = -1
+
+	if(istype(current_active_technique, /datum/sword_tech/wintersword))
+		var/datum/sword_tech/wintersword/icewalk = current_active_technique
+		if(icewalk.traverse_active)
+			next_move_slowdown = -1
+			flags_atom |= NO_ZFALL
+			new /obj/structure/fd_sword/ice_bridge(get_turf(NewLoc))
+
+	. = ..()
+
+	flags_atom &= ~NO_ZFALL
 
 /mob/living/carbon/human/proc/trigger_overcharge()
 	new /obj/effect/fd_sword/sanity_effect/overflow(get_turf(src))
@@ -647,7 +665,7 @@
 		new /obj/effect/fd_sword/sanity_effect/full(get_turf(connected_weapon.new_soul))
 		return TRUE
 
-	if(connected_weapon.new_soul.sword_usage_current > connected_weapon.new_soul.sword_usage_limit && !connected_weapon.new_soul.overcharged)
+	if(connected_weapon.new_soul.sword_usage_current > connected_weapon.new_soul.sword_usage_limit && !connected_weapon.new_soul.overcharged && !connected_weapon.new_soul.jackpot_status)
 		connected_weapon.new_soul.trigger_overcharge()
 
 /datum/sword_tech/proc/overcharge_debuffs()

@@ -24,18 +24,6 @@
 	if(cold)
 		. += SPAN_BLUE("На поверхности [src] виднеется едва заметная ледяная корка.")
 
-/mob/living/carbon/human/Move(NewLoc, direct)
-	if(istype(current_active_technique, /datum/sword_tech/wintersword))
-		var/datum/sword_tech/wintersword/icewalk = current_active_technique
-		if(icewalk.traverse_active)
-			next_move_slowdown = -1
-			flags_atom |= NO_ZFALL
-			new /obj/structure/fd_sword/ice_bridge(get_turf(NewLoc))
-
-	. = ..()
-
-	flags_atom &= ~NO_ZFALL
-
 /mob/living
 	var/cold = FALSE
 	var/tripped = FALSE

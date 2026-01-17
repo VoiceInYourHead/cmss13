@@ -4,8 +4,43 @@
 
 	var/guessed_number = 1
 
+	var/havent_seen_goldensword_dom = TRUE
+
+/atom/movable/screen/text/screen_text/command_order/centered
+	screen_loc = "CENTER,CENTER"
+
 /mob/living/proc/gambling_buff()
+
 /mob/living/proc/gambling_ownerbuff()
+
+	for(var/mob/living/L in view(src))
+		if(havent_seen_goldensword_dom)
+			L.havent_seen_goldensword_dom = FALSE
+
+			L.play_screen_text(text = "Успешно угадав заданное число во время действия воплощённого концепта...", alert_type = /atom/movable/screen/text/screen_text/command_order/centered, override_color = "#ffffff")
+
+			spawn(1 SECONDS)
+				L.play_screen_text(text = "...в качестве выигрыша [src] получает 3 минуты и 33 секунды...", alert_type = /atom/movable/screen/text/screen_text/command_order/centered, override_color = "#ffffff")
+
+			spawn(2 SECONDS)
+				L.play_screen_text(text = "ПОЛНОЙ НЕУЯЗВИМОСТИ", alert_type = /atom/movable/screen/text/screen_text/command_order/centered, override_color = "#ffae00")
+
+	rejuvenate()
+
+	jackpot_status = TRUE
+	status_flags |= GODMODE
+	RegisterSignal(src, list(COMSIG_LIVING_FLAMER_CROSSED, COMSIG_LIVING_FLAMER_FLAMED), PROC_REF(handle_fire_protection))
+
+	addtimer(CALLBACK(src, PROC_REF(remove_ownerbuff)), 213 SECONDS)
+/mob/living/proc/remove_ownerbuff()
+	rejuvenate()
+	sword_usage_current = 0
+
+	jackpot_status = FALSE
+
+	status_flags &= ~(GODMODE)
+	UnregisterSignal(src, list(COMSIG_LIVING_FLAMER_CROSSED, COMSIG_LIVING_FLAMER_FLAMED))
+
 /mob/living/proc/gambling_debuff()
 
 /atom/movable/screen/fullscreen/goldensword_dom
@@ -14,6 +49,18 @@
 
 	plane = 44
 	layer = 3
+
+/obj/effect/fd_sword/goldensword_fake
+	name = "combat sword"
+	icon = 'code/modules/fd_sword/icons/swords.dmi'
+	icon_state = "goldensword"
+
+	anchored = TRUE
+	mouse_opacity = FALSE
+	layer = 5
+	plane = 45
+
+	alpha = 0
 
 /obj/item/weapon/sword/fd_sword/goldensword
 	icon_state = "goldensword"
@@ -42,6 +89,7 @@
 	var/reroll_cost = 5
 
 	var/keep_spinning = FALSE
+	var/obj/effect/fd_sword/goldensword_fake/fakesword = null
 
 	aoe_ability_name = "СТАВКА"
 	aoe_ability_desc = "Останавливает мир вокруг вас на время вращения рулетки. Загадывается случайное число в диапазоне от 1 до 6 и все участники включая вас должны угадать какое. В зависимости от результата ставки вы можете как получить определённые бонусы, так и серьёзно пострадать"
@@ -53,14 +101,42 @@
 
 /datum/sword_tech/goldensword/proc/swordspin()
 
-	animate(connected_weapon, transform = matrix(90, MATRIX_ROTATE), time = 0.5 SECONDS, easing = EASE_IN)
+	if(!keep_spinning)
+		qdel(fakesword)
 
-	if(keep_spinning)
-		swordspin()
+	animate(fakesword, transform = matrix(30, MATRIX_ROTATE), time = 0.3 SECONDS, easing = EASE_IN)
+	swordspin()
 
 /datum/sword_tech/goldensword/use_aoe_ability()
 	keep_spinning = TRUE
+	fakesword = new /obj/effect/fd_sword/goldensword_fake(get_turf(connected_weapon.new_soul))
+
+	ADD_TRAIT(connected_weapon.new_soul, TRAIT_IMMOBILIZED, GOLDENCASINO_TRAIT)
+
+	animate(fakesword, alpha = 255, time = 1 SECONDS, flags = ANIMATION_PARALLEL)
+	animate(fakesword, pixel_y = 32, time = 1 SECONDS, easing = SINE_EASING|EASE_OUT, flags = ANIMATION_PARALLEL)
+
+	connected_weapon.new_soul.say("Воплощение концепта...")
+
+	sleep(1 SECONDS)
 	swordspin()
+
+	for(var/mob/living/L in view(connected_weapon.new_soul))
+
+		var/x_offset = (connected_weapon.new_soul.x - L.x) * 32
+		var/y_offset = (connected_weapon.new_soul.y - L.y) * 32
+
+		if(L != connected_weapon.new_soul)
+			animate(L.client, pixel_x = x_offset, pixel_y = y_offset, time = 6 SECONDS, easing = CUBIC_EASING)
+
+		ADD_TRAIT(L, TRAIT_IMMOBILIZED, GOLDENCASINO_TRAIT)
+		L.mouse_opacity = FALSE
+		L.anchored = TRUE
+
+		L.overlay_fullscreen("domain", /atom/movable/screen/fullscreen/goldensword_dom)
+		L.plane = 45
+
+		L.play_screen_text(text = "...ЗОЛОТО ДУРАКОВ!", alert_type = /atom/movable/screen/text/screen_text/command_order/centered, override_color = "#ffae00")
 
 	var/list/players = list()
 	var/correct_number = pick("1","2","3","4","5","6") // Я боюсь что иначе оно не поймёт
@@ -76,13 +152,9 @@
 								"PASS" = image(icon = 'code/modules/fd_sword/icons/visuals.dmi', icon_state = "pass"))
 
 	for(var/mob/living/L in view(connected_weapon.new_soul))
-		L.overlay_fullscreen("domain", /atom/movable/screen/fullscreen/goldensword_dom)
-		L.plane = 45
-
-		ADD_TRAIT(L, TRAIT_IMMOBILIZED, GOLDENCASINO_TRAIT)
 
 		if(L.client)
-			L.play_screen_text(text = "КАЗИНО НАЗВАЛО ЦИФРУ...", alert_type = /atom/movable/screen/text/screen_text/command_order, override_color = "#ffae00")
+			L.play_screen_text(text = "КАЗИНО НАЗВАЛО ЦИФРУ...", alert_type = /atom/movable/screen/text/screen_text/command_order, override_color = "#ffffff")
 
 			L.guessed_number = show_radial_menu(L, L, number_selection, tooltips = TRUE, radius = 60)
 			if(!L.guessed_number)
@@ -95,11 +167,11 @@
 			L.guessed_number = pick("1","2","3","4","5","6")
 
 	for(var/mob/living/L in players)
-		L.play_screen_text(text = "...И ЭТО ЦИФРА [correct_number]!", alert_type = /atom/movable/screen/text/screen_text/command_order, override_color = "#ffae00")
+		L.play_screen_text(text = "...И ЭТО ЦИФРА [correct_number]!", alert_type = /atom/movable/screen/text/screen_text/command_order/centered, override_color = "#ffae00")
 
 	for(connected_weapon.new_soul in players)
 		if(connected_weapon.new_soul.guessed_number != correct_number && connected_weapon.new_soul.collected_gold >= reroll_cost)
-			connected_weapon.new_soul.play_screen_text(text = "ХОТИТЕ СОВЕРШИТЬ ПОВТОРНУЮ КРУТКУ?", alert_type = /atom/movable/screen/text/screen_text/command_order, override_color = "#ffae00")
+			connected_weapon.new_soul.play_screen_text(text = "ХОТИТЕ СОВЕРШИТЬ ПОВТОРНУЮ КРУТКУ?", alert_type = /atom/movable/screen/text/screen_text/command_order, override_color = "#ffffff")
 			var/answer = show_radial_menu(connected_weapon.new_soul, connected_weapon.new_soul, afteroptions, tooltips = TRUE, radius = 30)
 
 			if(!answer)
@@ -107,8 +179,9 @@
 			switch(answer)
 				if("REROLL")
 					for(var/mob/living/L in players)
-						L.play_screen_text(text = "[connected_weapon.new_soul] КРУТИТ БАРАБАН СНОВА!", alert_type = /atom/movable/screen/text/screen_text/command_order, override_color = "#ffae00")
+						L.play_screen_text(text = "[connected_weapon.new_soul] КРУТИТ БАРАБАН СНОВА!", alert_type = /atom/movable/screen/text/screen_text/command_order/centered, override_color = "#ffae00")
 						connected_weapon.new_soul.collected_gold -= reroll_cost
+						keep_spinning = FALSE
 
 						aoe_ability_check()
 						return FALSE
@@ -131,5 +204,9 @@
 		L.plane = initial(L.plane)
 
 		REMOVE_TRAIT(L, TRAIT_IMMOBILIZED, GOLDENCASINO_TRAIT)
+		L.mouse_opacity = TRUE
+		L.anchored = FALSE
+
+		animate(L.client, pixel_x = 0, pixel_y = 0, time = 6 SECONDS, easing = CUBIC_EASING)
 
 	keep_spinning = FALSE
