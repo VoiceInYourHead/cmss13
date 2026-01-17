@@ -1897,6 +1897,7 @@
 #include "code\modules\events\nothing_happens.dm"
 #include "code\modules\fd_sword\basic_framework.dm"
 #include "code\modules\fd_sword\jobs_and_stuff.dm"
+#include "code\modules\fd_sword\swords\goldensword.dm"
 #include "code\modules\fd_sword\swords\pyrokinesis_school.dm"
 #include "code\modules\fd_sword\swords\timesword.dm"
 #include "code\modules\fd_sword\swords\wintersword.dm"

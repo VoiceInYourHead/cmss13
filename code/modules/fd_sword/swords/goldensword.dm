@@ -5,6 +5,7 @@
 	var/guessed_number = 1
 
 	var/havent_seen_goldensword_dom = TRUE
+	var/jackpot_status = FALSE
 
 /atom/movable/screen/text/screen_text/command_order/centered
 	screen_loc = "CENTER,CENTER"
@@ -33,13 +34,15 @@
 
 	addtimer(CALLBACK(src, PROC_REF(remove_ownerbuff)), 213 SECONDS)
 /mob/living/proc/remove_ownerbuff()
-	rejuvenate()
-	sword_usage_current = 0
+	var/mob/living/carbon/human/H = src
 
-	jackpot_status = FALSE
+	H.rejuvenate()
+	H.sword_usage_current = 0
 
-	status_flags &= ~(GODMODE)
-	UnregisterSignal(src, list(COMSIG_LIVING_FLAMER_CROSSED, COMSIG_LIVING_FLAMER_FLAMED))
+	H.jackpot_status = FALSE
+
+	H.status_flags &= ~(GODMODE)
+	UnregisterSignal(H, list(COMSIG_LIVING_FLAMER_CROSSED, COMSIG_LIVING_FLAMER_FLAMED))
 
 /mob/living/proc/gambling_debuff()
 
@@ -169,13 +172,11 @@
 	for(var/mob/living/L in players)
 		L.play_screen_text(text = "...И ЭТО ЦИФРА [correct_number]!", alert_type = /atom/movable/screen/text/screen_text/command_order/centered, override_color = "#ffae00")
 
-	for(connected_weapon.new_soul in players)
-		if(connected_weapon.new_soul.guessed_number != correct_number && connected_weapon.new_soul.collected_gold >= reroll_cost)
-			connected_weapon.new_soul.play_screen_text(text = "ХОТИТЕ СОВЕРШИТЬ ПОВТОРНУЮ КРУТКУ?", alert_type = /atom/movable/screen/text/screen_text/command_order, override_color = "#ffffff")
-			var/answer = show_radial_menu(connected_weapon.new_soul, connected_weapon.new_soul, afteroptions, tooltips = TRUE, radius = 30)
+	if(connected_weapon.new_soul.guessed_number != correct_number && connected_weapon.new_soul.collected_gold >= reroll_cost)
+		connected_weapon.new_soul.play_screen_text(text = "ХОТИТЕ СОВЕРШИТЬ ПОВТОРНУЮ КРУТКУ?", alert_type = /atom/movable/screen/text/screen_text/command_order, override_color = "#ffffff")
+		var/answer = show_radial_menu(connected_weapon.new_soul, connected_weapon.new_soul, afteroptions, tooltips = TRUE, radius = 30)
 
-			if(!answer)
-				continue
+		if(answer)
 			switch(answer)
 				if("REROLL")
 					for(var/mob/living/L in players)
@@ -185,8 +186,6 @@
 
 						aoe_ability_check()
 						return FALSE
-				if("PASS")
-					continue
 
 	for(var/mob/living/L in players)
 		if(L.guessed_number != correct_number)

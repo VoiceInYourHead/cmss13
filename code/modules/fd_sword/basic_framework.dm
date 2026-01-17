@@ -536,9 +536,6 @@
 
 //// MOB ////
 
-/mob/living
-	var/jackpot_status = FALSE
-
 /mob/living/carbon/human
 	var/datum/sword_tech/current_active_technique = null
 	var/obj/item/weapon/sword/fd_sword/sword_pact = null
