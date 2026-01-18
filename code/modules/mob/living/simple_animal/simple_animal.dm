@@ -364,8 +364,16 @@
 			visible_message(SPAN_DANGER("[attacking_mob] [response_harm] [src]!"), null, null, 5)
 
 			final_damage = attack.damage + extra_cqc_dmg + harm_intent_damage
-			apply_damage(final_damage, BRUTE, src, sharp = attack.sharp, edge = attack.edge)
-			return 1
+			if(attacking_mob.jackpot_status)
+
+				final_damage += 10
+				apply_damage(final_damage, BRUTE, src, sharp = attack.sharp, edge = attack.edge)
+				throw_atom(get_edge_target_turf(src, attacking_mob.dir), 3, SPEED_AVERAGE, src, FALSE)
+				return 1
+
+			else
+				apply_damage(final_damage, BRUTE, src, sharp = attack.sharp, edge = attack.edge)
+				return 1
 
 /mob/living/simple_animal/can_be_pulled_by(mob/pulling_mob)
 	if(locate(/obj/item/explosive/plastic) in contents)

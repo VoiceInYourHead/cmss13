@@ -101,6 +101,8 @@
 	if(client && client.player_data)
 		record_playtime(client.player_data, job, type)
 
+	drop_gold()
+
 	track_death_calculations()
 
 	INVOKE_ASYNC(src, PROC_REF(handle_death_cause), cause_data, get_turf(src))

@@ -269,7 +269,7 @@
 				if(!user.overcharged)
 					addtimer(CALLBACK(src, PROC_REF(hide_stat)), 5 SECONDS)
 				else
-					addtimer(CALLBACK(src, PROC_REF(hide_stat)), 11 SECONDS)
+					addtimer(CALLBACK(src, PROC_REF(hide_stat)), 200 SECONDS)
 
 		else
 			if(alpha != 0)
@@ -316,7 +316,7 @@
 				if(!user.overcharged)
 					addtimer(CALLBACK(src, PROC_REF(hide_stat)), 5 SECONDS)
 				else
-					addtimer(CALLBACK(src, PROC_REF(hide_stat)), 11 SECONDS)
+					addtimer(CALLBACK(src, PROC_REF(hide_stat)), 200 SECONDS)
 
 		else
 			if(alpha != 0)
@@ -510,7 +510,7 @@
 			new_soul = soul
 
 		soul.hud_used.sword_info.change_visibility(soul)
-		soul.balloon_alert_to_viewers("*[soul.real_name] обнажил клинок*", null, DEFAULT_MESSAGE_RANGE, null, COLOR_RED)
+		soul.balloon_alert_to_viewers("*[soul.real_name] обнажил(а) клинок*", null, DEFAULT_MESSAGE_RANGE, null, COLOR_RED)
 
 		return TRUE
 
@@ -521,7 +521,7 @@
 		soul.current_active_technique = null
 		soul.sword_combat_active = FALSE
 
-		soul.balloon_alert_to_viewers("*[soul.real_name] спрятал клинок*", null, DEFAULT_MESSAGE_RANGE, null, COLOR_WHITE)
+		soul.balloon_alert_to_viewers("*[soul.real_name] спрятал(а) клинок*", null, DEFAULT_MESSAGE_RANGE, null, COLOR_WHITE)
 
 		soul.hud_used.sword_info.change_visibility(soul)
 		soul.hud_used.traverse_info.change_visibility(soul)
@@ -549,7 +549,12 @@
 	var/overcharged = FALSE
 
 /mob/living/carbon/human/Move(NewLoc, direct)
-	if(jackpot_status)
+	if(collected_gold < 10 && collected_gold > 5)
+		next_move_slowdown = -0.5
+	if(collected_gold >= 10)
+		next_move_slowdown = -1.5
+
+	if(overcharged)
 		next_move_slowdown = -1
 
 	if(istype(current_active_technique, /datum/sword_tech/wintersword))
@@ -564,6 +569,8 @@
 	flags_atom &= ~NO_ZFALL
 
 /mob/living/carbon/human/proc/trigger_overcharge()
+	playsound_client(client, 'code/modules/fd_sword/sounds/overflow.mp3', src, 25, 0)
+
 	new /obj/effect/fd_sword/sanity_effect/overflow(get_turf(src))
 	add_filter("overcharged", 1, list("type" = "outline", "color" = "#a200ff", "size" = 1))
 	overlays += image('code/modules/fd_sword/icons/visuals.dmi', icon_state = "dementation")
@@ -572,15 +579,15 @@
 	hud_used.sword_usage_stat.update_stat(src)
 	hud_used.sword_limit_stat.update_stat(src)
 
-	reagents.add_reagent("speed_stimulant", 10)
-	reagents.add_reagent("brain_stimulant", 10)
-
-	addtimer(CALLBACK(src, PROC_REF(resolve_overcharge)), 10 SECONDS)
+	addtimer(CALLBACK(src, PROC_REF(resolve_overcharge)), 200 SECONDS)
 
 /mob/living/carbon/human/proc/resolve_overcharge()
 	new /obj/effect/fd_sword/sanity_effect(get_turf(src))
 	remove_filter("overcharged", 1, list("type" = "outline", "color" = "#a200ff", "size" = 1))
 	overlays -= image('code/modules/fd_sword/icons/visuals.dmi', icon_state = "dementation")
+
+	apply_effect(10, SLOW)
+	apply_effect(10, AGONY)
 
 	overcharged = FALSE
 	sword_usage_limit -= 1
@@ -592,7 +599,7 @@
 	reagents.del_reagent("speed_stimulant")
 	reagents.del_reagent("brain_stimulant")
 
-	sword_pact.technique_attached.overcharge_debuffs()
+	sword_pact.technique_attached.overcharge_marks()
 	sword_pact.technique_attached.danger_zone_reached = FALSE
 
 //// SCHOOL ////
@@ -665,7 +672,7 @@
 	if(connected_weapon.new_soul.sword_usage_current > connected_weapon.new_soul.sword_usage_limit && !connected_weapon.new_soul.overcharged && !connected_weapon.new_soul.jackpot_status)
 		connected_weapon.new_soul.trigger_overcharge()
 
-/datum/sword_tech/proc/overcharge_debuffs()
+/datum/sword_tech/proc/overcharge_marks()
 	return TRUE
 
 /datum/sword_tech/proc/traverse_ability_check()

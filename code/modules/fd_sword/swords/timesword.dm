@@ -150,6 +150,8 @@
 	aoe_ability_name = "ЧАС РАСПЛАТЫ"
 	targeted_ability_name = "ВРЕМЕННОЕ ИСКАЖЕНИЕ"
 
+	var/marks_amount = 0
+
 /datum/sword_tech/timesword/Initialize()
 	. = ..()
 	update_info()
@@ -159,6 +161,46 @@
 	ranged_ability_desc = "Все сущности, оказавшиеся в зоне оной, становятся на временной якорь. По прохождению 5 секунд, эти сущности притягиваются к якорю и замирают во времени. +2 ФРАГМЕНТА за каждую поражённую цель. Ваши текущие ФРАГМЕНТЫ: [time_fragments]"
 	aoe_ability_desc = "Создаёт темпоральный шторм, заставляющий всех живых существ замереть во времени. Тратит 10 ФРАГМЕНТОВ. Ваши текущие ФРАГМЕНТЫ: [time_fragments]"
 	targeted_ability_desc = "Касание пустой руки в боевом режиме де-материализует предмет из пространства за 1 ФРАГМЕНТ. Обычная атака даёт 1 ФРАГМЕНТ. Ваши текущие ФРАГМЕНТЫ: [time_fragments]"
+
+/datum/sword_tech/timesword/overcharge_marks()
+	connected_weapon.new_soul.age += 10
+
+	connected_weapon.new_soul.r_hair = 255
+	connected_weapon.new_soul.g_hair = 255
+	connected_weapon.new_soul.b_hair = 255
+
+	connected_weapon.new_soul.r_facial = 255
+	connected_weapon.new_soul.g_facial = 255
+	connected_weapon.new_soul.b_facial = 255
+
+	connected_weapon.new_soul.update_hair()
+
+	if(connected_weapon.new_soul.age >= 100)
+		process_death()
+
+/datum/sword_tech/timesword/proc/process_death()
+
+	connected_weapon.new_soul.play_screen_text(text = "Сердце...забилось чаще?", alert_type = /atom/movable/screen/text/screen_text/command_order/centered, override_color = "#ffffff")
+	connected_weapon.new_soul.m_intent = MOVE_INTENT_WALK
+
+	spawn(5 SECONDS)
+		connected_weapon.new_soul.play_screen_text(text = "Чувствую себя неважно, голова кружится...", alert_type = /atom/movable/screen/text/screen_text/command_order/centered, override_color = "#ffffff")
+		connected_weapon.new_soul.emote("cough")
+
+	spawn(5.5 SECONDS)
+		connected_weapon.new_soul.emote("cough")
+
+	spawn(10 SECONDS)
+		connected_weapon.new_soul.apply_effect(999, EYE_BLUR)
+		connected_weapon.new_soul.play_screen_text(text = "Неужто добегался?... <span class='corp_label_red'><b>Время словно утекает из моих рук</b></span>...", alert_type = /atom/movable/screen/text/screen_text/command_order/centered, override_color = "#ffffff")
+
+	spawn(15 SECONDS)
+		connected_weapon.new_soul.apply_effect(999, SLOW)
+		connected_weapon.new_soul.play_screen_text(text = "Мне так... <span class='corp_label_red'><b>страшно</b></span>...", alert_type = /atom/movable/screen/text/screen_text/command_order/centered, override_color = "#ffffff")
+
+	spawn(20 SECONDS)
+		connected_weapon.new_soul.play_screen_text(text = "Ре...-бята...", alert_type = /atom/movable/screen/text/screen_text/command_order/centered, override_color = "#ffffff")
+		connected_weapon.new_soul.apply_internal_damage(100, "heart")
 
 /datum/sword_tech/timesword/proc/create_new_anchor(mob/living/anchored)
 	var/teleport_to

@@ -90,6 +90,16 @@
 	if(!sword_combat_active && sword_usage_current > 0)
 		sword_usage_current -= 1
 
+	if(jackpot_status)
+		heal_parts_of_damage()
+
+	if(overcharged)
+		apply_damage(-5, BRUTE)
+		apply_damage(-5, BURN)
+
+		set_effect(0, STUN)
+		set_effect(0, DAZE)
+
 /mob/living/carbon/human/set_stat(new_stat)
 	. = ..()
 	// Temporarily force triggering HUD updates so they apply immediately rather than on Life tick.
