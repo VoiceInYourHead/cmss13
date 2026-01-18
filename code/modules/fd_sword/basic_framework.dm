@@ -243,12 +243,7 @@
 	icon_state = "usage_0"
 	alpha = 0
 	mouse_opacity = FALSE
-	var/matrix/matrix1
 	var/already_playing = FALSE
-
-/atom/movable/screen/sword_usage_stat/Initialize(mapload, ...)
-	. = ..()
-	matrix1 = new()
 
 /atom/movable/screen/sword_usage_stat/proc/update_stat(mob/living/carbon/human/user)
 	if(user && user.hud_used)
@@ -264,7 +259,7 @@
 
 				if(alpha != 255)
 					animate(src, alpha = 255, time = 0.5 SECONDS, flags = ANIMATION_PARALLEL)
-					animate(src, transform = matrix1.Update(1,1,0,32,0), time = 0.5 SECONDS, easing = SINE_EASING|EASE_OUT, flags = ANIMATION_PARALLEL)
+					animate(src, transform = matrix(32, 0, MATRIX_TRANSLATE), time = 0.5 SECONDS, easing = SINE_EASING|EASE_OUT, flags = ANIMATION_PARALLEL)
 
 				if(!user.overcharged)
 					addtimer(CALLBACK(src, PROC_REF(hide_stat)), 5 SECONDS)
@@ -277,7 +272,7 @@
 
 /atom/movable/screen/sword_usage_stat/proc/hide_stat()
 	animate(src, alpha = 0, time = 0.5 SECONDS, flags = ANIMATION_PARALLEL)
-	animate(src, transform = matrix1.Update(1,1,0,-32,0), time = 0.5 SECONDS, easing = SINE_EASING|EASE_IN, flags = ANIMATION_PARALLEL)
+	animate(src, transform = matrix(0, 0, MATRIX_TRANSLATE), time = 0.5 SECONDS, easing = SINE_EASING|EASE_IN, flags = ANIMATION_PARALLEL)
 	already_playing = FALSE
 
 /datum/hud/human/proc/draw_sword_limit_stat(datum/custom_hud/ui_datum)
@@ -291,12 +286,7 @@
 	icon_state = "usage_cap_10"
 	alpha = 0
 	mouse_opacity = FALSE
-	var/matrix/matrix1
 	var/already_playing = FALSE
-
-/atom/movable/screen/sword_limit_stat/Initialize(mapload, ...)
-	. = ..()
-	matrix1 = new()
 
 /atom/movable/screen/sword_limit_stat/proc/update_stat(mob/living/carbon/human/user)
 	if(user && user.hud_used)
@@ -311,7 +301,7 @@
 
 				if(alpha != 255)
 					animate(src, alpha = 255, time = 0.5 SECONDS, flags = ANIMATION_PARALLEL)
-					animate(src, transform = matrix1.Update(1,1,0,32,0), time = 0.5 SECONDS, easing = SINE_EASING|EASE_OUT, flags = ANIMATION_PARALLEL)
+					animate(src, transform = matrix(32, 0, MATRIX_TRANSLATE), time = 0.5 SECONDS, easing = SINE_EASING|EASE_OUT, flags = ANIMATION_PARALLEL)
 
 				if(!user.overcharged)
 					addtimer(CALLBACK(src, PROC_REF(hide_stat)), 5 SECONDS)
@@ -324,7 +314,7 @@
 
 /atom/movable/screen/sword_limit_stat/proc/hide_stat()
 	animate(src, alpha = 0, time = 0.5 SECONDS, flags = ANIMATION_PARALLEL)
-	animate(src, transform = matrix1.Update(1,1,0,-32,0), time = 0.5 SECONDS, easing = SINE_EASING|EASE_IN, flags = ANIMATION_PARALLEL)
+	animate(src, transform = matrix(0, 0, MATRIX_TRANSLATE), time = 0.5 SECONDS, easing = SINE_EASING|EASE_IN, flags = ANIMATION_PARALLEL)
 	already_playing = FALSE
 
 //// SWORD ////
@@ -481,6 +471,12 @@
 		if(2)
 			new /obj/effect/fd_sword/hit_effect/alt2(get_turf(target))
 
+/obj/item/weapon/sword/fd_sword/equipped(mob/user, slot, silent)
+	. = ..()
+
+	if(awakend)
+		trigger_awakening(user)
+
 /obj/item/weapon/sword/fd_sword/dropped(mob/user)
 	. = ..()
 
@@ -497,7 +493,45 @@
 	if(!awakend)
 
 		if(!isnull(new_soul) && new_soul != soul)
+			new /obj/effect/fd_sword/cannot_cast_ability(get_turf(soul))
+			soul.balloon_alert(soul, "Меч уже привязан к [new_soul]!", COLOR_RED)
+			shake_camera(soul, 2, 1)
+
 			return FALSE
+
+		if(length(soul.sword_pact) && !(src in soul.sword_pact))
+
+			if(length(soul.sword_pact) >= 2)
+				new /obj/effect/fd_sword/cannot_cast_ability(get_turf(soul))
+				soul.balloon_alert(soul, "Вы уже повязаны пактом с двумя другими орудиями!", COLOR_RED)
+				shake_camera(soul, 2, 1)
+
+				return FALSE
+
+			else
+				soul.play_screen_text(text = "Вы хотите привязать второе орудие ценой своей стабильности?", alert_type = /atom/movable/screen/text/screen_text/command_order, override_color = "#ffffff")
+
+				var/list/selection = list("YES" = image(icon = 'code/modules/fd_sword/icons/visuals.dmi', icon_state = "green"),
+										"NO" = image(icon = 'code/modules/fd_sword/icons/visuals.dmi', icon_state = "red"))
+				var/answer = show_radial_menu(soul, soul, selection, tooltips = TRUE, radius = 30)
+				if(!answer)
+					new /obj/effect/fd_sword/cannot_cast_ability(get_turf(soul))
+					soul.balloon_alert(soul, "Вы уже повязаны пактом с другим орудием!", COLOR_RED)
+					shake_camera(soul, 2, 1)
+
+					return FALSE
+
+				switch(answer)
+					if("YES")
+						soul.sword_usage_limit -= 2
+						soul.hud_used.sword_usage_stat.update_stat(soul)
+						soul.hud_used.sword_limit_stat.update_stat(soul)
+					if("NO")
+						new /obj/effect/fd_sword/cannot_cast_ability(get_turf(soul))
+						soul.balloon_alert(soul, "Вы уже повязаны пактом с другим орудием!", COLOR_RED)
+						shake_camera(soul, 2, 1)
+
+						return FALSE
 
 		awakend = TRUE
 		add_filter("awakend", 1, list("type" = "outline", "color" = "#ffffff", "size" = 1))
@@ -505,9 +539,9 @@
 		soul.current_active_technique = technique_attached
 		soul.sword_combat_active = TRUE
 
-		soul.sword_pact = src
 		if(isnull(new_soul))
 			new_soul = soul
+			new_soul.sword_pact += src
 
 		soul.hud_used.sword_info.change_visibility(soul)
 		soul.balloon_alert_to_viewers("*[soul.real_name] обнажил(а) клинок*", null, DEFAULT_MESSAGE_RANGE, null, COLOR_RED)
@@ -538,7 +572,7 @@
 
 /mob/living/carbon/human
 	var/datum/sword_tech/current_active_technique = null
-	var/obj/item/weapon/sword/fd_sword/sword_pact = null
+	var/list/obj/item/weapon/sword/fd_sword/sword_pact = list()
 
 	var/sword_usage_limit = 10
 	var/sword_usage_current = 0
@@ -549,10 +583,12 @@
 	var/overcharged = FALSE
 
 /mob/living/carbon/human/Move(NewLoc, direct)
-	if(collected_gold < 10 && collected_gold > 5)
-		next_move_slowdown = -0.5
-	if(collected_gold >= 10)
-		next_move_slowdown = -1.5
+
+	if(istype(current_active_technique, /datum/sword_tech/goldensword))
+		if(collected_gold < 20 && collected_gold > 5)
+			next_move_slowdown = -0.3
+		if(collected_gold >= 20)
+			next_move_slowdown = -0.8
 
 	if(overcharged)
 		next_move_slowdown = -1
@@ -579,9 +615,14 @@
 	hud_used.sword_usage_stat.update_stat(src)
 	hud_used.sword_limit_stat.update_stat(src)
 
+	for(var/obj/item/weapon/sword/fd_sword/S in sword_pact)
+		S.attack_speed = 1
+
 	addtimer(CALLBACK(src, PROC_REF(resolve_overcharge)), 200 SECONDS)
 
 /mob/living/carbon/human/proc/resolve_overcharge()
+	var/datum/sword_tech/last_used_tech = current_active_technique
+
 	new /obj/effect/fd_sword/sanity_effect(get_turf(src))
 	remove_filter("overcharged", 1, list("type" = "outline", "color" = "#a200ff", "size" = 1))
 	overlays -= image('code/modules/fd_sword/icons/visuals.dmi', icon_state = "dementation")
@@ -599,8 +640,11 @@
 	reagents.del_reagent("speed_stimulant")
 	reagents.del_reagent("brain_stimulant")
 
-	sword_pact.technique_attached.overcharge_marks()
-	sword_pact.technique_attached.danger_zone_reached = FALSE
+	last_used_tech.overcharge_marks()
+	last_used_tech.danger_zone_reached = FALSE
+
+	for(var/obj/item/weapon/sword/fd_sword/S in sword_pact)
+		S.attack_speed = initial(S.attack_speed)
 
 //// SCHOOL ////
 

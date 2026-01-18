@@ -123,6 +123,7 @@
 	for(var/mob/living/L in range(14, src))
 		tempo_list += L
 
+	add_filter("jackpot", 1, list("type" = "outline", "color" = "#ffae00", "size" = 1))
 	rejuvenate()
 	jackpot_status = TRUE
 
@@ -133,7 +134,7 @@
 		if(havent_seen_goldensword_dom_explanation)
 			L.havent_seen_goldensword_dom_explanation = FALSE
 
-			L.play_screen_text(text = "Успешно раскрыв заданный цвет во время действия <b>воплощённого концепта</b> богатства...", alert_type = /atom/movable/screen/text/screen_text/command_order/centered, override_color = "#ffffff")
+			L.play_screen_text(text = "Успешно раскрыв заданный цвет во время действия <b>воплощённого концепта</b>...", alert_type = /atom/movable/screen/text/screen_text/command_order/centered, override_color = "#ffffff")
 
 			spawn(6 SECONDS)
 				L.play_screen_text(text = "...в качестве выигрыша на следующие 3 минуты и 33 секунды <b>[src]</b> становится...", alert_type = /atom/movable/screen/text/screen_text/command_order/centered, override_color = "#ffffff")
@@ -150,6 +151,7 @@
 		H.sword_usage_current = 0
 
 	jackpot_status = FALSE
+	remove_filter("jackpot", 1, list("type" = "outline", "color" = "#ffae00", "size" = 1))
 
 /mob/living/proc/gambling_debuff()
 
@@ -176,7 +178,7 @@
 
 /obj/effect/fd_sword/goldensword_greencard
 	name = "GREEN"
-	icon = 'code/modules/fd_sword/icons/swords.dmi'
+	icon = 'code/modules/fd_sword/icons/visuals.dmi'
 	icon_state = "green"
 
 	anchored = TRUE
@@ -197,9 +199,26 @@
 	spawn(0.8 SECONDS)
 		qdel(src)
 
+/obj/effect/fd_sword/lightning
+	name = "ZZIP"
+	icon = 'code/modules/fd_sword/icons/visuals.dmi'
+	icon_state = "lightning_tg"
+
+	anchored = TRUE
+	mouse_opacity = FALSE
+	layer = 5
+	plane = 5
+
+/obj/effect/fd_sword/lightning/Initialize(mapload, ...)
+	. = ..()
+	animate(src, alpha = 0, time = 0.3 SECONDS)
+
+	spawn(0.3 SECONDS)
+		qdel(src)
+
 /obj/effect/fd_sword/goldensword_redcard
 	name = "RED"
-	icon = 'code/modules/fd_sword/icons/swords.dmi'
+	icon = 'code/modules/fd_sword/icons/visuals.dmi'
 	icon_state = "red"
 
 	anchored = TRUE
@@ -225,22 +244,20 @@
 	techniques = list(/datum/sword_tech/goldensword)
 
 /datum/sword_tech/goldensword
-	name = "КОНЦЕПЦИЯ: Богатство"
+	name = "КОНЦЕПЦИЯ: Беспечность"
 
 	var/already_spawned_some_gold = FALSE
 
 	traverse_ability_cost = 2
-	var/mob/living/insurance_agent = null
-	var/insurance_cost = 5
-	var/additional_death_penalty = 5
+	var/dance_cost = 5
 
-	traverse_ability_name = "СТРАХОВКА"
-	traverse_ability_desc = "Возвращает вас к предварительно помеченному страховому агенту, восстанавливая всё здоровье в обмен на некоторую часть вашего капитала. Применимо даже после смерти!"
+	traverse_ability_name = "ТАНЕЦ: БУГИ-ВУГИ"
+	traverse_ability_desc = "Меняет двух существ местами ценою 5 монет из вашего запаса"
 
 	ranged_ability_cooldown = 10 SECONDS
 	ranged_ability_cost = 2
 
-	ranged_ability_name = "ОСОБОЕ ПРЕДЛОЖЕНИЕ"
+	ranged_ability_name = "ТАНЕЦ: СОКРАШЕНИЕ ДИСТАНЦИИ"
 	ranged_ability_desc = "Притягивает к вам первого противника стоявшего на прямой линии вашего взгляда"
 
 	aoe_ability_cooldown = 10 SECONDS
@@ -252,13 +269,16 @@
 	var/obj/effect/fd_sword/goldensword_fake/fakesword = null
 	var/additional_angle = 0
 
-	aoe_ability_name = "СТАВКА"
+	aoe_ability_name = "ВОПЛОЩЕНИЕ КОНЦЕПЦИИ: МАКСИМАЛЬНАЯ СТАВКА"
 	aoe_ability_desc = "Останавливает мир вокруг вас на время вращения рулетки. Загадывается случайное число в диапазоне от 1 до 6 и все участники включая вас должны угадать какое. В зависимости от результата ставки вы можете как получить определённые бонусы, так и серьёзно пострадать"
 
 	targeted_ability_cost = 0
 
-	targeted_ability_name = "КОНТРАКТ"
-	targeted_ability_desc = "Нажимая по другому живому существу - вы заключаете с ним единоразовый страховой контракт, который затем можете применить в любой удобный для вас момент. Даже с того света"
+	targeted_ability_name = "ПОДГОТОВКА: ВЫБОР ПАРТНЁРА"
+	targeted_ability_desc = "Нажимая по другому живому существу на дистанции более метра ИЛИ по самому себе - вы присваиваете ему первый или второй номер. Это не тратит ровным счётом ничего и используется способностью перемещения"
+
+	var/mob/living/swap_target_1
+	var/mob/living/swap_target_2
 
 /datum/sword_tech/goldensword/Initialize()
 	. = ..()
@@ -307,6 +327,40 @@
 	spawn(0.5 SECONDS)
 		swordspin()
 
+/datum/sword_tech/goldensword/traverse_ability_check()
+	if(connected_weapon.new_soul.collected_gold < dance_cost)
+		new /obj/effect/fd_sword/cannot_cast_ability(get_turf(connected_weapon.new_soul))
+		connected_weapon.new_soul.balloon_alert(connected_weapon.new_soul, "Недостаточно средств!", COLOR_RED)
+		shake_camera(connected_weapon.new_soul, 2, 1)
+		return FALSE
+
+	if(!isnull(swap_target_1) || !isnull(swap_target_2))
+		new /obj/effect/fd_sword/cannot_cast_ability(get_turf(connected_weapon.new_soul))
+		connected_weapon.new_soul.balloon_alert(connected_weapon.new_soul, "Для танца нужно минимум два человека!", COLOR_RED)
+		shake_camera(connected_weapon.new_soul, 2, 1)
+
+	. = ..()
+
+/datum/sword_tech/goldensword/use_traverse_ability()
+	connected_weapon.new_soul.collected_gold -= dance_cost
+
+	var/turf/first = get_turf(swap_target_1)
+	var/turf/second = get_turf(swap_target_2)
+
+	swap_target_1.alpha = 0
+	new /obj/effect/fd_sword/lightning(first)
+
+	swap_target_2.alpha = 0
+	new /obj/effect/fd_sword/lightning(second)
+
+	spawn(0.4 SECONDS)
+		new /obj/effect/fd_sword/lightning(first)
+		new /obj/effect/fd_sword/lightning(second)
+
+	spawn(0.5 SECONDS)
+		swap_target_1.forceMove(second)
+		swap_target_2.forceMove(first)
+
 /datum/sword_tech/goldensword/aoe_ability_check()
 	if(connected_weapon.new_soul.collected_gold < bet_cost)
 		new /obj/effect/fd_sword/cannot_cast_ability(get_turf(connected_weapon.new_soul))
@@ -318,6 +372,7 @@
 
 /datum/sword_tech/goldensword/use_aoe_ability()
 	keep_spinning = TRUE
+	connected_weapon.new_soul.collected_gold -= bet_cost
 	playsound(connected_weapon.new_soul, 'code/modules/fd_sword/sounds/goldsword_dom.mp3', 80, 0)
 
 	if(!isnull(fakesword))
@@ -352,7 +407,7 @@
 		L.plane = 5
 
 		if(L.havent_seen_goldensword_dom)
-			L.play_screen_text(text = "...<b>ЗОЛОТО ДУРАКОВ</b>!", alert_type = /atom/movable/screen/text/screen_text/command_order/centered, override_color = "#ffae00")
+			L.play_screen_text(text = "...<b>МАКСИМАЛЬНАЯ СТАВКА</b>!", alert_type = /atom/movable/screen/text/screen_text/command_order/centered, override_color = "#ffae00")
 			L.havent_seen_goldensword_dom = FALSE
 
 		playsound_client(L.client, 'code/modules/fd_sword/sounds/dice_roll.wav', L, 100, 0)
@@ -456,3 +511,27 @@
 
 	qdel(fakesword)
 	keep_spinning = FALSE
+
+/datum/sword_tech/goldensword/use_targeted_ability(atom/target)
+	if(!connected_weapon.new_soul.get_active_hand())
+
+		if(istype(target, /mob/living/carbon/human))
+			var/mob/living/carbon/human/H = target
+
+			if(get_dist(target, connected_weapon.new_soul) > 1 || target == connected_weapon.new_soul)
+				new /obj/effect/fd_sword/targeted_ability(get_turf(H))
+
+				if(isnull(swap_target_1))
+					swap_target_1 = H
+					connected_weapon.new_soul.balloon_alert(connected_weapon.new_soul, "Ты выделил [H] первым участником!", COLOR_ORANGE)
+					return TRUE
+				if(isnull(swap_target_2))
+					swap_target_2 = H
+					connected_weapon.new_soul.balloon_alert(connected_weapon.new_soul, "Ты выделил [H] вторым участником!", COLOR_ORANGE)
+					return TRUE
+
+				if(!isnull(swap_target_1) && !isnull(swap_target_2))
+					swap_target_1 = H
+					swap_target_2 = null
+					connected_weapon.new_soul.balloon_alert(connected_weapon.new_soul, "Ты выделил [H] первым участником!", COLOR_ORANGE)
+					return TRUE
