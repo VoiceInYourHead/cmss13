@@ -100,6 +100,18 @@
 		msg += "<EM>[rank_display] </EM>"
 	msg += "<EM>[src]</EM>!\n"
 
+	if(age < 20)
+		msg += SPAN_BLUE(SPAN_BOLD("Выглядит крайне юно!\n"))
+
+	if(age >= 20 && age < 50)
+		msg += SPAN_BLUE(SPAN_BOLD("Человек в расцвете сил!\n"))
+
+	if(age >= 50 && age < 80)
+		msg += SPAN_ORANGE(SPAN_BOLD("На лице уже виднеются первые морщинки!\n"))
+
+	if(age >= 80)
+		msg += SPAN_RED(SPAN_BOLD("Кто-нибудь! Позвоните в дом престарелых!\n"))
+
 	//uniform
 	if(w_uniform && !skipjumpsuit)
 		msg += "[t_He] [t_is] [w_uniform.get_examine_location(src, user, WEAR_BODY, t_He, t_his, t_him, t_has, t_is)].\n"

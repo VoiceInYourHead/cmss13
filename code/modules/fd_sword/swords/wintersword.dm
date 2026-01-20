@@ -99,6 +99,7 @@
 
 	anchored = TRUE
 	density = FALSE
+	var/related_faction = "what"
 
 /obj/structure/fd_sword/ice_bridge/Initialize(mapload, ...)
 	. = ..()
@@ -120,8 +121,9 @@
 			else
 				var/mob/living/carbon/human/H = O
 				if(!istype(H.current_active_technique, /datum/sword_tech/wintersword))
-					tripover(H)
-					return TRUE
+					if(H.srd_faction != related_faction)
+						tripover(H)
+						return TRUE
 
 /obj/structure/fd_sword/ice_bridge/proc/tripover(mob/living/M)
 	M.tripped = TRUE
@@ -133,7 +135,9 @@
 	var/turf/slide = get_step(M, M.dir)
 	animate(M, time = 0.5 SECONDS, transform = matrix(90, MATRIX_ROTATE), easing = SINE_EASING)
 
-	M.forceMove(slide)
+	if(!slide.density)
+		M.forceMove(slide)
+
 	ADD_TRAIT(M, TRAIT_IMMOBILIZED, ICESLIDE_TRAIT)
 	ADD_TRAIT(M, TRAIT_UNDENSE, ICESLIDE_TRAIT)
 
@@ -416,6 +420,14 @@
 		new /obj/effect/fd_sword/telegraph_basic/wintersword/aoe(T)
 		inner_circle += T
 
+		// ДЛЯ СОЮЗНИКОВ //
+		for(var/mob/living/L in T)
+			if(L.srd_faction == connected_weapon.new_soul.srd_faction && L != connected_weapon.new_soul)
+				L.forceMove(get_turf(connected_weapon.new_soul))
+				L.anchored = TRUE
+				ADD_TRAIT(L, TRAIT_IMMOBILIZED, ICECAGE_TRAIT)
+		// ДЛЯ СОЮЗНИКОВ //
+
 	spawn(1 SECONDS)
 		for(var/turf/T in inner_circle)
 			new /obj/effect/fd_sword/ice_aoe(T)
@@ -432,6 +444,11 @@
 	spawn(2 SECONDS)
 		for(var/turf/T in outer_circle)
 			new /obj/effect/fd_sword/ice_aoe(T)
+
+		for(var/mob/living/L in get_turf(connected_weapon.new_soul))
+			if(L != connected_weapon.new_soul)
+				L.anchored = FALSE
+				REMOVE_TRAIT(L, TRAIT_IMMOBILIZED, ICECAGE_TRAIT)
 
 		connected_weapon.new_soul.anchored = FALSE
 		REMOVE_TRAIT(connected_weapon.new_soul, TRAIT_IMMOBILIZED, ICECAGE_TRAIT)
@@ -464,7 +481,8 @@
 			H.apply_damage(-30, BURN)
 			connected_weapon.new_soul.balloon_alert_to_viewers("*[connected_weapon.new_soul] прикладывает руку к ранам [H], помогая им затянуться*", null, DEFAULT_MESSAGE_RANGE, null, COLOR_CYAN)
 
-			new /obj/effect/fd_sword/targeted_ability(get_turf(target))
+			new /obj/effect/fd_sword/targeted_ability(get_turf(H))
+			new /obj/effect/fd_sword/heal_effect(get_turf(H))
 			connected_weapon.new_soul.sword_usage_current += 1
 
 			check_overcharge()

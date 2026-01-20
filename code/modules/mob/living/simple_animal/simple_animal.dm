@@ -368,7 +368,7 @@
 
 				final_damage += 10
 				apply_damage(final_damage, BRUTE, src, sharp = attack.sharp, edge = attack.edge)
-				throw_atom(get_edge_target_turf(src, attacking_mob.dir), 3, SPEED_AVERAGE, src, FALSE)
+				throw_atom(get_edge_target_turf(src, attacking_mob.dir), 7, SPEED_AVERAGE, src, TRUE)
 				return 1
 
 			else

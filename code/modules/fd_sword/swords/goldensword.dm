@@ -22,8 +22,7 @@
 			new /obj/effect/fd_sword/gold(get_turf(src))
 
 		for(var/obj/effect/fd_sword/gold/G in get_turf(src))
-			G.throw_atom(get_edge_target_turf(G, get_dir(src, G)), 3, SPEED_SLOW, src, TRUE, HIGH_LAUNCH, PASS_ALL)
-
+			G.throw_atom(get_step(src, pick(GLOB.cardinals)), 3, SPEED_SLOW, src, TRUE, HIGH_LAUNCH, PASS_ALL)
 
 /obj/effect/fd_sword/gold
 	name = "money"
@@ -52,10 +51,103 @@
 		L.collected_gold += 1
 
 		playsound_client(L.client, 'sound/machines/pda_ping.ogg', L, 25)
+		L.play_screen_text(text = "ТЕКУЩИЙ СЧЁТ: <b>[L.collected_gold]</b>", alert_type = /atom/movable/screen/text/screen_text/command_order/centered/fast, override_color = "#ffae00")
 
 	animate(src, alpha = 0, time = 0.2 SECONDS)
 	spawn(0.3 SECONDS)
 		qdel(src)
+
+/obj/effect/fd_sword/puff
+	name = "puff"
+	icon = 'code/modules/fd_sword/icons/visuals.dmi'
+	icon_state = "puff"
+
+	anchored = TRUE
+	mouse_opacity = FALSE
+	layer = ABOVE_MOB_LAYER
+
+/obj/effect/fd_sword/puff/Initialize(mapload, ...)
+	. = ..()
+	spawn(0.5 SECONDS)
+		qdel(src)
+
+/obj/effect/fd_sword/heal_effect
+	name = "healing"
+	icon = 'icons/mob/do_afters.dmi'
+	icon_state = "busy_medical"
+
+	anchored = TRUE
+	mouse_opacity = FALSE
+	layer = ABOVE_MOB_LAYER
+
+/obj/effect/fd_sword/heal_effect/Initialize(mapload, ...)
+	. = ..()
+	spawn(1 SECONDS)
+		animate(src, alpha = 0, time = 0.5 SECONDS)
+
+	spawn(1.5 SECONDS)
+		qdel(src)
+
+/obj/effect/fd_sword/gold_bomb
+	name = "money"
+	icon = 'code/modules/fd_sword/icons/visuals.dmi'
+	icon_state = "money"
+
+	anchored = TRUE
+	mouse_opacity = FALSE
+	var/related_faction = "what"
+
+/obj/effect/fd_sword/gold_bomb/Initialize(mapload, ...)
+	. = ..()
+
+	addtimer(CALLBACK(src, PROC_REF(remove_from_world)), 3 MINUTES)
+
+/obj/effect/fd_sword/gold_bomb/proc/remove_from_world()
+	animate(src, alpha = 0, time = 0.2 SECONDS)
+	spawn(0.3 SECONDS)
+		qdel(src)
+
+/obj/effect/fd_sword/gold_bomb/proc/trigger()
+	var/list/target_turfs = list()
+
+	for(var/turf/attack_zone in range(1,src))
+		new /obj/effect/fd_sword/telegraph_basic/goldensword/ranged(attack_zone)
+
+		target_turfs += attack_zone
+
+	spawn(0.5 SECONDS)
+		new /obj/effect/block(get_turf(src))
+		animate(src, alpha = 0, time = 0.3 SECONDS)
+
+		for(var/turf/T in target_turfs)
+			for(var/mob/living/L in T)
+				shake_camera(L, 2, 1)
+				new /obj/effect/fd_sword/puff(get_turf(L))
+
+				if(L.srd_faction != related_faction)
+					for(var/i = 0, i <= 3, i++)
+						var/impact_effect = pick(1,2)
+						switch(impact_effect)
+							if(1)
+								new /obj/effect/fd_sword/hit_effect/alt1(get_turf(L))
+							if(2)
+								new /obj/effect/fd_sword/hit_effect/alt2(get_turf(L))
+
+					L.set_effect(10, STUN)
+					L.apply_damage(20, BRUTE)
+
+				else
+					new /obj/effect/fd_sword/heal_effect(get_turf(L))
+					L.apply_damage(-20, BRUTE)
+
+	spawn(1 SECONDS)
+		qdel()
+
+
+/atom/movable/screen/text/screen_text/command_order/centered/fast
+	fade_out_delay = 1 SECONDS
+	fade_out_time = 0.3 SECONDS
+	letters_per_update = 3
 
 /mob/living/proc/heal_parts_of_damage()
 
@@ -63,9 +155,6 @@
 
 		apply_damage(-30, BRUTE)
 		apply_damage(-30, BURN)
-		apply_damage(-30, TOX)
-
-		apply_damage(2, OXY)
 
 		set_effect(0, PARALYZE)
 		set_effect(0, STUN)
@@ -116,6 +205,7 @@
 	screen_loc = "CENTER-7,CENTER"
 
 /mob/living/proc/gambling_buff()
+	rejuvenate()
 
 /mob/living/proc/gambling_ownerbuff()
 	var/list/tempo_list = list()
@@ -154,6 +244,41 @@
 	remove_filter("jackpot", 1, list("type" = "outline", "color" = "#ffae00", "size" = 1))
 
 /mob/living/proc/gambling_debuff()
+	var/list/organs_to_remove = list()
+
+	if(istype(src, /mob/living/carbon/human))
+		var/mob/living/carbon/human/H = src
+
+		if(H.has_limb("l_hand"))
+			organs_to_remove += "l_hand"
+		if(H.has_limb("r_hand"))
+			organs_to_remove += "r_hand"
+
+		if(H.has_limb("l_arm") && !H.has_limb("l_hand"))
+			organs_to_remove += "l_arm"
+		if(H.has_limb("r_arm") && !H.has_limb("r_hand"))
+			organs_to_remove += "r_arm"
+
+		if(length(organs_to_remove))
+			var/obj/limb/limb = H.get_limb(pick(organs_to_remove))
+			limb.droplimb(FALSE, FALSE, "gambling")
+			shake_camera(H, 2, 1)
+
+			playsound(H, 'sound/weapons/alien_tail_attack.ogg', 100, TRUE)
+		else
+			var/obj/limb/chest/mob_chest = locate(/obj/limb/chest) in H.limbs
+			mob_chest.add_bleeding(damage_amount = 100)
+			shake_camera(H, 2, 1)
+
+			playsound(H, 'sound/effects/splat.ogg', 100, TRUE)
+			H.say("!сплёвывает огромное количество крови.")
+
+		H.apply_effect(30, AGONY)
+		H.apply_effect(10, STUN)
+	else
+		apply_effect(10, STUN)
+		apply_damage(50, BRUTE)
+
 
 /atom/movable/screen/fullscreen/goldensword_dom
 	icon = 'code/modules/fd_sword/icons/visuals.dmi'
@@ -211,9 +336,9 @@
 
 /obj/effect/fd_sword/lightning/Initialize(mapload, ...)
 	. = ..()
-	animate(src, alpha = 0, time = 0.3 SECONDS)
+	animate(src, alpha = 0, time = 0.5 SECONDS)
 
-	spawn(0.3 SECONDS)
+	spawn(0.5 SECONDS)
 		qdel(src)
 
 /obj/effect/fd_sword/goldensword_redcard
@@ -243,22 +368,35 @@
 	icon_state = "goldensword"
 	techniques = list(/datum/sword_tech/goldensword)
 
+/obj/item/weapon/sword/fd_sword/goldensword/attack(mob/target, mob/user)
+	. = ..()
+
+	if(target.collected_gold > 0)
+		target.collected_gold -= 1
+
+		var/obj/spawned_gold = new /obj/effect/fd_sword/gold(get_turf(target))
+		spawned_gold.throw_atom(get_step(target, pick(GLOB.cardinals)), 3, SPEED_SLOW, src, TRUE, HIGH_LAUNCH, PASS_ALL)
+
 /datum/sword_tech/goldensword
 	name = "КОНЦЕПЦИЯ: Беспечность"
 
 	var/already_spawned_some_gold = FALSE
+	var/overtime_at = 30
+	var/overtime_reached = FALSE
+	var/circle_stacks = 0
 
+	traverse_ability_cooldown = 2 SECONDS
 	traverse_ability_cost = 2
 	var/dance_cost = 5
 
 	traverse_ability_name = "ТАНЕЦ: БУГИ-ВУГИ"
-	traverse_ability_desc = "Меняет двух существ местами ценою 5 монет из вашего запаса"
+	traverse_ability_desc = "Меняет первый и второй номер местами ценою 5 монет из вашего запаса"
 
 	ranged_ability_cooldown = 10 SECONDS
 	ranged_ability_cost = 2
 
-	ranged_ability_name = "ТАНЕЦ: СОКРАШЕНИЕ ДИСТАНЦИИ"
-	ranged_ability_desc = "Притягивает к вам первого противника стоявшего на прямой линии вашего взгляда"
+	ranged_ability_name = "ПОДГОТОВКА: ТЯЖЁЛЫЕ КАРМАНЫ"
+	ranged_ability_desc = "Говорят, что плохому танцору яйца мешают, а у нас - деньги. Помечает и временно ослабляет всех противников, количество монет у которых больше чем 5"
 
 	aoe_ability_cooldown = 10 SECONDS
 	aoe_ability_cost = 4
@@ -266,6 +404,7 @@
 	var/reroll_cost = 5
 
 	var/keep_spinning = FALSE
+	var/rerolling = FALSE
 	var/obj/effect/fd_sword/goldensword_fake/fakesword = null
 	var/additional_angle = 0
 
@@ -280,12 +419,30 @@
 	var/mob/living/swap_target_1
 	var/mob/living/swap_target_2
 
+	var/list/bombs_pool = list()
+
 /datum/sword_tech/goldensword/Initialize()
 	. = ..()
 
 	START_PROCESSING(SSobj, src)
 
 /datum/sword_tech/goldensword/process(delta_time)
+
+	if(connected_weapon.new_soul.stat == DEAD && circle_stacks > 0)
+		circle_stacks -= 1
+		connected_weapon.new_soul.rejuvenate()
+
+	if(connected_weapon.new_soul.collected_gold >= 100)
+		connected_weapon.new_soul.collected_gold = 0
+		overtime_at = 30
+		circle_stacks += 1
+
+		connected_weapon.new_soul.play_screen_text(text = "<b>НОВЫЙ КРУГ!</b>", alert_type = /atom/movable/screen/text/screen_text/command_order/centered, override_color = "#ffae00")
+		connected_weapon.new_soul.play_screen_text(text = "ТЕКУЩИЙ СЧЁТ: <b>[connected_weapon.new_soul.collected_gold]</b>", alert_type = /atom/movable/screen/text/screen_text/command_order/centered, override_color = "#ffae00")
+
+	if(connected_weapon.new_soul.collected_gold >= overtime_at && !overtime_reached)
+		overtime_reached = TRUE
+		overtime_at += 30
 
 	if(connected_weapon.new_soul.sword_combat_active && connected_weapon.new_soul.current_active_technique == src)
 		if(!already_spawned_some_gold)
@@ -295,18 +452,57 @@
 	already_spawned_some_gold = TRUE
 	var/list/turfs = list()
 
-	for(var/turf/T in orange(9, connected_weapon.new_soul))
-		if(T.density)
-			continue
-		turfs += T
+	if(overtime_reached)
+		overtime_reached = FALSE
 
-	for(var/i=0, i<5, i++)
-		var/turf/place_on = pick(turfs)
+		var/turf/north = get_ranged_target_turf(connected_weapon.new_soul, NORTH, 7)
+		var/turf/south = get_ranged_target_turf(connected_weapon.new_soul, SOUTH, 7)
+		var/turf/west = get_ranged_target_turf(connected_weapon.new_soul, WEST, 7)
+		var/turf/east = get_ranged_target_turf(connected_weapon.new_soul, EAST, 7)
 
-		turfs -= place_on
-		new /obj/effect/fd_sword/gold(place_on)
+		for(var/turf/T in get_line(connected_weapon.new_soul, north))
+			if(T.density)
+				continue
+			if(connected_weapon.new_soul in T)
+				continue
+			turfs += T
+		for(var/turf/T in get_line(connected_weapon.new_soul, south))
+			if(T.density)
+				continue
+			if(connected_weapon.new_soul in T)
+				continue
+			turfs += T
+		for(var/turf/T in get_line(connected_weapon.new_soul, west))
+			if(T.density)
+				continue
+			if(connected_weapon.new_soul in T)
+				continue
+			turfs += T
+		for(var/turf/T in get_line(connected_weapon.new_soul, east))
+			if(T.density)
+				continue
+			if(connected_weapon.new_soul in T)
+				continue
+			turfs += T
 
-	addtimer(CALLBACK(src, PROC_REF(reset_goldspawn)), 5 SECONDS)
+		for(var/turf/T in turfs)
+			new /obj/effect/fd_sword/gold(T)
+
+	else
+		for(var/turf/T in orange(9, connected_weapon.new_soul))
+			if(T.density)
+				continue
+			if(connected_weapon.new_soul in T)
+				continue
+			turfs += T
+
+		for(var/i=0, i<5, i++)
+			var/turf/place_on = pick(turfs)
+
+			turfs -= place_on
+			new /obj/effect/fd_sword/gold(place_on)
+
+	addtimer(CALLBACK(src, PROC_REF(reset_goldspawn)), 1 SECONDS)
 
 /datum/sword_tech/goldensword/proc/reset_goldspawn()
 	already_spawned_some_gold = FALSE
@@ -334,15 +530,19 @@
 		shake_camera(connected_weapon.new_soul, 2, 1)
 		return FALSE
 
-	if(!isnull(swap_target_1) || !isnull(swap_target_2))
+	if(isnull(swap_target_1) || isnull(swap_target_2))
 		new /obj/effect/fd_sword/cannot_cast_ability(get_turf(connected_weapon.new_soul))
 		connected_weapon.new_soul.balloon_alert(connected_weapon.new_soul, "Для танца нужно минимум два человека!", COLOR_RED)
 		shake_camera(connected_weapon.new_soul, 2, 1)
+		return FALSE
 
 	. = ..()
 
 /datum/sword_tech/goldensword/use_traverse_ability()
 	connected_weapon.new_soul.collected_gold -= dance_cost
+
+	playsound(connected_weapon.new_soul, 'code/modules/fd_sword/sounds/dice_roll.wav', 100, 0)
+	connected_weapon.new_soul.balloon_alert_to_viewers("*[connected_weapon.new_soul] щёлкнул пальцами*", null, DEFAULT_MESSAGE_RANGE, null, COLOR_WHITE)
 
 	var/turf/first = get_turf(swap_target_1)
 	var/turf/second = get_turf(swap_target_2)
@@ -353,16 +553,59 @@
 	swap_target_2.alpha = 0
 	new /obj/effect/fd_sword/lightning(second)
 
-	spawn(0.4 SECONDS)
+	spawn(0.5 SECONDS)
 		new /obj/effect/fd_sword/lightning(first)
 		new /obj/effect/fd_sword/lightning(second)
 
-	spawn(0.5 SECONDS)
+	spawn(0.7 SECONDS)
+		swap_target_1.alpha = 255
 		swap_target_1.forceMove(second)
+		swap_target_2.alpha = 255
 		swap_target_2.forceMove(first)
 
+/obj/effect/fd_sword/telegraph_basic/goldensword/ranged
+	delete_after = 0.5 SECONDS
+
+/datum/sword_tech/goldensword/use_ranged_ability()
+	var/list/target_turfs = list()
+	var/list/remove_filter_later = list()
+
+	for(var/obj/effect/fd_sword/gold_bomb/G in bombs_pool)
+		G.trigger()
+
+	for(var/turf/T in orange(7, connected_weapon.new_soul))
+		if(connected_weapon.new_soul in T)
+			continue
+
+		for(var/mob/living/L in T)
+
+			// ДЛЯ СОЮЗНИКОВ //
+			if(L.srd_faction == connected_weapon.new_soul.srd_faction && L != connected_weapon.new_soul)
+				continue
+			// ДЛЯ СОЮЗНИКОВ //
+
+			if(L.collected_gold > 5)
+				for(var/turf/attack_zone in range(1,L))
+					new /obj/effect/fd_sword/telegraph_basic/goldensword/ranged(attack_zone)
+
+					target_turfs += attack_zone
+
+	spawn(0.5 SECONDS)
+		for(var/turf/T in target_turfs)
+			for(var/mob/living/L in T)
+				L.apply_effect(20, SLOW)
+				L.add_filter("greedy", 1, list("type" = "outline", "color" = "#ff0000", "size" = 1))
+
+				L.throw_atom(connected_weapon.new_soul, 3, SPEED_FAST, src, FALSE, HIGH_LAUNCH, PASS_ALL)
+
+				remove_filter_later += L
+
+	spawn(1 SECONDS)
+		for(var/mob/living/L in remove_filter_later)
+			L.remove_filter("greedy", 1, list("type" = "outline", "color" = "#ff0000", "size" = 1))
+
 /datum/sword_tech/goldensword/aoe_ability_check()
-	if(connected_weapon.new_soul.collected_gold < bet_cost)
+	if(connected_weapon.new_soul.collected_gold < bet_cost && !rerolling)
 		new /obj/effect/fd_sword/cannot_cast_ability(get_turf(connected_weapon.new_soul))
 		connected_weapon.new_soul.balloon_alert(connected_weapon.new_soul, "Недостаточно средств!", COLOR_RED)
 		shake_camera(connected_weapon.new_soul, 2, 1)
@@ -371,8 +614,13 @@
 	. = ..()
 
 /datum/sword_tech/goldensword/use_aoe_ability()
+	if(rerolling)
+		rerolling = FALSE
+
+	if(!rerolling)
+		connected_weapon.new_soul.collected_gold -= bet_cost
+
 	keep_spinning = TRUE
-	connected_weapon.new_soul.collected_gold -= bet_cost
 	playsound(connected_weapon.new_soul, 'code/modules/fd_sword/sounds/goldsword_dom.mp3', 80, 0)
 
 	if(!isnull(fakesword))
@@ -479,25 +727,25 @@
 						playsound_client(L.client, 'sound/machines/slotmachine/rolling-slotmachine.ogg', L, 50)
 
 						L.remove_filter("wrong", 1, list("type" = "outline", "color" = "#ff0000", "size" = 1))
-						keep_spinning = FALSE
-						qdel(fakesword)
+						L.clear_fullscreen("domain")
+						L.plane = initial(L.plane)
 
-						sleep(4 SECONDS)
+						REMOVE_TRAIT(L, TRAIT_IMMOBILIZED, GOLDENCASINO_TRAIT)
+						L.mouse_opacity = TRUE
+						L.anchored = FALSE
 
-						aoe_ability_check()
-						return FALSE
+						if(L.client)
+							animate(L.client, pixel_x = 0, pixel_y = 0, time = 6 SECONDS, easing = CUBIC_EASING)
+
+					rerolling = TRUE
+					keep_spinning = FALSE
+					qdel(fakesword)
+					sleep(4 SECONDS)
+
+					aoe_ability_check()
+					return FALSE
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	for(var/mob/living/L in players)
-		if(L.guessed_color != correct_color)
-			// вставить сюда визуальную отметку проигрыша
-			L.gambling_debuff()
-		else
-			if(L == connected_weapon.new_soul)
-				// вставить сюда визуальную отметку джекпота
-				L.gambling_ownerbuff()
-			else
-				// вставить сюда визуальную отметку успеха
-				L.gambling_buff()
 
 		L.remove_filter("wrong", 1, list("type" = "outline", "color" = "#ff0000", "size" = 1))
 		L.clear_fullscreen("domain")
@@ -507,7 +755,24 @@
 		L.mouse_opacity = TRUE
 		L.anchored = FALSE
 
-		animate(L.client, pixel_x = 0, pixel_y = 0, time = 6 SECONDS, easing = CUBIC_EASING)
+		if(L.client)
+			animate(L.client, pixel_x = 0, pixel_y = 0, time = 6 SECONDS, easing = CUBIC_EASING)
+
+		if(L.guessed_color != correct_color)
+
+			// ДЛЯ СОЮЗНИКОВ //
+			if(L.srd_faction == connected_weapon.new_soul.srd_faction && L != connected_weapon.new_soul)
+				continue
+			// ДЛЯ СОЮЗНИКОВ //
+
+			L.gambling_debuff()
+		else
+			if(L == connected_weapon.new_soul)
+				// вставить сюда визуальную отметку джекпота
+				L.gambling_ownerbuff()
+			else
+				// вставить сюда визуальную отметку успеха
+				L.gambling_buff()
 
 	qdel(fakesword)
 	keep_spinning = FALSE
@@ -515,8 +780,26 @@
 /datum/sword_tech/goldensword/use_targeted_ability(atom/target)
 	if(!connected_weapon.new_soul.get_active_hand())
 
-		if(istype(target, /mob/living/carbon/human))
-			var/mob/living/carbon/human/H = target
+		if(istype(target, /turf/))
+			if(get_dist(target, connected_weapon.new_soul) > 1)
+				if(connected_weapon.new_soul.collected_gold < 5)
+					new /obj/effect/fd_sword/cannot_cast_ability(get_turf(connected_weapon.new_soul))
+					connected_weapon.new_soul.balloon_alert(connected_weapon.new_soul, "Недостаточно средств!", COLOR_RED)
+					shake_camera(connected_weapon.new_soul, 2, 1)
+					return FALSE
+
+				var/turf/open/floor/T = target
+
+				var/obj/effect/fd_sword/gold_bomb/G = new /obj/effect/fd_sword/gold_bomb(get_turf(connected_weapon.new_soul))
+				G.related_faction = connected_weapon.new_soul.srd_faction
+				bombs_pool += G
+
+				G.throw_atom(T, get_dist(T, connected_weapon.new_soul), SPEED_FAST, src, FALSE, HIGH_LAUNCH, PASS_ALL)
+
+				connected_weapon.new_soul.collected_gold -= 5
+
+		if(istype(target, /mob/living/))
+			var/mob/living/H = target
 
 			if(get_dist(target, connected_weapon.new_soul) > 1 || target == connected_weapon.new_soul)
 				new /obj/effect/fd_sword/targeted_ability(get_turf(H))
@@ -526,6 +809,8 @@
 					connected_weapon.new_soul.balloon_alert(connected_weapon.new_soul, "Ты выделил [H] первым участником!", COLOR_ORANGE)
 					return TRUE
 				if(isnull(swap_target_2))
+					if(H == swap_target_1)
+						return FALSE
 					swap_target_2 = H
 					connected_weapon.new_soul.balloon_alert(connected_weapon.new_soul, "Ты выделил [H] вторым участником!", COLOR_ORANGE)
 					return TRUE

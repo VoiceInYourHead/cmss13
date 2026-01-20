@@ -12,6 +12,8 @@
 			var/datum/sword_tech/timesword/T = technique_attached
 
 			T.time_fragments += 1
+			new_soul.play_screen_text(text = "ФРАГМЕНТЫ: <b>[T.time_fragments]</b>", alert_type = /atom/movable/screen/text/screen_text/command_order/centered/fast, override_color = "#929292")
+
 			T.update_info()
 
 /obj/effect/fd_sword/timeaoe
@@ -268,6 +270,7 @@
 /datum/sword_tech/timesword/use_traverse_ability()
 
 	time_fragments -= traverse_fragments_cost
+
 	update_info()
 	create_new_anchor(connected_weapon.new_soul)
 
@@ -287,6 +290,19 @@
 	for(var/turf/T in affected_turfs)
 		new /obj/effect/fd_sword/telegraph_basic/timesword/ranged(T)
 
+		// ДЛЯ СОЮЗНИКОВ //
+		for(var/mob/living/N in T)
+			var/list/escape_turfs = list()
+			if(N.srd_faction == connected_weapon.new_soul.srd_faction && N != connected_weapon.new_soul)
+				for(var/turf/move_to in range(1,N))
+					if(move_to.density)
+						continue
+					if(!(move_to in affected_turfs))
+						escape_turfs += move_to
+
+				N.forceMove(pick(escape_turfs))
+		// ДЛЯ СОЮЗНИКОВ //
+
 	spawn(0.5 SECONDS)
 
 		for(var/turf/T in affected_turfs)
@@ -298,6 +314,7 @@
 				time_fragments += 2
 				create_new_anchor(N)
 
+		connected_weapon.new_soul.play_screen_text(text = "ФРАГМЕНТЫ: <b>[time_fragments]</b>", alert_type = /atom/movable/screen/text/screen_text/command_order/centered/fast, override_color = "#929292")
 		update_info()
 
 		var/reverse_facing = get_dir(ending, connected_weapon.new_soul)
@@ -331,8 +348,24 @@
 	ADD_TRAIT(connected_weapon.new_soul, TRAIT_UNDENSE, TIMECURSE_TRAIT)
 
 	animate(connected_weapon.new_soul, pixel_z = 64, time = 1 SECONDS, easing = SINE_EASING|EASE_OUT)
+
+	var/list/danger_turfs = list()
 	for(var/turf/T in orange(aoe_area, connected_weapon.new_soul))
 		new /obj/effect/fd_sword/telegraph_basic/timesword/aoe(T)
+		danger_turfs += T
+
+		// ДЛЯ СОЮЗНИКОВ //
+		for(var/mob/living/L in T)
+			var/list/escape_turfs = list()
+			if(L.srd_faction == connected_weapon.new_soul.srd_faction && L != connected_weapon.new_soul)
+				for(var/turf/move_to in view(7,L))
+					if(move_to.density)
+						continue
+					if(!(move_to in danger_turfs))
+						escape_turfs += move_to
+
+				L.throw_atom(pick(escape_turfs), 7, SPEED_FAST, src, FALSE, HIGH_LAUNCH, PASS_ALL)
+		// ДЛЯ СОЮЗНИКОВ //
 
 	spawn(1 SECONDS)
 
@@ -369,7 +402,7 @@
 
 				new /obj/effect/fd_sword/targeted_ability(get_turf(O))
 
-				if(!O.deplaced)
+				if(!O.deplaced && !istype(O, /obj/item/weapon/sword/fd_sword))
 					animate(O, alpha = 100, time = 1 SECONDS)
 					O.add_filter("timestopped", 1, list("type" = "blur", "size" = 1))
 
@@ -379,6 +412,7 @@
 					O.deplaced = TRUE
 
 					time_fragments -= targeted_fragments_cost
+
 					connected_weapon.new_soul.sword_usage_current += 1
 
 					check_overcharge()

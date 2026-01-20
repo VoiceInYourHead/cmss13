@@ -117,7 +117,7 @@
 				raw_damage += 10
 				var/final_damage = armor_damage_reduction(GLOB.marine_melee, raw_damage, armor, TRUE)
 				apply_damage(final_damage, BRUTE, affecting, sharp=attack.sharp, edge = attack.edge)
-				throw_atom(get_edge_target_turf(src, attacking_mob.dir), 3, SPEED_AVERAGE, src, FALSE)
+				throw_atom(get_edge_target_turf(src, attacking_mob.dir), 7, SPEED_AVERAGE, src, TRUE)
 
 			else
 				var/final_damage = armor_damage_reduction(GLOB.marine_melee, raw_damage, armor, FALSE) // no penetration from punches

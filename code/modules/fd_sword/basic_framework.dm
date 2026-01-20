@@ -570,6 +570,9 @@
 
 //// MOB ////
 
+/mob
+	var/srd_faction = "Neutral"
+
 /mob/living/carbon/human
 	var/datum/sword_tech/current_active_technique = null
 	var/list/obj/item/weapon/sword/fd_sword/sword_pact = list()
@@ -582,23 +585,28 @@
 	var/danger_zone_reached = FALSE
 	var/overcharged = FALSE
 
+	srd_faction = "Allies"
+
 /mob/living/carbon/human/Move(NewLoc, direct)
 
 	if(istype(current_active_technique, /datum/sword_tech/goldensword))
 		if(collected_gold < 20 && collected_gold > 5)
-			next_move_slowdown = -0.3
-		if(collected_gold >= 20)
-			next_move_slowdown = -0.8
+			next_move_slowdown = -0.5
+		if(collected_gold >= 20 && collected_gold < 50)
+			next_move_slowdown = -1
+		if(collected_gold >= 50)
+			next_move_slowdown = -2
 
 	if(overcharged)
-		next_move_slowdown = -1
+		next_move_slowdown = -2
 
 	if(istype(current_active_technique, /datum/sword_tech/wintersword))
 		var/datum/sword_tech/wintersword/icewalk = current_active_technique
 		if(icewalk.traverse_active)
 			next_move_slowdown = -1
 			flags_atom |= NO_ZFALL
-			new /obj/structure/fd_sword/ice_bridge(get_turf(NewLoc))
+			var/obj/structure/fd_sword/ice_bridge/newbridge = new /obj/structure/fd_sword/ice_bridge(get_turf(NewLoc))
+			newbridge.related_faction = srd_faction
 
 	. = ..()
 
