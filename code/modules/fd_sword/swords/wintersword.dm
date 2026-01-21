@@ -1,7 +1,7 @@
 #define COMSIG_KB_HUMAN_WINTERSWORD_TRAVERSE_UP "keybinding_human_wintersword_traverse_up"
 #define COMSIG_KB_HUMAN_WINTERSWORD_TRAVERSE_DOWN "keybinding_human_wintersword_traverse_down"
 
-/obj/
+/atom/
 	var/cold = FALSE
 
 /obj/proc/chill_out()
@@ -12,11 +12,21 @@
 
 	addtimer(CALLBACK(src, PROC_REF(heat_up)), 1 MINUTES)
 
+/obj/structure/machinery/door/airlock/chill_out()
+	locked = TRUE
+
+	. = ..()
+
 /obj/proc/heat_up()
 	cold = FALSE
 
 	overlays -= image('code/modules/fd_sword/icons/visuals.dmi', icon_state = "empdisable")
 	remove_filter("chilled", 1, list("type" = "outline", "color" = "#aefff4", "size" = 1))
+
+/obj/structure/machinery/door/airlock/heat_up()
+	locked = FALSE
+
+	. = ..()
 
 /obj/get_examine_text(mob/user)
 	. = ..()
@@ -25,7 +35,6 @@
 		. += SPAN_BLUE("На поверхности [src] виднеется едва заметная ледяная корка.")
 
 /mob/living
-	var/cold = FALSE
 	var/tripped = FALSE
 	var/ice_stacks = 0
 

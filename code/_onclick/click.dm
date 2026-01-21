@@ -89,6 +89,11 @@
 			if(H.current_active_technique != /datum/sword_tech/timesword || !H.sword_combat_active)
 				H.play_screen_text(text = "ТЫ ПОМНИШЬ, ЧТО ЗДЕСЬ ЧТО-ТО БЫЛО...", alert_type = /atom/movable/screen/text/screen_text/command_order, override_color = "#929292")
 
+	if(istype(A, /obj/structure/machinery/door/airlock) && A.cold)
+		if(ishuman(src))
+			var/mob/living/carbon/human/H = src
+			H.play_screen_text(text = "ДВЕРЬ НАМЕРТВО ЗАМЁРЗЛА...ЕЁ НЕ ОТКРЫТЬ...", alert_type = /atom/movable/screen/text/screen_text/command_order, override_color = "#aefff4")
+
 	if(mods[MIDDLE_CLICK] || mods[BUTTON4] || mods[BUTTON5])
 		return
 
