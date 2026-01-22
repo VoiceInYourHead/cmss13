@@ -157,10 +157,6 @@
 	return
 
 /mob/living/Move(NewLoc, direct)
-	var/obj/structure/fd_sword/ice_bridge/I
-
-	if(I in NewLoc)
-		flags_atom |= NO_ZFALL
 
 	if(lying_angle != 0)
 		lying_angle_on_movement(direct)
@@ -222,8 +218,6 @@
 
 	if(back && (back.flags_item & ITEM_OVERRIDE_NORTHFACE))
 		update_inv_back()
-
-	flags_atom &= ~NO_ZFALL
 
 /mob/proc/resist_grab(moving_resist)
 	return //returning 1 means we successfully broke free

@@ -358,13 +358,11 @@
 		if(climber.a_intent == INTENT_HARM)
 			return TRUE
 
-		if(istype(mover, /mob/living))
-			var/mob/living/H = mover
-			var/obj/structure/fd_sword/ice_bridge/I
+		var/obj/structure/fd_sword/ice_bridge/I
 
-			if(I in space)
-				H.flags_atom |= NO_ZFALL
-				return TRUE
+		if(I in space)
+			climber.flags_atom |= NO_ZFALL
+			return TRUE
 
 		if(istype(mover, /mob/living/carbon/human))
 			var/mob/living/carbon/human/H = mover

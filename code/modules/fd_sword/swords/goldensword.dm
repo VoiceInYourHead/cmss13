@@ -112,13 +112,13 @@
 
 	add_filter("detonation", 1, list("type" = "outline", "color" = "#ff0000", "size" = 1))
 
-	spawn(0.3 SECONDS)
+	spawn(0.5 SECONDS)
 		for(var/turf/attack_zone in range(1,src))
 			new /obj/effect/fd_sword/telegraph_basic/goldensword/ranged(attack_zone)
 
 			target_turfs += attack_zone
 
-	spawn(0.8 SECONDS)
+	spawn(1 SECONDS)
 		new /obj/effect/block(get_turf(src))
 		animate(src, alpha = 0, time = 0.3 SECONDS)
 
@@ -143,8 +143,8 @@
 					new /obj/effect/fd_sword/heal_effect(get_turf(L))
 					L.apply_damage(-20, BRUTE)
 
-	spawn(1.3 SECONDS)
-		qdel()
+	spawn(1.5 SECONDS)
+		qdel(src)
 
 /atom/movable/screen/text/screen_text/command_order/centered/fast
 	fade_out_delay = 1 SECONDS
@@ -383,7 +383,7 @@
 	name = "КОНЦЕПЦИЯ: Беспечность"
 
 	var/already_spawned_some_gold = FALSE
-	var/overtime_at = 30
+	var/overtime_at = 50
 	var/overtime_reached = FALSE
 	var/circle_stacks = 0
 
@@ -436,7 +436,7 @@
 
 	if(connected_weapon.new_soul.collected_gold >= 100)
 		connected_weapon.new_soul.collected_gold = 0
-		overtime_at = 30
+		overtime_at = 50
 		circle_stacks += 1
 
 		connected_weapon.new_soul.play_screen_text(text = "<b>НОВЫЙ КРУГ!</b>", alert_type = /atom/movable/screen/text/screen_text/command_order/centered, override_color = "#ffae00")
@@ -444,7 +444,7 @@
 
 	if(connected_weapon.new_soul.collected_gold >= overtime_at && !overtime_reached)
 		overtime_reached = TRUE
-		overtime_at += 30
+		overtime_at += 50
 
 	if(connected_weapon.new_soul.sword_combat_active && connected_weapon.new_soul.current_active_technique == src)
 		if(!already_spawned_some_gold)
@@ -574,6 +574,7 @@
 
 	for(var/obj/effect/fd_sword/gold_bomb/G in bombs_pool)
 		G.trigger()
+		bombs_pool -= G
 
 	for(var/turf/T in orange(7, connected_weapon.new_soul))
 		if(connected_weapon.new_soul in T)
@@ -803,14 +804,15 @@
 	INVOKE_ASYNC(throw_item, /atom/movable/proc/throw_atom, get_step(src, pick(GLOB.cardinals)), 16, SPEED_AVERAGE, src)
 	playsound(src, "sound/machines/vending.ogg", 40, TRUE)
 
-	throw_item_until_empty()
+	spawn(0.5 SECONDS)
+		throw_item_until_empty()
 
 /datum/sword_tech/goldensword/use_targeted_ability(atom/target)
 	if(!connected_weapon.new_soul.get_active_hand())
 
 		if(istype(target, /obj/structure/machinery/vending))
 			var/obj/structure/machinery/vending/V = target
-			if(get_dist(V, connected_weapon.new_soul) < 1)
+			if(get_dist(V, connected_weapon.new_soul) <= 1)
 
 				new /obj/effect/fd_sword/targeted_ability(get_turf(V))
 				V.throw_item_until_empty()
