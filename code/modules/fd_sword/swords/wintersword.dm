@@ -58,7 +58,7 @@
 	bodytemperature = T37C
 
 	mouse_opacity = TRUE
-	ice_stacks = 0
+	set_status_value("cold", 0)
 
 /mob/living/proc/standup()
 	animate(src, time = 0.5 SECONDS, transform = matrix(0, MATRIX_ROTATE), easing = SINE_EASING)
@@ -111,7 +111,7 @@
 		if(target != user)
 			var/mob/living/L = target
 
-			L.ice_stacks += 2
+			L.add_status_value("cold", 2)
 
 			if(L.ice_stacks >= 10)
 				L.turn_to_ice()

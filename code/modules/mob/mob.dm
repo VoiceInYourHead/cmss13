@@ -1,4 +1,12 @@
 /mob/Destroy()
+
+	// Очищаем кэш и счётчики
+	for(var/key in counter_cache)
+		var/obj/effect/fd_sword/status_counter/SC = counter_cache[key]
+		qdel(SC)
+	counter_cache.Cut()
+	status_counters.Cut()
+
 	GLOB.mob_list -= src
 	GLOB.dead_mob_list -= src
 	GLOB.alive_mob_list -= src

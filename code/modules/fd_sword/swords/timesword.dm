@@ -10,10 +10,7 @@
 	if(istype(target, /mob/living))
 		if(target != user)
 
-			new_soul.time_fragments += 1
-			//new_soul.play_screen_text(text = "ФРАГМЕНТЫ: <b>[T.time_fragments]</b>", alert_type = /atom/movable/screen/text/screen_text/command_order/centered/fast, override_color = "#929292")
-
-			//T.update_info()
+			new_soul.add_status_value("time", 1)
 
 /mob/living/proc/reset_timeanchor()
 
@@ -54,19 +51,6 @@
 	ranged_ability_desc = "Все сущности, оказавшиеся в зоне оной, становятся на временной якорь. По прохождению 5 секунд, эти сущности притягиваются к якорю и замирают во времени. +2 ФРАГМЕНТА за каждую поражённую цель"
 	aoe_ability_desc = "Создаёт темпоральный шторм, заставляющий всех живых существ замереть во времени. Тратит 10 ФРАГМЕНТОВ"
 	targeted_ability_desc = "Касание пустой руки в боевом режиме де-материализует предмет из пространства за 1 ФРАГМЕНТ. Обычная атака даёт 1 ФРАГМЕНТ"
-
-/*
-/datum/sword_tech/timesword/Initialize()
-	. = ..()
-	update_info()
-
-
-/datum/sword_tech/timesword/proc/update_info()
-	traverse_ability_desc = "Устанавливает в точке временной якорь, который перемещает вас обратно во времени по прохождению пяти секунд, тратя 1 ФРАГМЕНТ и полностью восстанавливая здоровье. Ваши текущие ФРАГМЕНТЫ: [time_fragments]"
-	ranged_ability_desc = "Все сущности, оказавшиеся в зоне оной, становятся на временной якорь. По прохождению 5 секунд, эти сущности притягиваются к якорю и замирают во времени. +2 ФРАГМЕНТА за каждую поражённую цель. Ваши текущие ФРАГМЕНТЫ: [time_fragments]"
-	aoe_ability_desc = "Создаёт темпоральный шторм, заставляющий всех живых существ замереть во времени. Тратит 10 ФРАГМЕНТОВ. Ваши текущие ФРАГМЕНТЫ: [time_fragments]"
-	targeted_ability_desc = "Касание пустой руки в боевом режиме де-материализует предмет из пространства за 1 ФРАГМЕНТ. Обычная атака даёт 1 ФРАГМЕНТ. Ваши текущие ФРАГМЕНТЫ: [time_fragments]"
-*/
 
 /datum/sword_tech/timesword/overcharge_marks()
 	connected_weapon.new_soul.age += 10
@@ -173,7 +157,7 @@
 
 /datum/sword_tech/timesword/use_traverse_ability()
 
-	connected_weapon.new_soul.time_fragments -= traverse_fragments_cost
+	connected_weapon.new_soul.remove_status_value("time", traverse_fragments_cost)
 
 	//update_info()
 	create_new_anchor(connected_weapon.new_soul)
@@ -212,11 +196,8 @@
 			for(var/mob/living/N in T)
 				new /obj/effect/fd_sword/anchored(get_turf(N))
 
-				connected_weapon.new_soul.time_fragments += 2
+				connected_weapon.new_soul.add_status_value("time", 2)
 				create_new_anchor(N)
-
-		//connected_weapon.new_soul.play_screen_text(text = "ФРАГМЕНТЫ: <b>[time_fragments]</b>", alert_type = /atom/movable/screen/text/screen_text/command_order/centered/fast, override_color = "#929292")
-		//update_info()
 
 		var/reverse_facing = get_dir(ending, connected_weapon.new_soul)
 
@@ -237,7 +218,7 @@
 
 /datum/sword_tech/timesword/use_aoe_ability()
 	var/aoe_area = 2 + tech_level
-	connected_weapon.new_soul.time_fragments -= aoe_fragments_cost
+	connected_weapon.new_soul.remove_status_value("time", aoe_fragments_cost)
 
 	//update_info()
 
@@ -309,7 +290,7 @@
 					O.opacity = FALSE
 					O.deplaced = TRUE
 
-					connected_weapon.new_soul.time_fragments -= targeted_fragments_cost
+					connected_weapon.new_soul.remove_status_value("time", targeted_fragments_cost)
 
 					connected_weapon.new_soul.sword_usage_current += 1
 
@@ -328,7 +309,7 @@
 					O.opacity = initial(O.opacity)
 					O.deplaced = FALSE
 
-					connected_weapon.new_soul.time_fragments -= targeted_fragments_cost
+					connected_weapon.new_soul.remove_status_value("time", targeted_fragments_cost)
 
 					//update_info()
 			else

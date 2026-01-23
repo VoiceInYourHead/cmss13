@@ -406,10 +406,9 @@
 
 	if(istype(O, /mob/living))
 		var/mob/living/L = O
-		L.collected_gold += 1
+		L.add_status_value("gold", 1)
 
 		playsound_client(L.client, 'sound/machines/pda_ping.ogg', L, 25)
-		//L.play_screen_text(text = "ТЕКУЩИЙ СЧЁТ: <b>[L.collected_gold]</b>", alert_type = /atom/movable/screen/text/screen_text/command_order/centered/fast, override_color = "#ffae00")
 
 	animate(src, alpha = 0, time = 0.2 SECONDS)
 	spawn(0.3 SECONDS)

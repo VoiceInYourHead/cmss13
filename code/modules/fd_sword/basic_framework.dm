@@ -452,12 +452,12 @@
 	var/srd_faction = "Neutral"
 
 /mob/living/Life(delta_time)
-	. = ..()
-
 	if(ice_stacks > 0)
-		ice_stacks -= 1
+		remove_status_value("cold", 1)
 
 	update_srd_statuses()
+
+	. = ..()
 
 /mob/living/carbon/human
 	var/datum/sword_tech/current_active_technique = null

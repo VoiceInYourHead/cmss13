@@ -175,7 +175,7 @@
 	. = ..()
 
 	if(target.collected_gold > 0)
-		target.collected_gold -= 1
+		target.remove_status_value("gold", 1)
 
 		var/obj/spawned_gold = new /obj/effect/fd_sword/gold(get_turf(target))
 		spawned_gold.throw_atom(get_step(target, pick(GLOB.cardinals)), 3, SPEED_SLOW, src, TRUE, HIGH_LAUNCH, PASS_ALL)
@@ -231,13 +231,13 @@
 /datum/sword_tech/goldensword/process(delta_time)
 
 	if(connected_weapon.new_soul.stat == DEAD && connected_weapon.new_soul.circle_stacks > 0)
-		connected_weapon.new_soul.circle_stacks -= 1
+		connected_weapon.new_soul.remove_status_value("rejuv", 1)
 		connected_weapon.new_soul.rejuvenate()
 
 	if(connected_weapon.new_soul.collected_gold >= 100)
-		connected_weapon.new_soul.collected_gold = 0
+		connected_weapon.new_soul.set_status_value("gold", 0)
 		overtime_at = 50
-		connected_weapon.new_soul.circle_stacks += 1
+		connected_weapon.new_soul.add_status_value("rejuv", 1)
 
 		connected_weapon.new_soul.play_screen_text(text = "<b>НОВЫЙ КРУГ!</b>", alert_type = /atom/movable/screen/text/screen_text/command_order/centered, override_color = "#ffae00")
 
@@ -417,7 +417,7 @@
 		rerolling = FALSE
 
 	if(!rerolling)
-		connected_weapon.new_soul.collected_gold -= bet_cost
+		connected_weapon.new_soul.remove_status_value("gold", bet_cost)
 
 	keep_spinning = TRUE
 	playsound(connected_weapon.new_soul, 'code/modules/fd_sword/sounds/goldsword_dom.mp3', 80, 0)
@@ -521,7 +521,7 @@
 				if("REROLL")
 					for(var/mob/living/L in players)
 						L.play_screen_text(text = "<b>[connected_weapon.new_soul]</b> КРУТИТ БАРАБАН СНОВА!", alert_type = /atom/movable/screen/text/screen_text/command_order/centered, override_color = "#ffae00")
-						connected_weapon.new_soul.collected_gold -= reroll_cost
+						connected_weapon.new_soul.remove_status_value("gold", reroll_cost)
 
 						playsound_client(L.client, 'sound/machines/slotmachine/rolling-slotmachine.ogg', L, 50)
 
@@ -635,7 +635,7 @@
 
 				G.throw_atom(T, get_dist(T, connected_weapon.new_soul), SPEED_FAST, src, FALSE, HIGH_LAUNCH, PASS_ALL)
 
-				connected_weapon.new_soul.collected_gold -= 5
+				connected_weapon.new_soul.remove_status_value("gold", 5)
 
 		if(istype(target, /mob/living/))
 			var/mob/living/H = target
