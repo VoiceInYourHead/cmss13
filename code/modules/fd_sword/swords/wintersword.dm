@@ -36,13 +36,6 @@
 
 /mob/living
 	var/tripped = FALSE
-	var/ice_stacks = 0
-
-/mob/living/Life(delta_time)
-	. = ..()
-
-	if(ice_stacks > 0)
-		ice_stacks -= 1
 
 /mob/living/proc/turn_to_ice()
 	overlays += image('code/modules/fd_sword/icons/visuals.dmi', icon_state = "ice_cube")
@@ -67,156 +60,11 @@
 	mouse_opacity = TRUE
 	ice_stacks = 0
 
-/obj/effect/fd_sword/ice_aoe
-	name = "Ледяная пика"
-
-	icon = 'code/modules/fd_sword/icons/visuals.dmi'
-	icon_state = "spike"
-
-	anchored = TRUE
-	alpha = 0
-
-/obj/effect/fd_sword/ice_aoe/Initialize(mapload, ...)
-	. = ..()
-	animate(src, alpha = 255, time = 0.5 SECONDS, flags = ANIMATION_PARALLEL)
-	animate(src, pixel_y = 18, time = 0.5 SECONDS, easing = BACK_EASING|EASE_IN, flags = ANIMATION_PARALLEL)
-
-	for(var/mob/living/L in get_turf(src))
-		animate(L, pixel_z = 23, time = 0.5 SECONDS, easing = BACK_EASING|EASE_IN)
-		new /obj/effect/fd_sword/hit_effect(get_turf(L))
-
-		L.apply_damage(50, BRUTE)
-		shake_camera(L, 2, 1)
-
-	spawn(0.5 SECONDS)
-		animate(src, pixel_y = 0, time = 0.2 SECONDS, easing = SINE_EASING|EASE_IN)
-
-		for(var/mob/living/L in get_turf(src))
-			animate(L, pixel_z = 0, time = 0.2 SECONDS, easing = SINE_EASING|EASE_IN)
-
-	spawn(0.7 SECONDS)
-		animate(src, alpha = 0, time = 0.3 SECONDS)
-
-	spawn(1 SECONDS)
-		qdel(src)
-
-/obj/structure/fd_sword/ice_bridge
-	name = "Лёд"
-
-	icon = 'code/modules/fd_sword/icons/visuals.dmi'
-	icon_state = "ice_bridge"
-
-	anchored = TRUE
-	density = FALSE
-	var/related_faction = "what"
-
-/obj/structure/fd_sword/ice_bridge/Initialize(mapload, ...)
-	. = ..()
-	spawn(3 SECONDS)
-		animate(src, alpha = 0, time = 1 SECONDS)
-	spawn(4 SECONDS)
-		qdel(src)
-
-/obj/structure/fd_sword/ice_bridge/Crossed(O)
-	. = ..()
-
-	if(istype(O, /mob/living))
-		var/mob/living/L = O
-		if(!L.tripped)
-
-			if(!ishuman(L))
-				tripover(L)
-				return TRUE
-			else
-				var/mob/living/carbon/human/H = O
-				if(!istype(H.current_active_technique, /datum/sword_tech/wintersword))
-					if(H.srd_faction != related_faction)
-						tripover(H)
-						return TRUE
-
-/obj/structure/fd_sword/ice_bridge/proc/tripover(mob/living/M)
-	M.tripped = TRUE
-	if(M.buckled)
-		return FALSE
-	M.stop_pulling()
-	playsound(src.loc, 'sound/misc/slip.ogg', 25, 1)
-
-	var/turf/slide = get_step(M, M.dir)
-	animate(M, time = 0.5 SECONDS, transform = matrix(90, MATRIX_ROTATE), easing = SINE_EASING)
-
-	if(!slide.density)
-		M.forceMove(slide)
-
-	ADD_TRAIT(M, TRAIT_IMMOBILIZED, ICESLIDE_TRAIT)
-	ADD_TRAIT(M, TRAIT_UNDENSE, ICESLIDE_TRAIT)
-
-	for(var/i = 0, i <= 3, i++)
-		new /obj/effect/fd_sword/stunned(get_turf(M))
-
-	addtimer(CALLBACK(M, TYPE_PROC_REF(/mob/living, standup)), 1 SECONDS)
-
 /mob/living/proc/standup()
 	animate(src, time = 0.5 SECONDS, transform = matrix(0, MATRIX_ROTATE), easing = SINE_EASING)
 	REMOVE_TRAIT(src, TRAIT_IMMOBILIZED, ICESLIDE_TRAIT)
 	REMOVE_TRAIT(src, TRAIT_UNDENSE, ICESLIDE_TRAIT)
 	tripped = FALSE
-
-/obj/effect/fd_sword/stunned
-	icon = 'code/modules/fd_sword/icons/visuals.dmi'
-	icon_state = "stun"
-
-	anchored = TRUE
-	mouse_opacity = FALSE
-	alpha = 0
-	layer = BELOW_MOB_LAYER
-
-/obj/effect/fd_sword/stunned/Initialize(mapload, ...)
-	. = ..()
-	animate(src, alpha = 255, time = 0.5 SECONDS, flags = ANIMATION_PARALLEL)
-	animate(src, pixel_x = rand(-32,32), pixel_y = rand(-32,32), time = 0.5 SECONDS, easing = BOUNCE_EASING, flags = ANIMATION_PARALLEL)
-
-	spawn(0.5 SECONDS)
-		animate(src, alpha = 0, time = 0.5 SECONDS)
-
-	spawn(1 SECONDS)
-		qdel(src)
-
-/obj/effect/fd_sword/sparkles
-	icon = 'code/modules/fd_sword/icons/visuals.dmi'
-	icon_state = "empdisable"
-
-	anchored = TRUE
-	mouse_opacity = FALSE
-	layer = ABOVE_MOB_LAYER
-
-/obj/effect/fd_sword/sparkles/Initialize(mapload, ...)
-	. = ..()
-	spawn(1 SECONDS)
-		animate(src, alpha = 0, time = 0.5 SECONDS)
-
-	spawn(1.5 SECONDS)
-		qdel(src)
-
-/obj/effect/fd_sword/shards_creation
-	icon = 'code/modules/fd_sword/icons/visuals.dmi'
-	icon_state = "ice_shards"
-
-	anchored = TRUE
-	mouse_opacity = FALSE
-	alpha = 0
-
-/obj/effect/fd_sword/shards_creation/Initialize(mapload, ...)
-	. = ..()
-	var/matrix/base_matrix = matrix(base_transform)
-	update_base_transform(base_matrix.Scale(0.5,0.5))
-
-	animate(src, alpha = 255, time = 1 SECONDS)
-
-	spawn(1.4 SECONDS)
-		animate(src, alpha = 0, time = 0.5 SECONDS, flags = ANIMATION_PARALLEL)
-
-	spawn(2 SECONDS)
-		qdel(src)
 
 /datum/ammo/bullet/shotgun/iceshard
 	name = "ice spike"
@@ -264,6 +112,7 @@
 			var/mob/living/L = target
 
 			L.ice_stacks += 2
+
 			if(L.ice_stacks >= 10)
 				L.turn_to_ice()
 
@@ -408,9 +257,6 @@
 		connected_weapon.new_soul.animation_attack_on(shoot_angle)
 		projectile.fire_at(shoot_angle, connected_weapon.new_soul, connected_weapon.new_soul, shards_datum.max_range, shards_datum.shell_speed)
 		REMOVE_TRAIT(connected_weapon.new_soul, TRAIT_IMMOBILIZED, ICESPIKES_TRAIT)
-
-/obj/effect/fd_sword/telegraph_basic/wintersword/aoe
-	delete_after = 1 SECONDS
 
 /datum/sword_tech/wintersword/use_aoe_ability()
 	var/list/inner_circle = list()

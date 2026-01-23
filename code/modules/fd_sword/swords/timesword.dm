@@ -9,72 +9,11 @@
 
 	if(istype(target, /mob/living))
 		if(target != user)
-			var/datum/sword_tech/timesword/T = technique_attached
 
-			T.time_fragments += 1
-			new_soul.play_screen_text(text = "ФРАГМЕНТЫ: <b>[T.time_fragments]</b>", alert_type = /atom/movable/screen/text/screen_text/command_order/centered/fast, override_color = "#929292")
+			new_soul.time_fragments += 1
+			//new_soul.play_screen_text(text = "ФРАГМЕНТЫ: <b>[T.time_fragments]</b>", alert_type = /atom/movable/screen/text/screen_text/command_order/centered/fast, override_color = "#929292")
 
-			T.update_info()
-
-/obj/effect/fd_sword/timeaoe
-	name = "ЧАС РАСПЛАТЫ"
-
-	icon = 'code/modules/fd_sword/icons/160x160.dmi'
-	icon_state = "time"
-
-	anchored = TRUE
-	layer = 5
-	pixel_x = -64
-	pixel_y = -64
-
-/obj/effect/fd_sword/timeaoe/Initialize(mapload, ...)
-	. = ..()
-	spawn(1 SECONDS)
-		animate(src, alpha = 0, time = 1 SECONDS)
-	spawn(2 SECONDS)
-		qdel(src)
-
-/obj/effect/fd_sword/timetentacles
-	name = "ВРЕМЕННОЙ РАЗРЫВ"
-
-	icon = 'code/modules/fd_sword/icons/visuals.dmi'
-	icon_state = "dreamfiend"
-
-	anchored = TRUE
-	alpha = 0
-
-/obj/effect/fd_sword/timetentacles/Initialize(mapload, ...)
-	. = ..()
-	animate(src, alpha = 255, time = 1 SECONDS, flags = ANIMATION_PARALLEL)
-	animate(src, pixel_x = -32, time = 1 SECONDS, easing = SINE_EASING|EASE_OUT, flags = ANIMATION_PARALLEL)
-
-	spawn(1.5 SECONDS)
-		animate(src, alpha = 0, time = 1 SECONDS)
-
-	spawn(2.5 SECONDS)
-		qdel(src)
-
-/obj/effect/fd_sword/timeanchor
-	name = "ВРЕМЕННОЙ ЯКОРЬ"
-
-	icon = 'code/modules/fd_sword/icons/visuals.dmi'
-	icon_state = "void_conduit_tg"
-
-	anchored = TRUE
-	alpha = 0
-
-/obj/effect/fd_sword/timeanchor/Initialize(mapload, ...)
-	. = ..()
-	animate(src, alpha = 255, time = 1 SECONDS)
-
-/obj/effect/fd_sword/timeanchor/proc/timecurse(mob/living/M)
-	M.add_filter("timestopped", 1, list("type" = "blur", "size" = 1))
-
-	M.anchored = TRUE
-	ADD_TRAIT(M, TRAIT_IMMOBILIZED, TIMECURSE_TRAIT)
-	ADD_TRAIT(M, TRAIT_UNDENSE, TIMECURSE_TRAIT)
-
-	addtimer(CALLBACK(M, TYPE_PROC_REF(/mob/living, reset_timeanchor)), 4 SECONDS)
+			//T.update_info()
 
 /mob/living/proc/reset_timeanchor()
 
@@ -83,46 +22,6 @@
 	REMOVE_TRAIT(src, TRAIT_UNDENSE, TIMECURSE_TRAIT)
 
 	remove_filter("timestopped", 1, list("type" = "blur", "size" = 1))
-
-/obj/effect/fd_sword/timewave
-	name = "ВРЕМЕННАЯ ВОЛНА"
-
-	icon = 'code/modules/fd_sword/icons/visuals.dmi'
-	icon_state = "summoning"
-
-	anchored = TRUE
-	mouse_opacity = FALSE
-	layer = ABOVE_MOB_LAYER
-
-/obj/effect/fd_sword/timewave/Initialize(mapload, ...)
-	. = ..()
-	animate(src, alpha = 0, time = 1 SECONDS)
-	spawn(1 SECONDS)
-		qdel(src)
-
-/obj/effect/fd_sword/anchored
-	icon = 'code/modules/fd_sword/icons/visuals.dmi'
-	icon_state = "restrained"
-
-	anchored = TRUE
-	mouse_opacity = FALSE
-	alpha = 0
-	layer = BELOW_MOB_LAYER
-
-/obj/effect/fd_sword/anchored/Initialize(mapload, ...)
-	. = ..()
-	animate(src, alpha = 255, time = 0.5 SECONDS, flags = ANIMATION_PARALLEL)
-	animate(src, pixel_y = 48, time = 0.5 SECONDS, easing = SINE_EASING|EASE_OUT, flags = ANIMATION_PARALLEL)
-
-	spawn(0.5 SECONDS)
-		animate(src, alpha = 0, time = 0.5 SECONDS)
-
-	spawn(1 SECONDS)
-		qdel(src)
-
-/obj/effect/fd_sword/timeanchor/alter
-	icon_state = "void_chill_oh_fuck_tg"
-	layer = ABOVE_MOB_LAYER
 
 /datum/sword_tech/timesword
 	name = "КОНЦЕПЦИЯ: Время"
@@ -142,7 +41,6 @@
 	targeted_ability_cost = 0
 	targeted_ability_cooldown = 2 SECONDS
 
-	var/time_fragments = 0
 	var/traverse_fragments_cost = 1
 	var/aoe_fragments_cost = 10
 	var/targeted_fragments_cost = 1
@@ -152,17 +50,23 @@
 	aoe_ability_name = "ЧАС РАСПЛАТЫ"
 	targeted_ability_name = "ВРЕМЕННОЕ ИСКАЖЕНИЕ"
 
-	var/marks_amount = 0
+	traverse_ability_desc = "Устанавливает в точке временной якорь, который перемещает вас обратно во времени по прохождению пяти секунд, тратя 1 ФРАГМЕНТ и полностью восстанавливая здоровье"
+	ranged_ability_desc = "Все сущности, оказавшиеся в зоне оной, становятся на временной якорь. По прохождению 5 секунд, эти сущности притягиваются к якорю и замирают во времени. +2 ФРАГМЕНТА за каждую поражённую цель"
+	aoe_ability_desc = "Создаёт темпоральный шторм, заставляющий всех живых существ замереть во времени. Тратит 10 ФРАГМЕНТОВ"
+	targeted_ability_desc = "Касание пустой руки в боевом режиме де-материализует предмет из пространства за 1 ФРАГМЕНТ. Обычная атака даёт 1 ФРАГМЕНТ"
 
+/*
 /datum/sword_tech/timesword/Initialize()
 	. = ..()
 	update_info()
+
 
 /datum/sword_tech/timesword/proc/update_info()
 	traverse_ability_desc = "Устанавливает в точке временной якорь, который перемещает вас обратно во времени по прохождению пяти секунд, тратя 1 ФРАГМЕНТ и полностью восстанавливая здоровье. Ваши текущие ФРАГМЕНТЫ: [time_fragments]"
 	ranged_ability_desc = "Все сущности, оказавшиеся в зоне оной, становятся на временной якорь. По прохождению 5 секунд, эти сущности притягиваются к якорю и замирают во времени. +2 ФРАГМЕНТА за каждую поражённую цель. Ваши текущие ФРАГМЕНТЫ: [time_fragments]"
 	aoe_ability_desc = "Создаёт темпоральный шторм, заставляющий всех живых существ замереть во времени. Тратит 10 ФРАГМЕНТОВ. Ваши текущие ФРАГМЕНТЫ: [time_fragments]"
 	targeted_ability_desc = "Касание пустой руки в боевом режиме де-материализует предмет из пространства за 1 ФРАГМЕНТ. Обычная атака даёт 1 ФРАГМЕНТ. Ваши текущие ФРАГМЕНТЫ: [time_fragments]"
+*/
 
 /datum/sword_tech/timesword/overcharge_marks()
 	connected_weapon.new_soul.age += 10
@@ -259,7 +163,7 @@
 		qdel(anchor)
 
 /datum/sword_tech/timesword/traverse_ability_check()
-	if(time_fragments < traverse_fragments_cost)
+	if(connected_weapon.new_soul.time_fragments < traverse_fragments_cost)
 		new /obj/effect/fd_sword/cannot_cast_ability(get_turf(connected_weapon.new_soul))
 		connected_weapon.new_soul.balloon_alert(connected_weapon.new_soul, "Недостаточно фрагментов!", COLOR_RED)
 		shake_camera(connected_weapon.new_soul, 2, 1)
@@ -269,13 +173,10 @@
 
 /datum/sword_tech/timesword/use_traverse_ability()
 
-	time_fragments -= traverse_fragments_cost
+	connected_weapon.new_soul.time_fragments -= traverse_fragments_cost
 
-	update_info()
+	//update_info()
 	create_new_anchor(connected_weapon.new_soul)
-
-/obj/effect/fd_sword/telegraph_basic/timesword/ranged
-	delete_after = 0.5 SECONDS
 
 /datum/sword_tech/timesword/use_ranged_ability()
 	var/final_ability_range = ranged_ability_range + tech_level
@@ -311,11 +212,11 @@
 			for(var/mob/living/N in T)
 				new /obj/effect/fd_sword/anchored(get_turf(N))
 
-				time_fragments += 2
+				connected_weapon.new_soul.time_fragments += 2
 				create_new_anchor(N)
 
-		connected_weapon.new_soul.play_screen_text(text = "ФРАГМЕНТЫ: <b>[time_fragments]</b>", alert_type = /atom/movable/screen/text/screen_text/command_order/centered/fast, override_color = "#929292")
-		update_info()
+		//connected_weapon.new_soul.play_screen_text(text = "ФРАГМЕНТЫ: <b>[time_fragments]</b>", alert_type = /atom/movable/screen/text/screen_text/command_order/centered/fast, override_color = "#929292")
+		//update_info()
 
 		var/reverse_facing = get_dir(ending, connected_weapon.new_soul)
 
@@ -325,11 +226,8 @@
 		connected_weapon.new_soul.throw_atom(get_edge_target_turf(connected_weapon.new_soul, reverse_facing), 1, SPEED_AVERAGE, src, FALSE)
 		connected_weapon.new_soul.face_atom(ending)
 
-/obj/effect/fd_sword/telegraph_basic/timesword/aoe
-	delete_after = 1 SECONDS
-
 /datum/sword_tech/timesword/aoe_ability_check()
-	if(time_fragments < aoe_fragments_cost)
+	if(connected_weapon.new_soul.time_fragments < aoe_fragments_cost)
 		new /obj/effect/fd_sword/cannot_cast_ability(get_turf(connected_weapon.new_soul))
 		connected_weapon.new_soul.balloon_alert(connected_weapon.new_soul, "Недостаточно фрагментов!", COLOR_RED)
 		shake_camera(connected_weapon.new_soul, 2, 1)
@@ -339,9 +237,9 @@
 
 /datum/sword_tech/timesword/use_aoe_ability()
 	var/aoe_area = 2 + tech_level
-	time_fragments -= aoe_fragments_cost
+	connected_weapon.new_soul.time_fragments -= aoe_fragments_cost
 
-	update_info()
+	//update_info()
 
 	connected_weapon.new_soul.anchored = TRUE
 	ADD_TRAIT(connected_weapon.new_soul, TRAIT_IMMOBILIZED, TIMECURSE_TRAIT)
@@ -398,7 +296,7 @@
 		var/obj/O = target
 
 		if(!connected_weapon.new_soul.get_active_hand())
-			if(time_fragments >= targeted_fragments_cost)
+			if(connected_weapon.new_soul.time_fragments >= targeted_fragments_cost)
 
 				new /obj/effect/fd_sword/targeted_ability(get_turf(O))
 
@@ -411,7 +309,7 @@
 					O.opacity = FALSE
 					O.deplaced = TRUE
 
-					time_fragments -= targeted_fragments_cost
+					connected_weapon.new_soul.time_fragments -= targeted_fragments_cost
 
 					connected_weapon.new_soul.sword_usage_current += 1
 
@@ -420,7 +318,7 @@
 					connected_weapon.new_soul.hud_used.sword_usage_stat.update_stat(connected_weapon.new_soul)
 					connected_weapon.new_soul.hud_used.sword_limit_stat.update_stat(connected_weapon.new_soul)
 
-					update_info()
+					//update_info()
 				else
 					animate(O, alpha = 255, time = 1 SECONDS)
 					O.remove_filter("timestopped", 1, list("type" = "blur", "size" = 1))
@@ -430,9 +328,9 @@
 					O.opacity = initial(O.opacity)
 					O.deplaced = FALSE
 
-					time_fragments -= targeted_fragments_cost
+					connected_weapon.new_soul.time_fragments -= targeted_fragments_cost
 
-					update_info()
+					//update_info()
 			else
 				new /obj/effect/fd_sword/cannot_cast_ability(get_turf(connected_weapon.new_soul))
 				connected_weapon.new_soul.balloon_alert(connected_weapon.new_soul, "Недостаточно фрагментов!", COLOR_RED)

@@ -1,5 +1,4 @@
 /mob
-	var/collected_gold = 0
 	var/gold_worth = 0
 
 /mob/living
@@ -23,128 +22,6 @@
 
 		for(var/obj/effect/fd_sword/gold/G in get_turf(src))
 			G.throw_atom(get_step(src, pick(GLOB.cardinals)), 3, SPEED_SLOW, src, TRUE, HIGH_LAUNCH, PASS_ALL)
-
-/obj/effect/fd_sword/gold
-	name = "money"
-	icon = 'code/modules/fd_sword/icons/visuals.dmi'
-	icon_state = "money"
-
-	anchored = TRUE
-	mouse_opacity = FALSE
-
-	alpha = 0
-
-/obj/effect/fd_sword/gold/Initialize(mapload, ...)
-	. = ..()
-	animate(src, alpha = 255, time = 0.5 SECONDS)
-
-	spawn(5 SECONDS)
-		animate(src, alpha = 0, time = 0.2 SECONDS)
-	spawn(5.2 SECONDS)
-		qdel(src)
-
-/obj/effect/fd_sword/gold/Crossed(O)
-	. = ..()
-
-	if(istype(O, /mob/living))
-		var/mob/living/L = O
-		L.collected_gold += 1
-
-		playsound_client(L.client, 'sound/machines/pda_ping.ogg', L, 25)
-		L.play_screen_text(text = "ТЕКУЩИЙ СЧЁТ: <b>[L.collected_gold]</b>", alert_type = /atom/movable/screen/text/screen_text/command_order/centered/fast, override_color = "#ffae00")
-
-	animate(src, alpha = 0, time = 0.2 SECONDS)
-	spawn(0.3 SECONDS)
-		qdel(src)
-
-/obj/effect/fd_sword/puff
-	name = "puff"
-	icon = 'code/modules/fd_sword/icons/visuals.dmi'
-	icon_state = "puff"
-
-	anchored = TRUE
-	mouse_opacity = FALSE
-	layer = ABOVE_MOB_LAYER
-
-/obj/effect/fd_sword/puff/Initialize(mapload, ...)
-	. = ..()
-	spawn(0.5 SECONDS)
-		qdel(src)
-
-/obj/effect/fd_sword/heal_effect
-	name = "healing"
-	icon = 'icons/mob/do_afters.dmi'
-	icon_state = "busy_medical"
-
-	anchored = TRUE
-	mouse_opacity = FALSE
-	layer = ABOVE_MOB_LAYER
-
-/obj/effect/fd_sword/heal_effect/Initialize(mapload, ...)
-	. = ..()
-	spawn(1 SECONDS)
-		animate(src, alpha = 0, time = 0.5 SECONDS)
-
-	spawn(1.5 SECONDS)
-		qdel(src)
-
-/obj/effect/fd_sword/gold_bomb
-	name = "money"
-	icon = 'code/modules/fd_sword/icons/visuals.dmi'
-	icon_state = "money"
-
-	anchored = TRUE
-	mouse_opacity = FALSE
-	var/related_faction = "what"
-
-/obj/effect/fd_sword/gold_bomb/Initialize(mapload, ...)
-	. = ..()
-
-	addtimer(CALLBACK(src, PROC_REF(remove_from_world)), 3 MINUTES)
-
-/obj/effect/fd_sword/gold_bomb/proc/remove_from_world()
-	animate(src, alpha = 0, time = 0.2 SECONDS)
-	spawn(0.3 SECONDS)
-		qdel(src)
-
-/obj/effect/fd_sword/gold_bomb/proc/trigger()
-	var/list/target_turfs = list()
-
-	add_filter("detonation", 1, list("type" = "outline", "color" = "#ff0000", "size" = 1))
-
-	spawn(0.5 SECONDS)
-		for(var/turf/attack_zone in range(1,src))
-			new /obj/effect/fd_sword/telegraph_basic/goldensword/ranged(attack_zone)
-
-			target_turfs += attack_zone
-
-	spawn(1 SECONDS)
-		new /obj/effect/block(get_turf(src))
-		animate(src, alpha = 0, time = 0.3 SECONDS)
-
-		for(var/turf/T in target_turfs)
-			for(var/mob/living/L in T)
-				shake_camera(L, 2, 1)
-				new /obj/effect/fd_sword/puff(get_turf(L))
-
-				if(L.srd_faction != related_faction)
-					for(var/i = 0, i <= 3, i++)
-						var/impact_effect = pick(1,2)
-						switch(impact_effect)
-							if(1)
-								new /obj/effect/fd_sword/hit_effect/alt1(get_turf(L))
-							if(2)
-								new /obj/effect/fd_sword/hit_effect/alt2(get_turf(L))
-
-					L.set_effect(10, STUN)
-					L.apply_damage(20, BRUTE)
-
-				else
-					new /obj/effect/fd_sword/heal_effect(get_turf(L))
-					L.apply_damage(-20, BRUTE)
-
-	spawn(1.5 SECONDS)
-		qdel(src)
 
 /atom/movable/screen/text/screen_text/command_order/centered/fast
 	fade_out_delay = 1 SECONDS
@@ -281,7 +158,6 @@
 		apply_effect(10, STUN)
 		apply_damage(50, BRUTE)
 
-
 /atom/movable/screen/fullscreen/goldensword_dom
 	icon = 'code/modules/fd_sword/icons/visuals.dmi'
 	icon_state = "hakari_domain"
@@ -290,81 +166,6 @@
 
 	plane = 4
 	layer = 4
-
-/obj/effect/fd_sword/goldensword_fake
-	name = "combat sword"
-	icon = 'code/modules/fd_sword/icons/swords.dmi'
-	icon_state = "goldensword"
-
-	anchored = TRUE
-	mouse_opacity = FALSE
-	layer = 5
-	plane = 5
-
-	alpha = 0
-
-/obj/effect/fd_sword/goldensword_greencard
-	name = "GREEN"
-	icon = 'code/modules/fd_sword/icons/visuals.dmi'
-	icon_state = "green"
-
-	anchored = TRUE
-	mouse_opacity = FALSE
-	layer = 5
-	plane = 5
-
-	alpha = 0
-
-/obj/effect/fd_sword/goldensword_greencard/Initialize(mapload, ...)
-	. = ..()
-	animate(src, alpha = 255, time = 0.5 SECONDS, flags = ANIMATION_PARALLEL)
-	animate(src, pixel_y = 32, time = 0.5 SECONDS, easing = SINE_EASING|EASE_IN, flags = ANIMATION_PARALLEL)
-
-	spawn(0.5 SECONDS)
-		animate(src, alpha = 0, time = 0.3 SECONDS)
-
-	spawn(0.8 SECONDS)
-		qdel(src)
-
-/obj/effect/fd_sword/lightning
-	name = "ZZIP"
-	icon = 'code/modules/fd_sword/icons/visuals.dmi'
-	icon_state = "lightning_tg"
-
-	anchored = TRUE
-	mouse_opacity = FALSE
-	layer = 5
-	plane = 5
-
-/obj/effect/fd_sword/lightning/Initialize(mapload, ...)
-	. = ..()
-	animate(src, alpha = 0, time = 0.5 SECONDS)
-
-	spawn(0.5 SECONDS)
-		qdel(src)
-
-/obj/effect/fd_sword/goldensword_redcard
-	name = "RED"
-	icon = 'code/modules/fd_sword/icons/visuals.dmi'
-	icon_state = "red"
-
-	anchored = TRUE
-	mouse_opacity = FALSE
-	layer = 5
-	plane = 5
-
-	alpha = 0
-
-/obj/effect/fd_sword/goldensword_redcard/Initialize(mapload, ...)
-	. = ..()
-	animate(src, alpha = 255, time = 0.5 SECONDS, flags = ANIMATION_PARALLEL)
-	animate(src, pixel_y = 32, time = 0.5 SECONDS, easing = SINE_EASING|EASE_IN, flags = ANIMATION_PARALLEL)
-
-	spawn(0.5 SECONDS)
-		animate(src, alpha = 0, time = 0.3 SECONDS)
-
-	spawn(0.8 SECONDS)
-		qdel(src)
 
 /obj/item/weapon/sword/fd_sword/goldensword
 	icon_state = "goldensword"
@@ -385,7 +186,6 @@
 	var/already_spawned_some_gold = FALSE
 	var/overtime_at = 50
 	var/overtime_reached = FALSE
-	var/circle_stacks = 0
 
 	traverse_ability_cooldown = 2 SECONDS
 	traverse_ability_cost = 2
@@ -430,17 +230,16 @@
 
 /datum/sword_tech/goldensword/process(delta_time)
 
-	if(connected_weapon.new_soul.stat == DEAD && circle_stacks > 0)
-		circle_stacks -= 1
+	if(connected_weapon.new_soul.stat == DEAD && connected_weapon.new_soul.circle_stacks > 0)
+		connected_weapon.new_soul.circle_stacks -= 1
 		connected_weapon.new_soul.rejuvenate()
 
 	if(connected_weapon.new_soul.collected_gold >= 100)
 		connected_weapon.new_soul.collected_gold = 0
 		overtime_at = 50
-		circle_stacks += 1
+		connected_weapon.new_soul.circle_stacks += 1
 
 		connected_weapon.new_soul.play_screen_text(text = "<b>НОВЫЙ КРУГ!</b>", alert_type = /atom/movable/screen/text/screen_text/command_order/centered, override_color = "#ffae00")
-		connected_weapon.new_soul.play_screen_text(text = "ТЕКУЩИЙ СЧЁТ: <b>[connected_weapon.new_soul.collected_gold]</b>", alert_type = /atom/movable/screen/text/screen_text/command_order/centered, override_color = "#ffae00")
 
 	if(connected_weapon.new_soul.collected_gold >= overtime_at && !overtime_reached)
 		overtime_reached = TRUE
@@ -564,9 +363,6 @@
 		swap_target_1.forceMove(second)
 		swap_target_2.alpha = 255
 		swap_target_2.forceMove(first)
-
-/obj/effect/fd_sword/telegraph_basic/goldensword/ranged
-	delete_after = 0.5 SECONDS
 
 /datum/sword_tech/goldensword/use_ranged_ability()
 	var/list/target_turfs = list()

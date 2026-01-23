@@ -319,128 +319,6 @@
 
 //// SWORD ////
 
-/obj/effect/fd_sword/telegraph_basic
-	name = "ТЕЛЕГРАФИЯ АТАКИ"
-
-	icon = 'code/modules/fd_sword/icons/visuals.dmi'
-	icon_state = "target_tile"
-
-	anchored = TRUE
-	mouse_opacity = FALSE
-	var/delete_after = 1 SECONDS
-
-/obj/effect/fd_sword/telegraph_basic/Initialize(mapload, ...)
-	. = ..()
-	addtimer(CALLBACK(src, PROC_REF(remove)), delete_after)
-
-/obj/effect/fd_sword/telegraph_basic/proc/remove()
-	animate(src, alpha = 0, time = 0.5 SECONDS)
-	spawn(0.6 SECONDS)
-		qdel(src)
-
-/obj/effect/fd_sword/targeted_ability
-	name = "CLICK ME"
-	icon = 'code/modules/fd_sword/icons/visuals.dmi'
-	icon_state = "spellwarning"
-
-	anchored = TRUE
-	mouse_opacity = FALSE
-
-/obj/effect/fd_sword/targeted_ability/Initialize(mapload, ...)
-	. = ..()
-	spawn(1 SECONDS)
-		qdel(src)
-
-/obj/effect/fd_sword/ability_on_cooldown
-	icon = 'code/modules/fd_sword/icons/visuals.dmi'
-	icon_state = "cooldown"
-
-	anchored = TRUE
-	mouse_opacity = FALSE
-	alpha = 0
-
-/obj/effect/fd_sword/ability_on_cooldown/Initialize(mapload, ...)
-	. = ..()
-	animate(src, alpha = 255, time = 0.5 SECONDS, flags = ANIMATION_PARALLEL)
-	animate(src, pixel_y = 48, time = 0.5 SECONDS, easing = SINE_EASING|EASE_OUT, flags = ANIMATION_PARALLEL)
-
-	spawn(1.5 SECONDS)
-		animate(src, alpha = 0, time = 0.5 SECONDS)
-
-	spawn(2 SECONDS)
-		qdel(src)
-
-/obj/effect/fd_sword/cannot_cast_ability
-	icon = 'code/modules/fd_sword/icons/visuals.dmi'
-	icon_state = "cantdoit"
-
-	anchored = TRUE
-	mouse_opacity = FALSE
-	alpha = 0
-
-/obj/effect/fd_sword/cannot_cast_ability/Initialize(mapload, ...)
-	. = ..()
-	animate(src, alpha = 255, time = 0.5 SECONDS, flags = ANIMATION_PARALLEL)
-	animate(src, pixel_y = 48, time = 0.5 SECONDS, easing = SINE_EASING|EASE_OUT, flags = ANIMATION_PARALLEL)
-
-	spawn(1.5 SECONDS)
-		animate(src, alpha = 0, time = 0.5 SECONDS)
-
-	spawn(2 SECONDS)
-		qdel(src)
-
-/obj/effect/fd_sword/sanity_effect
-	icon = 'code/modules/fd_sword/icons/visuals.dmi'
-	icon_state = "stabilized"
-
-	anchored = TRUE
-	mouse_opacity = FALSE
-	alpha = 0
-
-/obj/effect/fd_sword/sanity_effect/Initialize(mapload, ...)
-	. = ..()
-	animate(src, alpha = 255, time = 0.5 SECONDS, flags = ANIMATION_PARALLEL)
-	animate(src, pixel_y = 48, time = 0.5 SECONDS, easing = SINE_EASING|EASE_OUT, flags = ANIMATION_PARALLEL)
-
-	spawn(1 SECONDS)
-		animate(src, alpha = 0, time = 0.5 SECONDS)
-
-	spawn(1.5 SECONDS)
-		qdel(src)
-
-/obj/effect/fd_sword/sanity_effect/full
-	icon = 'code/modules/fd_sword/icons/visuals.dmi'
-	icon_state = "full"
-
-/obj/effect/fd_sword/sanity_effect/overflow
-	icon = 'code/modules/fd_sword/icons/visuals.dmi'
-	icon_state = "overflow"
-
-/obj/effect/fd_sword/hit_effect
-	icon = 'code/modules/fd_sword/icons/visuals.dmi'
-	icon_state = "wham"
-
-	anchored = TRUE
-	mouse_opacity = FALSE
-	alpha = 0
-
-/obj/effect/fd_sword/hit_effect/Initialize(mapload, ...)
-	. = ..()
-	animate(src, alpha = 255, time = 0.5 SECONDS, flags = ANIMATION_PARALLEL)
-	animate(src, pixel_x = rand(-32,32), pixel_y = rand(-32,32), time = 0.5 SECONDS, easing = BOUNCE_EASING, flags = ANIMATION_PARALLEL)
-
-	spawn(0.5 SECONDS)
-		animate(src, alpha = 0, time = 0.5 SECONDS)
-
-	spawn(1 SECONDS)
-		qdel(src)
-
-/obj/effect/fd_sword/hit_effect/alt1
-	icon_state = "pow"
-
-/obj/effect/fd_sword/hit_effect/alt2
-	icon_state = "bonk"
-
 /obj/item/weapon/sword/fd_sword
 	var/list/datum/sword_tech/techniques = list()
 	var/datum/sword_tech/technique_attached = null
@@ -572,6 +450,14 @@
 
 /mob
 	var/srd_faction = "Neutral"
+
+/mob/living/Life(delta_time)
+	. = ..()
+
+	if(ice_stacks > 0)
+		ice_stacks -= 1
+
+	update_srd_statuses()
 
 /mob/living/carbon/human
 	var/datum/sword_tech/current_active_technique = null
