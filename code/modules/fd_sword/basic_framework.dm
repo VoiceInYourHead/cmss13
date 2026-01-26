@@ -340,14 +340,31 @@
 		technique_attached = techniques[1]
 
 /obj/item/weapon/sword/fd_sword/attack(mob/target, mob/user)
+	if(istype(target, /mob/living))
+
+		var/mob/living/L = target
+		var/mob/living/N = user
+
+		N.animation_attack_on(target)
+		N.flick_attack_overlay(target, "punch")
+
+		if(L.parry_protection)
+			new /obj/effect/block(get_turf(L))
+
+			N.handle_melee_parry()
+			return FALSE
+
 	. = ..()
 
-	var/impact_effect = pick(1,2)
-	switch(impact_effect)
-		if(1)
-			new /obj/effect/fd_sword/hit_effect/alt1(get_turf(target))
-		if(2)
-			new /obj/effect/fd_sword/hit_effect/alt2(get_turf(target))
+	if(!ishuman(target))
+		new /obj/effect/fd_sword/hit_text(get_turf(target), force)
+
+		var/impact_effect = pick(1,2)
+		switch(impact_effect)
+			if(1)
+				new /obj/effect/fd_sword/hit_effect/alt1(get_turf(target))
+			if(2)
+				new /obj/effect/fd_sword/hit_effect/alt2(get_turf(target))
 
 /obj/item/weapon/sword/fd_sword/equipped(mob/user, slot, silent)
 	. = ..()
@@ -451,6 +468,10 @@
 /mob
 	var/srd_faction = "Neutral"
 
+/mob/living
+	var/parry_delay = FALSE
+	var/parry_protection = FALSE
+
 /mob/living/Life(delta_time)
 	if(ice_stacks > 0)
 		remove_status_value("cold", 1)
@@ -458,6 +479,28 @@
 	update_srd_statuses()
 
 	. = ..()
+
+/mob/living/proc/reset_parry_timer()
+	balloon_alert(src, "Парирование перезарядилось!", COLOR_ORANGE)
+	parry_delay = FALSE
+
+/mob/living/proc/reset_parry_protection()
+	anchored = FALSE
+	REMOVE_TRAIT(src, TRAIT_IMMOBILIZED, PARRY_TRAIT)
+
+	parry_protection = FALSE
+
+/mob/living/proc/handle_melee_parry()
+	for(var/i = 0, i <= 3, i++)
+		new /obj/effect/fd_sword/stunned(get_turf(src))
+
+	shake_camera(src, 2, 1)
+
+	ADD_TRAIT(src, TRAIT_IMMOBILIZED, PARRY_STUN_TRAIT)
+	addtimer(CALLBACK(src, PROC_REF(remove_parry_stun)), 4 SECONDS)
+
+/mob/living/proc/remove_parry_stun()
+	REMOVE_TRAIT(src, TRAIT_IMMOBILIZED, PARRY_STUN_TRAIT)
 
 /mob/living/carbon/human
 	var/datum/sword_tech/current_active_technique = null
@@ -751,6 +794,8 @@
 #define COMSIG_KB_HUMAN_SWORD_RANGED "keybinding_human_sword_ranged"
 #define COMSIG_KB_HUMAN_SWORD_AOE "keybinding_human_sword_aoe"
 
+#define COMSIG_KB_HUMAN_SWORD_PARRY "keybinding_human_sword_parry_button"
+
 #define CATEGORY_SWORD "ТЕХНИКА МЕЧА"
 
 /datum/keybinding/human/sword_technique
@@ -829,6 +874,43 @@
 	var/mob/living/carbon/human/human_mob = user.mob
 	human_mob.current_active_technique.aoe_ability_check()
 	return TRUE
+
+/datum/keybinding/human/sword_technique/parry
+	hotkey_keys = list("F")
+	classic_keys = list("Unbound")
+	name = "sword_parry"
+	full_name = "УТИЛИТА: Паррирование"
+	description = "Блокирует входящую атаку, если нажата вовремя."
+	keybind_signal = COMSIG_KB_HUMAN_SWORD_PARRY
+
+/datum/keybinding/human/sword_technique/parry/can_use(client/user)
+
+	. = ..()
+
+	var/mob/living/carbon/human/human_mob = user.mob
+
+	if(human_mob.parry_delay)
+		new /obj/effect/fd_sword/cannot_cast_ability(get_turf(human_mob))
+		human_mob.balloon_alert(human_mob, "Ещё рано! Парирование недоступно!", COLOR_RED)
+		shake_camera(human_mob, 2, 1)
+		return FALSE
+
+
+/datum/keybinding/human/sword_technique/parry/up(client/user)
+	. = ..()
+	if(.)
+		return
+
+	var/mob/living/carbon/human/human_mob = user.mob
+	human_mob.parry_delay = TRUE
+	human_mob.parry_protection = TRUE
+
+	new /obj/effect/fd_sword/parry(get_turf(human_mob))
+
+	human_mob.anchored = TRUE
+	ADD_TRAIT(human_mob, TRAIT_IMMOBILIZED, PARRY_TRAIT)
+	addtimer(CALLBACK(human_mob, TYPE_PROC_REF(/mob/living/carbon/human, reset_parry_timer)), 6 SECONDS)
+	addtimer(CALLBACK(human_mob, TYPE_PROC_REF(/mob/living/carbon/human, reset_parry_protection)), 1.5 SECONDS)
 
 // VARIOUS TEST STUFF //
 

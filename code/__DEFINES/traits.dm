@@ -545,3 +545,6 @@ GLOBAL_LIST(trait_name_map)
 #define ICECAGE_TRAIT "icecage"
 // goldensword domain
 #define GOLDENCASINO_TRAIT "goldencasino"
+// parry
+#define PARRY_TRAIT "parry"
+#define PARRY_STUN_TRAIT "parry_stun"

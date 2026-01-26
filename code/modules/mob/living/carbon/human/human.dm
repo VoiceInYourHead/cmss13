@@ -258,6 +258,13 @@
 	else
 		if(M.attack_sound)
 			playsound(loc, M.attack_sound, 25, 1)
+
+		if(parry_protection)
+			new /obj/effect/block(get_turf(src))
+
+			M.handle_melee_parry()
+			return FALSE
+
 		for(var/mob/O in viewers(src, null))
 			O.show_message(SPAN_DANGER("<B>[M]</B> [M.attacktext] [src]!"), SHOW_MESSAGE_VISIBLE)
 		last_damage_data = create_cause_data(initial(M.name), M)

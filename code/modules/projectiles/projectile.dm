@@ -933,6 +933,10 @@
 	if(!P)
 		return
 
+	if(parry_protection)
+		new /obj/effect/block(get_turf(src))
+		return
+
 	var/ammo_flags = P.ammo.flags_ammo_behavior | P.projectile_override_flags
 	var/damage = P.calculate_damage()
 	if(P.ammo.debilitate && stat != DEAD && ( damage || (ammo_flags & AMMO_IGNORE_RESIST) ) )

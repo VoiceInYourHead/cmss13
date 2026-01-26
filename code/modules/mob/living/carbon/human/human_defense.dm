@@ -145,6 +145,16 @@ Contains most of the procs that are called when a mob is attacked by something
 	var/damage = armor_damage_reduction(GLOB.marine_melee, I.force, armor, (weapon_sharp?30:0) + (weapon_edge?10:0)) // no penetration frm punches
 	apply_damage(damage, I.damtype, affecting, sharp=weapon_sharp, edge=weapon_edge, used_weapon=I)
 
+	if(istype(I, /obj/item/weapon/sword/fd_sword))
+		var/impact_effect = pick(1,2)
+		switch(impact_effect)
+			if(1)
+				new /obj/effect/fd_sword/hit_effect/alt1(get_turf(src), damage)
+			if(2)
+				new /obj/effect/fd_sword/hit_effect/alt2(get_turf(src), damage)
+
+		new /obj/effect/fd_sword/hit_text(get_turf(src), damage)
+
 	if(damage > 5)
 		last_damage_data = create_cause_data(initial(I.name), user)
 		user.track_hit(initial(I.name))

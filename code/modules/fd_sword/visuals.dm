@@ -51,6 +51,24 @@
 	spawn(2 SECONDS)
 		qdel(src)
 
+/obj/effect/fd_sword/parry
+	icon = 'code/modules/fd_sword/icons/visuals.dmi'
+	icon_state = "mech_sparks"
+
+	anchored = TRUE
+	mouse_opacity = FALSE
+	alpha = 0
+	layer = ABOVE_MOB_LAYER
+
+/obj/effect/fd_sword/parry/Initialize(mapload, ...)
+	. = ..()
+	animate(src, alpha = 255, time = 0.3 SECONDS)
+	spawn(1 SECONDS)
+		animate(src, alpha = 0, time = 0.5 SECONDS)
+
+	spawn(1.5 SECONDS)
+		qdel(src)
+
 /obj/effect/fd_sword/cannot_cast_ability
 	icon = 'code/modules/fd_sword/icons/visuals.dmi'
 	icon_state = "cantdoit"
@@ -117,6 +135,34 @@
 	icon = 'code/modules/fd_sword/icons/visuals.dmi'
 	icon_state = "overflow"
 
+/obj/effect/fd_sword/hit_text
+	icon_state = ""
+
+	anchored = TRUE
+	mouse_opacity = FALSE
+
+	layer = ABOVE_MOB_LAYER
+
+/obj/effect/fd_sword/hit_text/New(loc, damage_number)
+	if(damage_number > 0)
+		maptext = "<span class='langchat' style=font-size:14pt;text-align:center valign='top'>[damage_number]</span>"
+
+	animate(src, transform = matrix(0.01, MATRIX_SCALE), time = 0)
+
+	. = ..()
+
+/obj/effect/fd_sword/hit_text/Initialize(mapload, ...)
+	. = ..()
+
+	animate(src, pixel_y = rand(-64,64), pixel_x = rand(-64,64), time = 1 SECONDS, easing = BOUNCE_EASING, flags = ANIMATION_PARALLEL)
+	animate(src, transform = matrix(1.5, MATRIX_SCALE), time = 1 SECONDS, easing = BOUNCE_EASING, flags = ANIMATION_PARALLEL)
+
+	spawn(1 SECONDS)
+		animate(src, alpha = 0, time = 0.3 SECONDS)
+
+	spawn(1.3 SECONDS)
+		qdel(src)
+
 /obj/effect/fd_sword/hit_effect
 	icon = 'code/modules/fd_sword/icons/visuals.dmi'
 	icon_state = "wham"
@@ -127,6 +173,7 @@
 
 /obj/effect/fd_sword/hit_effect/Initialize(mapload, ...)
 	. = ..()
+
 	animate(src, alpha = 255, time = 0.5 SECONDS, flags = ANIMATION_PARALLEL)
 	animate(src, pixel_x = rand(-32,32), pixel_y = rand(-32,32), time = 0.5 SECONDS, easing = BOUNCE_EASING, flags = ANIMATION_PARALLEL)
 
@@ -269,6 +316,7 @@
 	for(var/mob/living/L in get_turf(src))
 		animate(L, pixel_z = 23, time = 0.5 SECONDS, easing = BACK_EASING|EASE_IN)
 		new /obj/effect/fd_sword/hit_effect(get_turf(L))
+		new /obj/effect/fd_sword/hit_text(get_turf(L), 50)
 
 		L.apply_damage(50, BRUTE)
 		shake_camera(L, 2, 1)
@@ -485,6 +533,10 @@
 				new /obj/effect/fd_sword/puff(get_turf(L))
 
 				if(L.srd_faction != related_faction)
+					if(L.parry_protection)
+						new /obj/effect/block(get_turf(L))
+						continue
+
 					for(var/i = 0, i <= 3, i++)
 						var/impact_effect = pick(1,2)
 						switch(impact_effect)
@@ -492,6 +544,8 @@
 								new /obj/effect/fd_sword/hit_effect/alt1(get_turf(L))
 							if(2)
 								new /obj/effect/fd_sword/hit_effect/alt2(get_turf(L))
+
+					new /obj/effect/fd_sword/hit_text(get_turf(L), 20)
 
 					L.set_effect(10, STUN)
 					L.apply_damage(20, BRUTE)

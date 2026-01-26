@@ -119,6 +119,15 @@
 				apply_damage(final_damage, BRUTE, affecting, sharp=attack.sharp, edge = attack.edge)
 				throw_atom(get_edge_target_turf(src, attacking_mob.dir), 7, SPEED_AVERAGE, src, TRUE)
 
+				var/impact_effect = pick(1,2)
+				switch(impact_effect)
+					if(1)
+						new /obj/effect/fd_sword/hit_effect/alt1(get_turf(src))
+					if(2)
+						new /obj/effect/fd_sword/hit_effect/alt2(get_turf(src))
+
+				new /obj/effect/fd_sword/hit_text(get_turf(src), final_damage)
+
 			else
 				var/final_damage = armor_damage_reduction(GLOB.marine_melee, raw_damage, armor, FALSE) // no penetration from punches
 				apply_damage(final_damage, BRUTE, affecting, sharp=attack.sharp, edge = attack.edge)

@@ -298,6 +298,16 @@
 
 	spawn(2 SECONDS)
 		for(var/turf/T in outer_circle)
+
+			for(var/mob/living/M in T)
+				if(M.parry_protection)
+					new /obj/effect/block(get_turf(M))
+
+					var/reverse_facing = get_dir(get_edge_target_turf(M, M.dir), M)
+
+					M.throw_atom(get_edge_target_turf(M, reverse_facing), 9, SPEED_AVERAGE, src, FALSE)
+					continue
+
 			new /obj/effect/fd_sword/ice_aoe(T)
 
 		for(var/mob/living/L in get_turf(connected_weapon.new_soul))

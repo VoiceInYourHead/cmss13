@@ -194,6 +194,9 @@
 			new /obj/effect/fd_sword/timewave(T)
 
 			for(var/mob/living/N in T)
+				if(N.parry_protection)
+					new /obj/effect/block(get_turf(N))
+					continue
 				new /obj/effect/fd_sword/anchored(get_turf(N))
 
 				connected_weapon.new_soul.add_status_value("time", 2)
