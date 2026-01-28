@@ -70,6 +70,8 @@
 	var/mother_button = TRUE
 	var/hide = FALSE
 
+	var/opened = FALSE
+
 /atom/movable/screen/sword_info/proc/change_visibility(mob/living/carbon/human/user)
 
 	if(mother_button)
@@ -104,13 +106,24 @@
 	if (..())
 		return 1
 
+	if(opened)
+		playsound_client(user.client, 'code/modules/fd_sword/sounds/009_MainUI_DownPanel_a_v1.wav', user, 50, 0)
+	if(!opened)
+		playsound_client(user.client, 'code/modules/fd_sword/sounds/010_MainUI_UpPanel_a_v1.wav', user, 50, 0)
+
 	if(user && user.hud_used && user.sword_combat_active)
 		if(mother_button)
 			user.hud_used.traverse_info.change_visibility(user)
 			user.hud_used.ranged_info.change_visibility(user)
 			user.hud_used.aoe_info.change_visibility(user)
 			user.hud_used.targeted_info.change_visibility(user)
-			return 1
+
+			if(!opened)
+				opened = TRUE
+				return 1
+			if(opened)
+				opened = FALSE
+				return 1
 
 /atom/movable/screen/sword_info/traverse_info
 	icon_state = "info_traverse"
@@ -319,6 +332,15 @@
 
 //// SWORD ////
 
+GLOBAL_LIST_INIT(parry_sound, list('code/modules/fd_sword/sounds/parry1.wav',
+								'code/modules/fd_sword/sounds/parry2.wav',
+								'code/modules/fd_sword/sounds/parry3.wav',
+								'code/modules/fd_sword/sounds/parry4.wav',
+								'code/modules/fd_sword/sounds/parry5.wav',
+								'code/modules/fd_sword/sounds/parry6.wav',
+								'code/modules/fd_sword/sounds/parry7.wav',
+								'code/modules/fd_sword/sounds/parry8.wav'))
+
 /obj/item/weapon/sword/fd_sword
 	var/list/datum/sword_tech/techniques = list()
 	var/datum/sword_tech/technique_attached = null
@@ -349,6 +371,7 @@
 		N.flick_attack_overlay(target, "punch")
 
 		if(L.parry_protection)
+			playsound(L, pick(GLOB.parry_sound), 50)
 			new /obj/effect/block(get_turf(L))
 
 			N.handle_melee_parry()

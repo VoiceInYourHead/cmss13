@@ -195,6 +195,7 @@
 
 			for(var/mob/living/N in T)
 				if(N.parry_protection)
+					playsound(N, pick(GLOB.parry_sound), 50)
 					new /obj/effect/block(get_turf(N))
 					continue
 				new /obj/effect/fd_sword/anchored(get_turf(N))

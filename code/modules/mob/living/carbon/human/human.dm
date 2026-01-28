@@ -260,6 +260,7 @@
 			playsound(loc, M.attack_sound, 25, 1)
 
 		if(parry_protection)
+			playsound(src, pick(GLOB.parry_sound), 50)
 			new /obj/effect/block(get_turf(src))
 
 			M.handle_melee_parry()

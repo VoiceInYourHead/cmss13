@@ -301,6 +301,7 @@
 
 			for(var/mob/living/M in T)
 				if(M.parry_protection)
+					playsound(M, pick(GLOB.parry_sound), 50)
 					new /obj/effect/block(get_turf(M))
 
 					var/reverse_facing = get_dir(get_edge_target_turf(M, M.dir), M)

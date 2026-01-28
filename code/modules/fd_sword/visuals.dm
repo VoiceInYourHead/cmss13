@@ -534,6 +534,7 @@
 
 				if(L.srd_faction != related_faction)
 					if(L.parry_protection)
+						playsound(L, pick(GLOB.parry_sound), 50)
 						new /obj/effect/block(get_turf(L))
 						continue
 

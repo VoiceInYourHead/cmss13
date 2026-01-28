@@ -934,6 +934,7 @@
 		return
 
 	if(parry_protection)
+		playsound(src, pick(GLOB.parry_sound), 50)
 		new /obj/effect/block(get_turf(src))
 		return
 

@@ -97,6 +97,9 @@
 	jackpot_status = TRUE
 
 	for(var/mob/living/L in tempo_list)
+		if(!L.client)
+			continue
+
 		if(L == src && !havent_seen_goldensword_dom_explanation)
 			playsound_client(L.client, 'code/modules/fd_sword/sounds/invincible_gambler2.mp3', L, 25, 0)
 
