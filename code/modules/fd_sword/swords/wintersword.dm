@@ -247,6 +247,8 @@
 	former_projectile = new /obj/effect/fd_sword/shards_creation(shoot_angle)
 
 	spawn(1.2 SECONDS)
+		playsound(connected_weapon.new_soul, 'code/modules/fd_sword/sounds/wintersword_ranged2.wav', 50)
+
 		former_projectile.forceMove(get_turf(get_step(former_projectile, connected_weapon.new_soul.dir)))
 		var/obj/projectile/projectile = new /obj/projectile(connected_weapon.new_soul.loc)
 
@@ -283,6 +285,8 @@
 				ADD_TRAIT(L, TRAIT_IMMOBILIZED, ICECAGE_TRAIT)
 		// ДЛЯ СОЮЗНИКОВ //
 
+	playsound(connected_weapon.new_soul, 'code/modules/fd_sword/sounds/wintersword_aoe.wav', 50)
+
 	spawn(1 SECONDS)
 		for(var/turf/T in inner_circle)
 			new /obj/effect/fd_sword/ice_aoe(T)
@@ -303,6 +307,10 @@
 				if(M.parry_protection)
 					playsound(M, pick(GLOB.parry_sound), 50)
 					new /obj/effect/block(get_turf(M))
+
+					if(ishuman(M))
+						var/mob/living/carbon/human/H = M
+						H.remove_sword_usage(2)
 
 					var/reverse_facing = get_dir(get_edge_target_turf(M, M.dir), M)
 
@@ -329,7 +337,7 @@
 				O.chill_out()
 
 				new /obj/effect/fd_sword/targeted_ability(get_turf(target))
-				connected_weapon.new_soul.sword_usage_current += 1
+				connected_weapon.new_soul.add_sword_usage(1)
 
 				check_overcharge()
 				connected_weapon.new_soul.hud_used.sword_usage_stat.update_stat(connected_weapon.new_soul)
@@ -349,7 +357,7 @@
 
 			new /obj/effect/fd_sword/targeted_ability(get_turf(H))
 			new /obj/effect/fd_sword/heal_effect(get_turf(H))
-			connected_weapon.new_soul.sword_usage_current += 1
+			connected_weapon.new_soul.add_sword_usage(1)
 
 			check_overcharge()
 			connected_weapon.new_soul.hud_used.sword_usage_stat.update_stat(connected_weapon.new_soul)

@@ -88,7 +88,7 @@
 		species.handle_npc(src)
 
 	if(!sword_combat_active && sword_usage_current > 0)
-		sword_usage_current -= 1
+		remove_sword_usage(1)
 
 	if(jackpot_status)
 		heal_parts_of_damage()

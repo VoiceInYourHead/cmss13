@@ -263,6 +263,8 @@
 			playsound(src, pick(GLOB.parry_sound), 50)
 			new /obj/effect/block(get_turf(src))
 
+			remove_sword_usage(2)
+
 			M.handle_melee_parry()
 			return FALSE
 

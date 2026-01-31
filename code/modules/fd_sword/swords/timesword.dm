@@ -116,6 +116,8 @@
 			animate(connected_weapon.new_soul, pixel_x = -32, time = 0.5 SECONDS, easing = SINE_EASING|EASE_OUT, flags = ANIMATION_PARALLEL)
 			animate(connected_weapon.new_soul, alpha = 0, time = 0.5 SECONDS, flags = ANIMATION_PARALLEL)
 
+			playsound(connected_weapon.new_soul, 'code/modules/fd_sword/sounds/timesword_traverse.wav', 50)
+
 		spawn(1.5 SECONDS)
 			connected_weapon.new_soul.anchored = FALSE
 			REMOVE_TRAIT(connected_weapon.new_soul, TRAIT_IMMOBILIZED, TIMECURSE_TRAIT)
@@ -190,6 +192,8 @@
 
 	spawn(0.5 SECONDS)
 
+		playsound(connected_weapon.new_soul, 'code/modules/fd_sword/sounds/timesword_ranged.wav', 50)
+
 		for(var/turf/T in affected_turfs)
 			new /obj/effect/fd_sword/timewave(T)
 
@@ -197,6 +201,11 @@
 				if(N.parry_protection)
 					playsound(N, pick(GLOB.parry_sound), 50)
 					new /obj/effect/block(get_turf(N))
+
+					if(ishuman(N))
+						var/mob/living/carbon/human/H = N
+						H.remove_sword_usage(2)
+
 					continue
 				new /obj/effect/fd_sword/anchored(get_turf(N))
 
@@ -252,6 +261,8 @@
 
 	spawn(1 SECONDS)
 
+		playsound(connected_weapon.new_soul, 'code/modules/fd_sword/sounds/timesword_aoe3.wav', 50)
+
 		for(var/turf/T in orange(aoe_area, connected_weapon.new_soul))
 			new /obj/effect/fd_sword/timewave(T)
 
@@ -295,8 +306,7 @@
 					O.deplaced = TRUE
 
 					connected_weapon.new_soul.remove_status_value("time", targeted_fragments_cost)
-
-					connected_weapon.new_soul.sword_usage_current += 1
+					connected_weapon.new_soul.add_sword_usage(1)
 
 					check_overcharge()
 

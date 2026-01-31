@@ -616,7 +616,7 @@
 				new /obj/effect/fd_sword/targeted_ability(get_turf(V))
 				V.throw_item_until_empty()
 
-				connected_weapon.new_soul.sword_usage_current += 1
+				connected_weapon.new_soul.add_sword_usage(1)
 
 				check_overcharge()
 				connected_weapon.new_soul.hud_used.sword_usage_stat.update_stat(connected_weapon.new_soul)

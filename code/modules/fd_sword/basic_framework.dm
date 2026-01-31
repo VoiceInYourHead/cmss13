@@ -71,6 +71,7 @@
 	var/hide = FALSE
 
 	var/opened = FALSE
+	var/prepare_offset = 0
 
 /atom/movable/screen/sword_info/proc/change_visibility(mob/living/carbon/human/user)
 
@@ -90,16 +91,19 @@
 				mouse_opacity = FALSE
 				hide = TRUE
 				animate(src, alpha = 0, time = 0.5 SECONDS)
+				animate(src, transform = matrix(0, 0, MATRIX_TRANSLATE), time = 0.5 SECONDS, easing = SINE_EASING|EASE_IN, flags = ANIMATION_PARALLEL)
 				return 1
 			if(hide)
 				mouse_opacity = TRUE
 				hide = FALSE
 				animate(src, alpha = 255, time = 0.5 SECONDS)
+				animate(src, transform = matrix(prepare_offset, 0, MATRIX_TRANSLATE), time = 0.5 SECONDS, easing = SINE_EASING|EASE_OUT, flags = ANIMATION_PARALLEL)
 				return 1
 			if(!hide)
 				mouse_opacity = FALSE
 				hide = TRUE
 				animate(src, alpha = 0, time = 0.5 SECONDS)
+				animate(src, transform = matrix(0, 0, MATRIX_TRANSLATE), time = 0.5 SECONDS, easing = SINE_EASING|EASE_IN, flags = ANIMATION_PARALLEL)
 				return 1
 
 /atom/movable/screen/sword_info/clicked(mob/living/carbon/human/user, list/mods)
@@ -131,6 +135,8 @@
 	mother_button = FALSE
 	hide = TRUE
 
+	prepare_offset = -15
+
 /atom/movable/screen/sword_info/traverse_info/MouseEntered(location, control, params)
 	. = ..()
 	var/mob/living/carbon/human/user = usr
@@ -160,6 +166,8 @@
 	alpha = 0
 	mother_button = FALSE
 	hide = TRUE
+
+	prepare_offset = -30
 
 /atom/movable/screen/sword_info/ranged_info/MouseEntered(location, control, params)
 	. = ..()
@@ -191,6 +199,8 @@
 	mother_button = FALSE
 	hide = TRUE
 
+	prepare_offset = -45
+
 /atom/movable/screen/sword_info/aoe_info/MouseEntered(location, control, params)
 	. = ..()
 	var/mob/living/carbon/human/user = usr
@@ -220,6 +230,8 @@
 	alpha = 0
 	mother_button = FALSE
 	hide = TRUE
+
+	prepare_offset = -60
 
 /atom/movable/screen/sword_info/targeted_info/MouseEntered(location, control, params)
 	. = ..()
@@ -347,6 +359,8 @@ GLOBAL_LIST_INIT(parry_sound, list('code/modules/fd_sword/sounds/parry1.wav',
 	icon = 'code/modules/fd_sword/icons/swords.dmi'
 	icon_state = "timesword"
 
+	hitsound = 'code/modules/fd_sword/sounds/basic_melee.wav'
+
 	var/awakend = FALSE
 	var/mob/living/carbon/human/new_soul = null
 
@@ -373,6 +387,10 @@ GLOBAL_LIST_INIT(parry_sound, list('code/modules/fd_sword/sounds/parry1.wav',
 		if(L.parry_protection)
 			playsound(L, pick(GLOB.parry_sound), 50)
 			new /obj/effect/block(get_turf(L))
+
+			if(ishuman(L))
+				var/mob/living/carbon/human/H = L
+				H.remove_sword_usage(2)
 
 			N.handle_melee_parry()
 			return FALSE
@@ -462,6 +480,7 @@ GLOBAL_LIST_INIT(parry_sound, list('code/modules/fd_sword/sounds/parry1.wav',
 			new_soul.sword_pact += src
 
 		soul.hud_used.sword_info.change_visibility(soul)
+		playsound(soul, 'code/modules/fd_sword/sounds/unsheet.wav', 50)
 		soul.balloon_alert_to_viewers("*[soul.real_name] обнажил(а) клинок*", null, DEFAULT_MESSAGE_RANGE, null, COLOR_RED)
 
 		return TRUE
@@ -563,6 +582,14 @@ GLOBAL_LIST_INIT(parry_sound, list('code/modules/fd_sword/sounds/parry1.wav',
 	. = ..()
 
 	flags_atom &= ~NO_ZFALL
+
+/mob/living/carbon/human/proc/remove_sword_usage(amount)
+	sword_usage_current -= amount
+	if(sword_usage_current < 0)
+		sword_usage_current = 0
+
+/mob/living/carbon/human/proc/add_sword_usage(amount)
+	sword_usage_current += amount
 
 /mob/living/carbon/human/proc/trigger_overcharge()
 	playsound_client(client, 'code/modules/fd_sword/sounds/overflow.mp3', src, 25, 0)
@@ -686,7 +713,7 @@ GLOBAL_LIST_INIT(parry_sound, list('code/modules/fd_sword/sounds/parry1.wav',
 		return FALSE
 
 	use_traverse_ability()
-	connected_weapon.new_soul.sword_usage_current += traverse_ability_cost
+	connected_weapon.new_soul.add_sword_usage(traverse_ability_cost)
 
 	check_overcharge()
 
@@ -719,7 +746,7 @@ GLOBAL_LIST_INIT(parry_sound, list('code/modules/fd_sword/sounds/parry1.wav',
 		return FALSE
 
 	use_ranged_ability()
-	connected_weapon.new_soul.sword_usage_current += ranged_ability_cost
+	connected_weapon.new_soul.add_sword_usage(ranged_ability_cost)
 
 	check_overcharge()
 
@@ -753,7 +780,7 @@ GLOBAL_LIST_INIT(parry_sound, list('code/modules/fd_sword/sounds/parry1.wav',
 		return FALSE
 
 	use_aoe_ability()
-	connected_weapon.new_soul.sword_usage_current += aoe_ability_cost
+	connected_weapon.new_soul.add_sword_usage(aoe_ability_cost)
 
 	check_overcharge()
 
@@ -788,7 +815,7 @@ GLOBAL_LIST_INIT(parry_sound, list('code/modules/fd_sword/sounds/parry1.wav',
 		return FALSE
 
 	use_targeted_ability(target)
-	connected_weapon.new_soul.sword_usage_current += targeted_ability_cost
+	connected_weapon.new_soul.add_sword_usage(targeted_ability_cost)
 
 	check_overcharge()
 

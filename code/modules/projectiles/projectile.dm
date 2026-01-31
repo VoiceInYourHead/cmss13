@@ -936,6 +936,11 @@
 	if(parry_protection)
 		playsound(src, pick(GLOB.parry_sound), 50)
 		new /obj/effect/block(get_turf(src))
+
+		if(ishuman(src))
+			var/mob/living/carbon/human/H = src
+			H.remove_sword_usage(2)
+
 		return
 
 	var/ammo_flags = P.ammo.flags_ammo_behavior | P.projectile_override_flags

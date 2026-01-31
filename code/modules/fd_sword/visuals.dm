@@ -536,6 +536,11 @@
 					if(L.parry_protection)
 						playsound(L, pick(GLOB.parry_sound), 50)
 						new /obj/effect/block(get_turf(L))
+
+						if(ishuman(L))
+							var/mob/living/carbon/human/H = L
+							H.remove_sword_usage(2)
+
 						continue
 
 					for(var/i = 0, i <= 3, i++)
