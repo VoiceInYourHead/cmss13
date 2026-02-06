@@ -516,7 +516,17 @@ GLOBAL_LIST_INIT(parry_sound, list('code/modules/fd_sword/sounds/parry1.wav',
 
 /mob/living/Life(delta_time)
 	if(ice_stacks > 0)
-		remove_status_value("cold", 1)
+		if(ice_stacks >= 10)
+			turn_to_ice()
+			set_status_value("cold", 0)
+		else
+			remove_status_value("cold", 1)
+
+	if(bleed_stacks > 0)
+		new /obj/effect/fd_sword/hit_text(get_turf(src), bleed_stacks*2)
+
+		apply_damage(bleed_stacks*2, BRUTE)
+		remove_status_value("bleed", 2)
 
 	update_srd_statuses()
 
@@ -556,6 +566,8 @@ GLOBAL_LIST_INIT(parry_sound, list('code/modules/fd_sword/sounds/parry1.wav',
 	var/danger_zone_reached = FALSE
 	var/overcharged = FALSE
 
+	var/sword_directionals = TRUE
+
 	srd_faction = "Allies"
 
 /mob/living/carbon/human/Move(NewLoc, direct)
@@ -584,12 +596,11 @@ GLOBAL_LIST_INIT(parry_sound, list('code/modules/fd_sword/sounds/parry1.wav',
 	flags_atom &= ~NO_ZFALL
 
 /mob/living/carbon/human/proc/remove_sword_usage(amount)
-	sword_usage_current -= amount
-	if(sword_usage_current < 0)
-		sword_usage_current = 0
+	sword_usage_current = max(0, sword_usage_current - amount)
 
 /mob/living/carbon/human/proc/add_sword_usage(amount)
 	sword_usage_current += amount
+	current_active_technique.check_overcharge()
 
 /mob/living/carbon/human/proc/trigger_overcharge()
 	playsound_client(client, 'code/modules/fd_sword/sounds/overflow.mp3', src, 25, 0)
@@ -715,8 +726,6 @@ GLOBAL_LIST_INIT(parry_sound, list('code/modules/fd_sword/sounds/parry1.wav',
 	use_traverse_ability()
 	connected_weapon.new_soul.add_sword_usage(traverse_ability_cost)
 
-	check_overcharge()
-
 	if(traverse_ability_cost > 0)
 		connected_weapon.new_soul.hud_used.sword_usage_stat.update_stat(connected_weapon.new_soul)
 		connected_weapon.new_soul.hud_used.sword_limit_stat.update_stat(connected_weapon.new_soul)
@@ -747,8 +756,6 @@ GLOBAL_LIST_INIT(parry_sound, list('code/modules/fd_sword/sounds/parry1.wav',
 
 	use_ranged_ability()
 	connected_weapon.new_soul.add_sword_usage(ranged_ability_cost)
-
-	check_overcharge()
 
 	if(ranged_ability_cost > 0)
 		connected_weapon.new_soul.hud_used.sword_usage_stat.update_stat(connected_weapon.new_soul)
@@ -781,8 +788,6 @@ GLOBAL_LIST_INIT(parry_sound, list('code/modules/fd_sword/sounds/parry1.wav',
 
 	use_aoe_ability()
 	connected_weapon.new_soul.add_sword_usage(aoe_ability_cost)
-
-	check_overcharge()
 
 	if(aoe_ability_cost > 0)
 		connected_weapon.new_soul.hud_used.sword_usage_stat.update_stat(connected_weapon.new_soul)
@@ -817,8 +822,6 @@ GLOBAL_LIST_INIT(parry_sound, list('code/modules/fd_sword/sounds/parry1.wav',
 	use_targeted_ability(target)
 	connected_weapon.new_soul.add_sword_usage(targeted_ability_cost)
 
-	check_overcharge()
-
 	if(targeted_ability_cost > 0)
 		connected_weapon.new_soul.hud_used.sword_usage_stat.update_stat(connected_weapon.new_soul)
 		connected_weapon.new_soul.hud_used.sword_limit_stat.update_stat(connected_weapon.new_soul)
@@ -844,9 +847,10 @@ GLOBAL_LIST_INIT(parry_sound, list('code/modules/fd_sword/sounds/parry1.wav',
 #define COMSIG_KB_HUMAN_SWORD_RANGED "keybinding_human_sword_ranged"
 #define COMSIG_KB_HUMAN_SWORD_AOE "keybinding_human_sword_aoe"
 
-#define COMSIG_KB_HUMAN_SWORD_PARRY "keybinding_human_sword_parry_button"
+#define COMSIG_KB_HUMAN_SWORD_PARRY "keybinding_human_sword_parry"
+#define COMSIG_KB_HUMAN_SWORD_DIRECTIONALS "keybinding_human_sword_directionals"
 
-#define CATEGORY_SWORD "ТЕХНИКА МЕЧА"
+#define CATEGORY_SWORD "ПРОЕКТ МЕЧ"
 
 /datum/keybinding/human/sword_technique
 	category = CATEGORY_SWORD
@@ -945,7 +949,6 @@ GLOBAL_LIST_INIT(parry_sound, list('code/modules/fd_sword/sounds/parry1.wav',
 		shake_camera(human_mob, 2, 1)
 		return FALSE
 
-
 /datum/keybinding/human/sword_technique/parry/up(client/user)
 	. = ..()
 	if(.)
@@ -961,6 +964,33 @@ GLOBAL_LIST_INIT(parry_sound, list('code/modules/fd_sword/sounds/parry1.wav',
 	ADD_TRAIT(human_mob, TRAIT_IMMOBILIZED, PARRY_TRAIT)
 	addtimer(CALLBACK(human_mob, TYPE_PROC_REF(/mob/living/carbon/human, reset_parry_timer)), 6 SECONDS)
 	addtimer(CALLBACK(human_mob, TYPE_PROC_REF(/mob/living/carbon/human, reset_parry_protection)), 1.5 SECONDS)
+
+/datum/keybinding/human/sword_technique/directional_attacks
+	hotkey_keys = list("Unbound")
+	classic_keys = list("Unbound")
+	name = "sword_directionals"
+	full_name = "УТИЛИТА: Автоматическое наведение"
+	description = "Атакует цель вплотную к вам по направлению клика"
+	keybind_signal = COMSIG_KB_HUMAN_SWORD_DIRECTIONALS
+
+/datum/keybinding/human/sword_technique/directional_attacks/can_use(client/user)
+	return ishuman(user.mob) && user.mob.stat == CONSCIOUS
+
+/datum/keybinding/human/sword_technique/directional_attacks/up(client/user)
+	. = ..()
+	if(.)
+		return
+
+	var/mob/living/carbon/human/human_mob = user.mob
+
+	if(human_mob.sword_directionals)
+		human_mob.sword_directionals = FALSE
+		human_mob.balloon_alert(human_mob, "Автоматическое наведение отключено!", COLOR_ORANGE)
+		return TRUE
+	else
+		human_mob.sword_directionals = TRUE
+		human_mob.balloon_alert(human_mob, "Автоматическое наведение включено!", COLOR_ORANGE)
+		return TRUE
 
 // VARIOUS TEST STUFF //
 

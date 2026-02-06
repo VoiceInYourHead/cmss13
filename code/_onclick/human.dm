@@ -15,6 +15,18 @@
 	if(sword_combat_active && !istype(A, /atom/movable/screen))
 		current_active_technique.targeted_ability_check(A)
 
+	if(sword_directionals)
+		var/obj/item/weapon/sword/fd_sword/S = get_active_hand()
+
+		var/turf/target_turf = get_turf(get_step(src, Get_Compass_Dir(src, A)))
+		var/mob/living/target = null
+		for(var/mob/living/L in target_turf)
+			target = L
+
+		if(!isnull(target))
+			S.attack(target, src)
+			next_move += S.attack_speed
+
 	var/use_ability = FALSE
 	switch(get_ability_mouse_key())
 		if(XENO_ABILITY_CLICK_SHIFT)

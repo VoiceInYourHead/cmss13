@@ -113,9 +113,6 @@
 
 			L.add_status_value("cold", 2)
 
-			if(L.ice_stacks >= 10)
-				L.turn_to_ice()
-
 /datum/keybinding/human/sword_technique/wintersword_traverse_up
 	hotkey_keys = list("Northeast")
 	classic_keys = list("Unbound")
@@ -339,7 +336,6 @@
 				new /obj/effect/fd_sword/targeted_ability(get_turf(target))
 				connected_weapon.new_soul.add_sword_usage(1)
 
-				check_overcharge()
 				connected_weapon.new_soul.hud_used.sword_usage_stat.update_stat(connected_weapon.new_soul)
 				connected_weapon.new_soul.hud_used.sword_limit_stat.update_stat(connected_weapon.new_soul)
 
@@ -359,6 +355,5 @@
 			new /obj/effect/fd_sword/heal_effect(get_turf(H))
 			connected_weapon.new_soul.add_sword_usage(1)
 
-			check_overcharge()
 			connected_weapon.new_soul.hud_used.sword_usage_stat.update_stat(connected_weapon.new_soul)
 			connected_weapon.new_soul.hud_used.sword_limit_stat.update_stat(connected_weapon.new_soul)

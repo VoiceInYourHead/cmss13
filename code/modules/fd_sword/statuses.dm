@@ -45,6 +45,10 @@
 	name = "TIME STACKS"
 	icon_state = "time"
 
+/obj/effect/fd_sword/status_counter/bleed_stacks
+	name = "BLEED STACKS"
+	icon_state = "bleed"
+
 // ============ МОБ С СИСТЕМОЙ СЧЁТЧИКОВ ============
 /mob
 	// Переменные для хранения значений статусов
@@ -52,6 +56,7 @@
 	var/circle_stacks = 0
 	var/ice_stacks = 0
 	var/time_fragments = 0
+	var/bleed_stacks = 0
 
 	// Система счётчиков
 	var/list/status_counters = list()  // Все активные счётчики
@@ -115,6 +120,9 @@
 	if(time_fragments > 0)
 		create_status_counter(/obj/effect/fd_sword/status_counter/time_stacks, time_fragments)
 
+	if(bleed_stacks > 0)
+		create_status_counter(/obj/effect/fd_sword/status_counter/bleed_stacks, bleed_stacks)
+
 	// Добавляем все счётчики в оверлеи
 	for(var/obj/effect/fd_sword/status_counter/SC in status_counters)
 		add_overlay_safe(SC)
@@ -176,6 +184,8 @@
 			circle_stacks += value
 		if("cold")
 			ice_stacks += value
+		if("bleed")
+			bleed_stacks += value
 		if("time")
 			time_fragments += value
 
@@ -189,6 +199,8 @@
 			circle_stacks = max(0, circle_stacks - value)
 		if("cold")
 			ice_stacks = max(0, ice_stacks - value)
+		if("bleed")
+			bleed_stacks = max(0, bleed_stacks - value)
 		if("time")
 			time_fragments = max(0, time_fragments - value)
 
@@ -202,6 +214,8 @@
 			circle_stacks = value
 		if("cold")
 			ice_stacks = value
+		if("bleed")
+			bleed_stacks = value
 		if("time")
 			time_fragments = value
 
@@ -211,6 +225,7 @@
 	collected_gold = 0
 	circle_stacks = 0
 	ice_stacks = 0
+	bleed_stacks = 0
 	time_fragments = 0
 
 	update_srd_statuses()

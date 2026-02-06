@@ -308,8 +308,6 @@
 					connected_weapon.new_soul.remove_status_value("time", targeted_fragments_cost)
 					connected_weapon.new_soul.add_sword_usage(1)
 
-					check_overcharge()
-
 					connected_weapon.new_soul.hud_used.sword_usage_stat.update_stat(connected_weapon.new_soul)
 					connected_weapon.new_soul.hud_used.sword_limit_stat.update_stat(connected_weapon.new_soul)
 
