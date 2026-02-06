@@ -23,9 +23,8 @@
 		for(var/mob/living/L in target_turf)
 			target = L
 
-		if(!isnull(target))
+		if(!isnull(target) && !isnull(S))
 			S.attack(target, src)
-			next_move += S.attack_speed
 
 	var/use_ability = FALSE
 	switch(get_ability_mouse_key())
