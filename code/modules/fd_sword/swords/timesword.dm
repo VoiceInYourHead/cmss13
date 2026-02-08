@@ -7,7 +7,9 @@
 /obj/item/weapon/sword/fd_sword/timesword/attack(mob/target, mob/user)
 	. = ..()
 
-	if(istype(target, /mob/living))
+	var/mob/living/carbon/human/H = user
+
+	if(istype(target, /mob/living) && H.sword_combat_active)
 		if(target != user)
 
 			new_soul.add_status_value("time", 1)

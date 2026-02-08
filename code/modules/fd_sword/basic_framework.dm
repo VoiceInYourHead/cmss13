@@ -638,11 +638,11 @@ GLOBAL_LIST_INIT(parry_sound, list('code/modules/fd_sword/sounds/parry1.wav',
 	reagents.del_reagent("speed_stimulant")
 	reagents.del_reagent("brain_stimulant")
 
-	last_used_tech.overcharge_marks()
-	last_used_tech.danger_zone_reached = FALSE
-
 	for(var/obj/item/weapon/sword/fd_sword/S in sword_pact)
 		S.attack_speed = initial(S.attack_speed)
+
+	last_used_tech.overcharge_marks()
+	last_used_tech.danger_zone_reached = FALSE
 
 //// SCHOOL ////
 
@@ -938,9 +938,6 @@ GLOBAL_LIST_INIT(parry_sound, list('code/modules/fd_sword/sounds/parry1.wav',
 	keybind_signal = COMSIG_KB_HUMAN_SWORD_PARRY
 
 /datum/keybinding/human/sword_technique/parry/can_use(client/user)
-
-	. = ..()
-
 	var/mob/living/carbon/human/human_mob = user.mob
 
 	if(human_mob.parry_delay)
@@ -948,6 +945,8 @@ GLOBAL_LIST_INIT(parry_sound, list('code/modules/fd_sword/sounds/parry1.wav',
 		human_mob.balloon_alert(human_mob, "Ещё рано! Парирование недоступно!", COLOR_RED)
 		shake_camera(human_mob, 2, 1)
 		return FALSE
+
+	return ishuman(user.mob) && user.mob.stat == CONSCIOUS
 
 /datum/keybinding/human/sword_technique/parry/up(client/user)
 	. = ..()

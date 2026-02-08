@@ -1900,6 +1900,7 @@
 #include "code\modules\fd_sword\statuses.dm"
 #include "code\modules\fd_sword\visuals.dm"
 #include "code\modules\fd_sword\swords\goldensword.dm"
+#include "code\modules\fd_sword\swords\huntersword.dm"
 #include "code\modules\fd_sword\swords\pyrokinesis_school.dm"
 #include "code\modules\fd_sword\swords\timesword.dm"
 #include "code\modules\fd_sword\swords\wintersword.dm"

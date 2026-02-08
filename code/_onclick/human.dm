@@ -17,6 +17,8 @@
 
 	if(sword_directionals)
 		var/obj/item/weapon/sword/fd_sword/S = get_active_hand()
+		if(world.time <= next_move)
+			return FALSE
 
 		var/turf/target_turf = get_turf(get_step(src, Get_Compass_Dir(src, A)))
 		var/mob/living/target = null
@@ -24,6 +26,7 @@
 			target = L
 
 		if(!isnull(target) && !isnull(S))
+			next_move += S.attack_speed
 			S.attack(target, src)
 
 	var/use_ability = FALSE
