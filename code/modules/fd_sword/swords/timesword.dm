@@ -3,6 +3,7 @@
 
 /obj/item/weapon/sword/fd_sword/timesword
 	techniques = list(/datum/sword_tech/timesword)
+	hit_color = "#5f5f5f"
 
 /obj/item/weapon/sword/fd_sword/timesword/attack(mob/target, mob/user)
 	. = ..()
@@ -217,7 +218,7 @@
 		var/reverse_facing = get_dir(ending, connected_weapon.new_soul)
 
 		new /obj/effect/fd_sword/hit_effect(get_turf(connected_weapon.new_soul))
-		connected_weapon.new_soul.animation_attack_on(ending)
+		connected_weapon.new_soul.cool_sword_attack_on(ending)
 
 		connected_weapon.new_soul.throw_atom(get_edge_target_turf(connected_weapon.new_soul, reverse_facing), 1, SPEED_AVERAGE, src, FALSE)
 		connected_weapon.new_soul.face_atom(ending)

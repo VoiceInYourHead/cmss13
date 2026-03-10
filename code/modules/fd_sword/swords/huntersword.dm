@@ -79,4 +79,4 @@
 
 	H.throw_atom(get_edge_target_turf(H, reverse_facing), 1, SPEED_AVERAGE, src, FALSE)
 	H.face_atom(target_turf)
-	H.animation_attack_on(target_turf)
+	H.cool_sword_attack_on(target_turf)

@@ -173,6 +173,7 @@
 /obj/item/weapon/sword/fd_sword/goldensword
 	icon_state = "goldensword"
 	techniques = list(/datum/sword_tech/goldensword)
+	hit_color = "#ffae00"
 
 /obj/item/weapon/sword/fd_sword/goldensword/attack(mob/target, mob/user)
 	. = ..()

@@ -22,7 +22,10 @@
 	if(W && !.)
 		if(!(W.flags_item & NOBLUDGEON))
 			visible_message(SPAN_DANGER("[src] has been hit by [user] with [W]."), null, null, 5, CHAT_TYPE_MELEE_HIT)
-			user.animation_attack_on(src)
+			if(istype(W,/obj/item/weapon/sword/fd_sword))
+				user.cool_sword_attack_on(src)
+			else
+				user.animation_attack_on(src)
 			user.flick_attack_overlay(src, "punch")
 			return ATTACKBY_HINT_UPDATE_NEXT_MOVE
 
@@ -100,7 +103,10 @@
 		user.visible_message(SPAN_DANGER("[M] has been [used_verb] with [src][showname]."),
 			SPAN_DANGER("You [used_verb] [M == user ? "yourself":M] with [src]."), null, 5, CHAT_TYPE_MELEE_HIT)
 
-		user.animation_attack_on(M)
+		if(istype(src, /obj/item/weapon/sword/fd_sword))
+			user.cool_sword_attack_on(M)
+		else
+			user.animation_attack_on(M)
 		user.flick_attack_overlay(M, "punch")
 		if(isxeno(M))
 			var/mob/living/carbon/xenomorph/X = M

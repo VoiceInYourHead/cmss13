@@ -102,6 +102,7 @@
 /obj/item/weapon/sword/fd_sword/wintersword
 	techniques = list(/datum/sword_tech/wintersword)
 	icon_state = "wintersword"
+	hit_color = "#58ffe3"
 
 /obj/item/weapon/sword/fd_sword/wintersword/attack(mob/target, mob/user)
 	. = ..()
@@ -253,7 +254,7 @@
 		projectile.generate_bullet(shards_datum)
 
 		shake_camera(connected_weapon.new_soul, 2, 1)
-		connected_weapon.new_soul.animation_attack_on(shoot_angle)
+		connected_weapon.new_soul.cool_sword_attack_on(shoot_angle)
 		projectile.fire_at(shoot_angle, connected_weapon.new_soul, connected_weapon.new_soul, shards_datum.max_range, shards_datum.shell_speed)
 		REMOVE_TRAIT(connected_weapon.new_soul, TRAIT_IMMOBILIZED, ICESPIKES_TRAIT)
 

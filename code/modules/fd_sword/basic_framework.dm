@@ -363,6 +363,7 @@ GLOBAL_LIST_INIT(parry_sound, list('code/modules/fd_sword/sounds/parry1.wav',
 
 	var/awakend = FALSE
 	var/mob/living/carbon/human/new_soul = null
+	var/hit_color = "#FF0000"
 
 /obj/item/weapon/sword/fd_sword/Initialize(mapload, ...)
 	. = ..()
@@ -381,7 +382,7 @@ GLOBAL_LIST_INIT(parry_sound, list('code/modules/fd_sword/sounds/parry1.wav',
 		var/mob/living/L = target
 		var/mob/living/N = user
 
-		N.animation_attack_on(target)
+		N.cool_sword_attack_on(target)
 		N.flick_attack_overlay(target, "punch")
 
 		if(L.parry_protection)
@@ -553,6 +554,165 @@ GLOBAL_LIST_INIT(parry_sound, list('code/modules/fd_sword/sounds/parry1.wav',
 
 /mob/living/proc/remove_parry_stun()
 	REMOVE_TRAIT(src, TRAIT_IMMOBILIZED, PARRY_STUN_TRAIT)
+
+/mob/living/proc/cool_sword_attack_on(atom/A, pixel_offset = 8)
+
+	var/obj/item/weapon/sword/fd_sword/FDS = get_active_hand()
+	animation_flash_color(A, FDS.hit_color)
+	SEND_SIGNAL(src, COMSIG_MOB_ANIMATING)
+
+	if(A.clone)
+		if(src.Adjacent(A.clone))
+			A = A.clone
+	if(buckled || anchored || HAS_TRAIT(src, TRAIT_HAULED)) //it would look silly.
+		return
+	var/pixel_x_diff = 0
+	var/pixel_y_diff = 0
+	var/angle_diff = 0
+	var/direction = get_dir(src, get_turf(A))
+	pixel_offset = floor(pixel_offset) // Just to be safe
+
+	var/client_offset_x = 0
+	var/client_offset_y = 0
+
+	if(QDELETED(A))
+		direction = dir
+
+	sword_overlayed_strike(FDS, src, direction)
+
+	switch(direction)
+		if(NORTH)
+			pixel_y_diff = pixel_offset
+			angle_diff = 30
+			client_offset_y = 10
+		if(SOUTH)
+			pixel_y_diff = -pixel_offset
+			angle_diff = -30
+			client_offset_y = -10
+		if(EAST)
+			pixel_x_diff = pixel_offset
+			angle_diff = 30
+			client_offset_x = 10
+		if(WEST)
+			pixel_x_diff = -pixel_offset
+			angle_diff = -30
+			client_offset_x = -10
+		if(NORTHEAST)
+			pixel_x_diff = pixel_offset
+			pixel_y_diff = pixel_offset
+			angle_diff = 30
+			client_offset_x = 10
+			client_offset_y = 10
+		if(NORTHWEST)
+			pixel_x_diff = -pixel_offset
+			pixel_y_diff = pixel_offset
+			angle_diff = -30
+			client_offset_x = -10
+			client_offset_y = 10
+		if(SOUTHEAST)
+			pixel_x_diff = pixel_offset
+			pixel_y_diff = -pixel_offset
+			angle_diff = 30
+			client_offset_x = 10
+			client_offset_y = -10
+		if(SOUTHWEST)
+			pixel_x_diff = -pixel_offset
+			pixel_y_diff = -pixel_offset
+			angle_diff = -30
+			client_offset_x = -10
+			client_offset_y = -10
+
+	special_camera_move(src, client_offset_x, client_offset_y)
+
+	animate(src, transform = matrix(angle_diff, MATRIX_ROTATE), pixel_x = pixel_x + pixel_x_diff, pixel_y = pixel_y + pixel_y_diff, time = 0.3 SECONDS, easing = SINE_EASING)
+	animate(src, transform = matrix(2, 2, MATRIX_SCALE), time = 0.2 SECONDS, easing = SINE_EASING, flags = ANIMATION_PARALLEL)
+	animate(transform = matrix(0, MATRIX_ROTATE), pixel_x = initial(pixel_x), pixel_y = initial(pixel_y), time = 0.2 SECONDS)
+	animate(transform = matrix(1, 1, MATRIX_SCALE), time = 0.3 SECONDS)
+
+/proc/sword_overlayed_strike(atom/A, mob/living/owner, sword_direction = NORTH)
+
+	var/obj/effect/fd_sword/fake_simple/fakesword = new /obj/effect/fd_sword/fake_simple(get_turf(owner))
+	fakesword.icon_state = A.icon_state
+
+	var/rotate_for = 0
+	var/pixel_x_offset = 0
+	var/pixel_y_offset = 0
+	var/matrix/start_point = matrix()
+
+	switch(sword_direction)
+		if(NORTH)
+			fakesword.pixel_y = 15
+			start_point.Turn(60)
+			rotate_for = 30
+			pixel_y_offset = 10
+		if(SOUTH)
+			fakesword.pixel_y = -15
+			start_point.Turn(240)
+			rotate_for = 195
+			pixel_y_offset = -10
+		if(EAST)
+			fakesword.pixel_x = 15
+			start_point.Turn(150)
+			rotate_for = 120
+			pixel_x_offset = 10
+		if(WEST)
+			fakesword.pixel_x = -15
+			start_point.Turn(300)
+			rotate_for = 330
+			pixel_x_offset = -10
+		if(NORTHEAST)
+			fakesword.pixel_x = 15
+			fakesword.pixel_y = 15
+			start_point.Turn(135)
+			rotate_for = 90
+			pixel_x_offset = 10
+			pixel_y_offset = 10
+		if(NORTHWEST)
+			fakesword.pixel_x = -15
+			fakesword.pixel_y = 15
+			start_point.Turn(315)
+			rotate_for = 360
+			pixel_x_offset = -10
+			pixel_y_offset = 10
+		if(SOUTHEAST)
+			fakesword.pixel_x = 15
+			fakesword.pixel_y = -15
+			start_point.Turn(135)
+			rotate_for = 180
+			pixel_x_offset = 10
+			pixel_y_offset = -10
+		if(SOUTHWEST)
+			fakesword.pixel_x = -15
+			fakesword.pixel_y = -15
+			start_point.Turn(315)
+			rotate_for = 270
+			pixel_x_offset = -10
+			pixel_y_offset = -10
+
+	fakesword.transform = start_point
+	animate(fakesword, alpha = 175, pixel_x = fakesword.pixel_x + pixel_x_offset, pixel_y = fakesword.pixel_y + pixel_y_offset, transform = matrix(rotate_for, MATRIX_ROTATE), time = 0.3 SECONDS, easing = SINE_EASING)
+
+	spawn(1 SECONDS)
+		qdel(fakesword)
+
+/proc/special_camera_move(mob/M, offset_x, offset_y)
+	var/old_x = M.client.get_pixel_x()
+	var/old_y = M.client.get_pixel_y()
+
+	animate(M.client, pixel_x = old_x + offset_x, pixel_y = old_y + offset_y, time = 0.3 SECONDS, easing = BACK_EASING|EASE_OUT)
+	animate(pixel_x = old_x, pixel_y = old_y, time = 0.2 SECONDS, easing = SINE_EASING|EASE_OUT)
+
+/obj/effect/fd_sword/fake_simple
+	name = "combat sword"
+	icon = 'code/modules/fd_sword/icons/swords.dmi'
+	icon_state = "goldensword"
+
+	anchored = TRUE
+	mouse_opacity = FALSE
+	layer = 5
+	plane = 5
+
+	alpha = 0
 
 /mob/living/carbon/human
 	var/datum/sword_tech/current_active_technique = null
