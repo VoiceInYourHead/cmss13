@@ -548,3 +548,6 @@ GLOBAL_LIST(trait_name_map)
 // parry
 #define PARRY_TRAIT "parry"
 #define PARRY_STUN_TRAIT "parry_stun"
+// inksword
+#define ON_INK_TRAIT "on_ink"
+#define INK_SUBMERGED_TRAIT "ink_submerged"

@@ -731,7 +731,6 @@ GLOBAL_LIST_INIT(parry_sound, list('code/modules/fd_sword/sounds/parry1.wav',
 	srd_faction = "Allies"
 
 /mob/living/carbon/human/Move(NewLoc, direct)
-
 	if(istype(current_active_technique, /datum/sword_tech/goldensword))
 		if(collected_gold < 20 && collected_gold > 5)
 			next_move_slowdown = -0.5
@@ -750,6 +749,11 @@ GLOBAL_LIST_INIT(parry_sound, list('code/modules/fd_sword/sounds/parry1.wav',
 			flags_atom |= NO_ZFALL
 			var/obj/structure/fd_sword/ice_bridge/newbridge = new /obj/structure/fd_sword/ice_bridge(get_turf(NewLoc))
 			newbridge.related_faction = srd_faction
+	
+	if(HAS_TRAIT(src, ON_INK_TRAIT))
+		next_move_slowdown -= 0.5
+		if(istype(current_active_technique, /datum/sword_tech/inksword))
+			next_move_slowdown -= 0.5 // дополнительный плюсик если ты слоп мастер
 
 	. = ..()
 

@@ -29,6 +29,8 @@
 	var/hivenumber = XENO_HIVE_NORMAL
 	var/turf/weeded_turf
 
+	var/spread_delay_mod = 1
+
 	// Which node is responsible for keeping this weed patch alive?
 	var/obj/effect/alien/weeds/node/parent = null
 
@@ -71,7 +73,7 @@
 		if(get_dist(node, src) >= node.node_range)
 			SEND_SIGNAL(parent, COMSIG_WEEDNODE_GROWTH_COMPLETE)
 		else if(!hibernate && do_spread)
-			addtimer(CALLBACK(src, PROC_REF(weed_expand)), WEED_BASE_GROW_SPEED / max(weed_strength, 1))
+			addtimer(CALLBACK(src, PROC_REF(weed_expand)), WEED_BASE_GROW_SPEED / max(weed_strength, 1) * spread_delay_mod)
 
 	var/turf/turf = get_turf(src)
 	if(turf)
