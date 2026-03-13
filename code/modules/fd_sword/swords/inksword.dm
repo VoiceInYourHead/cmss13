@@ -86,9 +86,9 @@
 /datum/sword_tech/inksword/proc/move_override(mob/self, turf/to_enter)
 	for(var/atom/movable/thing in to_enter)
 		if(istype(thing, /obj/effect/alien/weeds/black_slop) || istype(thing, /obj/effect/alien/weeds/node/black_slop))
-			try_undive(self)
 			return COMPONENT_TURF_ALLOW_MOVEMENT
 
+	try_undive(self)
 	return COMPONENT_TURF_DENY_MOVEMENT
 
 /datum/sword_tech/inksword/proc/try_undive(mob/self)
